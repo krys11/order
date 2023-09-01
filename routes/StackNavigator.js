@@ -23,7 +23,7 @@ const MainStackNavigator = () => {
 
 const OrderStackNavigation = () => {
   return (
-    <stack.Navigator>
+    <stack.Navigator screenOptions={{ header: () => null }}>
       <stack.Screen name="Order" component={Order} />
     </stack.Navigator>
   );
@@ -31,7 +31,7 @@ const OrderStackNavigation = () => {
 
 const BillsStackNavigation = () => {
   return (
-    <stack.Navigator>
+    <stack.Navigator screenOptions={{ header: () => null }}>
       <stack.Screen name="Bills" component={Bills} />
     </stack.Navigator>
   );
@@ -39,7 +39,7 @@ const BillsStackNavigation = () => {
 
 const AccountStackNavigation = () => {
   return (
-    <stack.Navigator>
+    <stack.Navigator screenOptions={{ header: () => null }}>
       <stack.Screen name="Account" component={Account} />
     </stack.Navigator>
   );
