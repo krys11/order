@@ -1,12 +1,23 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Dimensions,
+  Image,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { onLogin } from "../../firebase/Firebase";
 
+//img
+import imgLogoDefault from "../../img/logo_default.jpeg";
+
 //Toast
 import Toast from "react-native-toast-message";
+
 //Context
 import { MyContext } from "../../context/MyContext";
 import { Colors } from "../../constant/Colors";
@@ -87,14 +98,23 @@ const Login = () => {
         <Toast />
         <View>
           <Text style={styles.textColorWhite}>Image</Text>
+          <Image source={imgLogoDefault} />
         </View>
         <View style={styles.containerZone}>
-          <Text style={[styles.textColorWhite, styles.textBold]}>
+          <Text
+            style={[
+              styles.textColorWhite,
+              styles.textBold,
+              styles.textConnectionSize,
+            ]}
+          >
             Connexion
           </Text>
           <View>
-            <View>
-              <Text style={styles.textColorWhite}>Email</Text>
+            <View style={styles.inputViewMargin}>
+              <Text style={[styles.textColorWhite, styles.textMargin]}>
+                Email
+              </Text>
               <TextInput
                 placeholder="Email"
                 onChangeText={(txt) => setEmail(txt)}
@@ -102,7 +122,9 @@ const Login = () => {
               />
             </View>
             <View>
-              <Text style={styles.textColorWhite}>Mot de passe</Text>
+              <Text style={[styles.textColorWhite, styles.textMargin]}>
+                Mot de passe
+              </Text>
               <TextInput
                 placeholder="Mot de passe"
                 onChangeText={(txt) => setPassword(txt)}
@@ -146,6 +168,9 @@ const styles = StyleSheet.create({
   textBold: {
     fontWeight: "bold",
   },
+  textConnectionSize: {
+    fontSize: 30,
+  },
   containerZone: {
     backgroundColor: Colors.colorBlackAlpha,
     width: 350,
@@ -153,11 +178,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
+  inputViewMargin: {
+    marginVertical: 20,
+  },
+  textMargin: {
+    paddingBottom: 5,
+  },
   inputZone: {
     backgroundColor: Colors.colorWhite,
     height: 40,
     width: 300,
     borderRadius: 10,
+    paddingHorizontal: 15,
   },
   btnConnect: {
     backgroundColor: Colors.colorRed,
