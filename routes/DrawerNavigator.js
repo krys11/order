@@ -10,7 +10,6 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator screenOptions={{}}>
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
-      <Drawer.Screen name="HomeDrawer" component={Home} />
     </Drawer.Navigator>
   );
 };

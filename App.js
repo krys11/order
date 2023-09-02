@@ -7,28 +7,14 @@ import { MyContext } from "./context/MyContext";
 import { auth } from "./firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-// import {
-//   getAuth,
-//   initializeAuth,
-//   getReactNativePersistence,
-// } from "firebase/auth";
-// import { app } from "./firebase/Firebase";
-
-// import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-
-// const auth = initializeAuth(app, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-// });
-
 export default function App() {
   const [authCurrentExist, setAuthCurrentExist] = useState();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
   const [data, setData] = useState();
   const [changeStat, setChangeStat] = useState(auth.currentUser ? true : false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log("user:::", user);
       setUser(user);
       setData(user);
     });
