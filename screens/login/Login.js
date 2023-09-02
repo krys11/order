@@ -96,9 +96,9 @@ const Login = () => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <Toast />
-        <View>
+        <View style={styles.viewImage}>
           <Text style={styles.textColorWhite}>Image</Text>
-          <Image source={imgLogoDefault} />
+          <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
         <View style={styles.containerZone}>
           <Text
@@ -158,6 +158,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.colorBlack,
     justifyContent: "space-evenly",
     alignItems: "center",
+  },
+  imgLogo: {
+    height: 30,
+    width: 30,
   },
   textColorWhite: {
     color: Colors.colorWhite,
