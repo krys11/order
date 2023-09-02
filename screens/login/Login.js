@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
@@ -26,9 +28,16 @@ const Login = () => {
   //variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [desable, setDesable] = useState(true);
   const [errMsg, setErrMsg] = useState("");
-  const { auth, setChangeStat } = useContext(MyContext);
+  const [activityIndicator, setActivityIndicator] = useState(false);
+  const [disableTouchable, setDisableTouchable] = useState();
+
+  //vider les champs
+  const cleanVariable = () => {
+    setEmail(""), setPassword("");
+  };
+
+  //navigation
   const navigation = useNavigation();
 
   //Toast message
@@ -41,6 +50,7 @@ const Login = () => {
     });
   };
 
+  //notification
   const showToastError = (msg) => {
     Toast.show({
       type: "error",
@@ -51,13 +61,19 @@ const Login = () => {
   };
 
   const userLogin = async () => {
+    setActivityIndicator(true);
+    setDisableTouchable(true);
     try {
       const UserCredential = await onLogin(email, password);
       if (UserCredential) {
+        cleanVariable();
         console.log("Login:::: ", UserCredential);
         showToastSuccess();
       }
     } catch (error) {
+      setActivityIndicator(false);
+      setDisableTouchable(false);
+
       console.log(error.code);
       let er;
       if (error.code === "auth/wrong-password") {
@@ -78,10 +94,10 @@ const Login = () => {
 
   //useEffect
   useEffect(() => {
-    if (email.length != 0 && password.length > 6) {
-      setDesable(false);
+    if (email.length != 0 && password.length) {
+      setDisableTouchable(false);
     } else {
-      setDesable(true);
+      setDisableTouchable(true);
     }
   }, [email, password]);
 
@@ -92,52 +108,62 @@ const Login = () => {
     setErrMsg("");
   }, [errMsg]);
 
+  const btnLogin = !activityIndicator ? (
+    <Text style={[styles.textColorWhite, styles.textBold]}>Se connecter</Text>
+  ) : (
+    <ActivityIndicator animated={activityIndicator} color={Colors.colorWhite} />
+  );
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <Toast />
         <View style={styles.viewImage}>
-          <Text style={styles.textColorWhite}>Image</Text>
           <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
-        <View style={styles.containerZone}>
-          <Text
-            style={[
-              styles.textColorWhite,
-              styles.textBold,
-              styles.textConnectionSize,
-            ]}
-          >
-            Connexion
-          </Text>
-          <View>
-            <View style={styles.inputViewMargin}>
-              <Text style={[styles.textColorWhite, styles.textMargin]}>
-                Email
-              </Text>
-              <TextInput
-                placeholder="Email"
-                onChangeText={(txt) => setEmail(txt)}
-                style={styles.inputZone}
-              />
-            </View>
-            <View>
-              <Text style={[styles.textColorWhite, styles.textMargin]}>
-                Mot de passe
-              </Text>
-              <TextInput
-                placeholder="Mot de passe"
-                onChangeText={(txt) => setPassword(txt)}
-                style={styles.inputZone}
-              />
-            </View>
-          </View>
-          <TouchableOpacity style={styles.btnConnect} onPress={userLogin}>
-            <Text style={[styles.textColorWhite, styles.textBold]}>
-              Se connecter
+        <KeyboardAvoidingView behavior="padding">
+          <View style={styles.containerZone}>
+            <Text
+              style={[
+                styles.textColorWhite,
+                styles.textBold,
+                styles.textConnectionSize,
+              ]}
+            >
+              Connexion
             </Text>
-          </TouchableOpacity>
-        </View>
+            <View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Email
+                </Text>
+
+                <TextInput
+                  placeholder="Email"
+                  onChangeText={(txt) => setEmail(txt)}
+                  style={styles.inputZone}
+                />
+              </View>
+              <View>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Mot de passe
+                </Text>
+                <TextInput
+                  placeholder="Mot de passe"
+                  onChangeText={(txt) => setPassword(txt)}
+                  style={styles.inputZone}
+                />
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.btnConnect}
+              onPress={userLogin}
+              disabled={disableTouchable}
+            >
+              {btnLogin}
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
         <View style={styles.footer}>
           <Text style={styles.textColorWhite}>
             Vous n'avez pas de compte ?{" "}
@@ -159,9 +185,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
+  viewImage: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   imgLogo: {
-    height: 30,
-    width: 30,
+    height: 150,
+    width: 150,
   },
   textColorWhite: {
     color: Colors.colorWhite,

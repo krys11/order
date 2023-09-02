@@ -1,18 +1,34 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { onRegister } from "../../firebase/Firebase";
+
 //Toast
 import Toast from "react-native-toast-message";
+
+//img
+import imgLogoDefault from "../../img/logo_default.jpeg";
+
+//Color
+import { Colors } from "../../constant/Colors";
 
 const Register = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
+  const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [desable, setDesable] = useState(true);
   const [errMsg, setErrMsg] = useState("");
+  const [activityIndicator, setActivityIndicator] = useState(false);
+  const [disableTouchable, setDisableTouchable] = useState();
+
+  //vider les champs
+  const cleanVariable = () => {
+    setEmail(""), setTel(""), setPassword(""), setPassword2("");
+  };
 
   //Toast message
   const showToastSuccess = () => {
@@ -109,5 +125,67 @@ const Register = () => {
     </SafeAreaProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
+    backgroundColor: Colors.colorBlack,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  viewImage: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imgLogo: {
+    height: 150,
+    width: 150,
+  },
+  textColorWhite: {
+    color: Colors.colorWhite,
+  },
+  textColorRed: {
+    color: Colors.colorRed,
+  },
+  textBold: {
+    fontWeight: "bold",
+  },
+  textConnectionSize: {
+    fontSize: 30,
+  },
+  containerZone: {
+    backgroundColor: Colors.colorBlackAlpha,
+    width: 350,
+    height: 300,
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  inputViewMargin: {
+    marginVertical: 20,
+  },
+  textMargin: {
+    paddingBottom: 5,
+  },
+  inputZone: {
+    backgroundColor: Colors.colorWhite,
+    height: 40,
+    width: 300,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+  },
+  btnConnect: {
+    backgroundColor: Colors.colorRed,
+    height: 35,
+    width: 300,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  footer: {
+    flexDirection: "row",
+    //justifyContent: "center",
+  },
+});
 
 export default Register;
