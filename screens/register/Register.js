@@ -1,4 +1,13 @@
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  Keyboard,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
@@ -20,7 +29,6 @@ const Register = () => {
   const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-  const [desable, setDesable] = useState(true);
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
   const [disableTouchable, setDisableTouchable] = useState();
@@ -48,45 +56,61 @@ const Register = () => {
     });
   };
 
+  //function Register
   const userRegister = async () => {
-    try {
-      const UserCredential = await onRegister(email, password);
-      if (UserCredential) {
-        showToastSuccess();
+    let er;
+    Keyboard.dismiss();
+
+    if (password === password2) {
+      setActivityIndicator(true);
+      setDisableTouchable(true);
+      try {
+        const UserCredential = await onRegister(email, password);
+        if (UserCredential) {
+          cleanVariable();
+          showToastSuccess();
+        }
+        setLoader(false);
+      } catch (error) {
+        setActivityIndicator(false);
+        setDisableTouchable(false);
+        console.log(error.code);
+        if (error.code === "auth/wrong-password") {
+          er = "Mot de passe incorrect";
+          setErrMsg(er);
+        } else if (error.code === "auth/weak-password") {
+          er = "Votre mot de passe doit depasser de six(6) lettres";
+          setErrMsg(er);
+        } else if (error.code === "auth/email-already-in-use") {
+          er = "Cet email est deja utiliser";
+          setErrMsg(er);
+        } else if (error.code === "auth/invalid-email") {
+          er = "Email incorrect";
+          setErrMsg(er);
+        } else if (error.code === "auth/too-many-requests") {
+          er = "Patienter un peu, serveur occuper";
+          setErrMsg(er);
+        }
       }
-      setLoader(false);
-    } catch (error) {
-      console.log(error.code);
-      if (error.code === "auth/wrong-password") {
-        er = "Mot de passe incorrect";
-        setErrMsg(er);
-        //showToastError(errMsg);
-      } else if (error.code === "auth/weak-password") {
-        er = "Votre mot de passe doit depasser de six(6) lettres";
-        setErrMsg(er);
-        //showToastError(errMsg);
-      } else if (error.code === "auth/email-already-in-use") {
-        er = "Cet email est deja utiliser";
-        setErrMsg(er);
-        //showToastError(errMsg);
-      } else if (error.code === "auth/invalid-email") {
-        er = "Email incorrect";
-        setErrMsg(er);
-        //showToastError(errMsg);
-      } else if (error.code === "auth/too-many-requests") {
-        er = "Patienter un peu, serveur occuper";
-        setErrMsg(er);
-        //showToastError(errMsg);
-      }
+    } else {
+      setActivityIndicator(false);
+      setDisableTouchable(false);
+      er = "Les deux mots de passe doivent etre conforme";
+      setErrMsg(er);
     }
   };
 
   //useEffect
   useEffect(() => {
-    if (email.length != 0 && password.length > 6) {
-      setDesable(false);
+    if (
+      email.length != 0 &&
+      tel.length != 0 &&
+      password.length &&
+      password2.length
+    ) {
+      setDisableTouchable(false);
     } else {
-      setDesable(true);
+      setDisableTouchable(true);
     }
   }, [email, password]);
 
@@ -97,30 +121,92 @@ const Register = () => {
     setErrMsg("");
   }, [errMsg]);
 
+  //btn option
+  const btnRegister = !activityIndicator ? (
+    <Text style={[styles.textColorWhite, styles.textBold]}>S'inscrire</Text>
+  ) : (
+    <ActivityIndicator animated={activityIndicator} color={Colors.colorWhite} />
+  );
+
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
         <Toast />
-        <View>
-          <Text>Register</Text>
+        <View style={styles.viewImage}>
+          <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
+        <KeyboardAvoidingView behavior="position">
+          <View style={styles.containerZone}>
+            <Text
+              style={[
+                styles.textColorWhite,
+                styles.textBold,
+                styles.textConnectionSize,
+              ]}
+            >
+              Inscription
+            </Text>
+            <View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Email
+                </Text>
 
-        <View>
-          <TextInput
-            placeholder="Email"
-            onChangeText={(txt) => setEmail(txt)}
-          />
-          <TextInput
-            placeholder="Mot de passe"
-            onChangeText={(txt) => setPassword(txt)}
-          />
-          <TouchableOpacity onPress={userRegister}>
-            <Text>S'inscrire</Text>
+                <TextInput
+                  placeholder="Email"
+                  onChangeText={(txt) => setEmail(txt)}
+                  style={styles.inputZone}
+                />
+              </View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Telephone
+                </Text>
+                <TextInput
+                  placeholder="Telephone"
+                  onChangeText={(txt) => setTel(txt)}
+                  style={styles.inputZone}
+                />
+              </View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Mot de passe
+                </Text>
+                <TextInput
+                  placeholder="Mot de passe"
+                  secureTextEntry
+                  onChangeText={(txt) => setPassword(txt)}
+                  style={styles.inputZone}
+                />
+              </View>
+              <View>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Confirme mot de passe
+                </Text>
+                <TextInput
+                  placeholder="Confirme mot de passe"
+                  secureTextEntry
+                  onChangeText={(txt) => setPassword2(txt)}
+                  style={styles.inputZone}
+                />
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.btnRegiste}
+              onPress={userRegister}
+              disabled={disableTouchable}
+            >
+              {btnRegister}
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+
+        <View style={styles.footer}>
+          <Text style={styles.textColorWhite}>Vous avez deja un compte ? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.textColorRed}>Connectez vous</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Forgotpassword")}>
-          <Text>Go Forgot Password</Text>
-        </TouchableOpacity>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -157,12 +243,12 @@ const styles = StyleSheet.create({
   containerZone: {
     backgroundColor: Colors.colorBlackAlpha,
     width: 350,
-    height: 300,
+    height: 500,
     alignItems: "center",
     justifyContent: "space-around",
   },
   inputViewMargin: {
-    marginVertical: 20,
+    marginBottom: 20,
   },
   textMargin: {
     paddingBottom: 5,
@@ -174,7 +260,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
   },
-  btnConnect: {
+  btnRegiste: {
     backgroundColor: Colors.colorRed,
     height: 35,
     width: 300,

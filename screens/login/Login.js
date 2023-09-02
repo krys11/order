@@ -2,12 +2,12 @@ import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   Dimensions,
   Image,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
@@ -20,8 +20,7 @@ import imgLogoDefault from "../../img/logo_default.jpeg";
 //Toast
 import Toast from "react-native-toast-message";
 
-//Context
-import { MyContext } from "../../context/MyContext";
+//Color
 import { Colors } from "../../constant/Colors";
 
 const Login = () => {
@@ -61,8 +60,11 @@ const Login = () => {
   };
 
   const userLogin = async () => {
+    let er;
+    Keyboard.dismiss();
     setActivityIndicator(true);
     setDisableTouchable(true);
+
     try {
       const UserCredential = await onLogin(email, password);
       if (UserCredential) {
@@ -73,21 +75,16 @@ const Login = () => {
     } catch (error) {
       setActivityIndicator(false);
       setDisableTouchable(false);
-
       console.log(error.code);
-      let er;
       if (error.code === "auth/wrong-password") {
         er = "Mot de passe incorrect";
         setErrMsg(er);
-        //showToastError(errMsg);
       } else if (error.code === "auth/invalid-email") {
         er = "Email incorrect";
         setErrMsg(er);
-        //showToastError(errMsg);
       } else if (error.code === "auth/too-many-requests") {
         er = "Patienter un peu, serveur occuper";
         setErrMsg(er);
-        //showToastError(errMsg);
       }
     }
   };
@@ -121,7 +118,7 @@ const Login = () => {
         <View style={styles.viewImage}>
           <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAvoidingView behavior="position">
           <View style={styles.containerZone}>
             <Text
               style={[
@@ -150,6 +147,7 @@ const Login = () => {
                 </Text>
                 <TextInput
                   placeholder="Mot de passe"
+                  secureTextEntry
                   onChangeText={(txt) => setPassword(txt)}
                   style={styles.inputZone}
                 />
@@ -172,6 +170,9 @@ const Login = () => {
             <Text style={styles.textColorRed}>Creer un compte</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={() => navigation.navigate("Forgotpassword")}>
+          <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </SafeAreaProvider>
   );
