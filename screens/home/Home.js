@@ -7,12 +7,12 @@ import TestComponent from "../../components/Testcomponents";
 const Home = ({ route }) => {
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <KkiapayProvider>
-          {/* <Text>Home</Text> */}
+      <KkiapayProvider>
+        <SafeAreaView>
+          <Text>Home</Text>
           <TestComponent />
-        </KkiapayProvider>
-      </SafeAreaView>
+        </SafeAreaView>
+      </KkiapayProvider>
     </SafeAreaProvider>
   );
 };
