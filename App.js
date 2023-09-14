@@ -65,8 +65,6 @@ export default function App() {
     },
   ];
 
-  console.log(menu[0].img1.toString());
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setData(user);
