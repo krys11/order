@@ -270,6 +270,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
+    position: "relative",
+    bottom: 30,
     //justifyContent: "center",
   },
 });

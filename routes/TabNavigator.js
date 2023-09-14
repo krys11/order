@@ -8,9 +8,6 @@ import {
   AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import Entypo from "react-native-vector-icons/Entypo";
 
 //Screen
 import Home from "../screens/home/Home";
@@ -18,25 +15,39 @@ import Order from "../screens/order/Order";
 import Bills from "../screens/bills/Bills";
 import Account from "../screens/account/Account";
 
+//Color
+import { Colors } from "../constant/Colors";
+import ProductsDetails from "../screens/productsDetails/ProductsDetails";
+import { createStackNavigator } from "@react-navigation/stack";
+import { HomeProducts } from "./StackNavigator";
+
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
-  const [color, setColor] = useState("");
   return (
     <Tab.Navigator
       initialRouteName="home"
       screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarIcon: ({ focused, size }) => {
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: Colors.colorBlackAlpha,
+          borderWidth: 1,
+          borderBottomColor: Colors.colorWhite,
+        },
+        headerTitleStyle: {
+          fontWeight: "bold",
+          textTransform: "uppercase",
+        },
+        headerTintColor: Colors.colorWhite,
+        tabBarIcon: ({ focused }) => {
           let iconName;
-          let colorName;
           if (route.name == "Acceuil") {
             iconName = "home";
             return (
               <AntDesign
                 name={iconName}
                 size={24}
-                color={focused ? "red" : "black"}
+                color={focused ? Colors.colorRed : Colors.colorWhite}
               />
             );
           } else if (route.name == "Commandes") {
@@ -45,7 +56,7 @@ const BottomTabNavigator = () => {
               <MaterialIcons
                 name={iconName}
                 size={24}
-                color={focused ? "red" : "black"}
+                color={focused ? Colors.colorRed : Colors.colorWhite}
               />
             );
           } else if (route.name == "Factures") {
@@ -54,7 +65,7 @@ const BottomTabNavigator = () => {
               <AntDesign
                 name={iconName}
                 size={24}
-                color={focused ? "red" : "black"}
+                color={focused ? Colors.colorRed : Colors.colorWhite}
               />
             );
           } else if (route.name == "Compte") {
@@ -63,25 +74,30 @@ const BottomTabNavigator = () => {
               <MaterialCommunityIcons
                 name={iconName}
                 size={24}
-                color={focused ? "red" : "black"}
+                color={focused ? Colors.colorRed : Colors.colorWhite}
               />
             );
           }
         },
         tabBarStyle: {
-          borderRadius: 10,
-          marginHorizontal: 10,
-          marginBottom: 10,
+          backgroundColor: Colors.colorBlackAlpha,
+          paddingBottom: 5,
         },
         tabBarLabelStyle: {
-          color: "black",
+          color: Colors.colorWhite,
           marginBottom: 1,
           fontSize: 12,
           fontWeight: "bold",
         },
       })}
     >
-      <Tab.Screen name="Acceuil" component={Home} />
+      <Tab.Screen
+        name="Acceuil"
+        component={HomeProducts}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Tab.Screen name="Commandes" component={Order} />
       <Tab.Screen name="Factures" component={Bills} />
       <Tab.Screen name="Compte" component={Account} />

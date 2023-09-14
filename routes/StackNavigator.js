@@ -7,6 +7,9 @@ import ForgotPassword from "../screens/forgotPassword/ForgotPassword";
 import Order from "../screens/order/Order";
 import Bills from "../screens/bills/Bills";
 import Account from "../screens/account/Account";
+import Home from "../screens/home/Home";
+import ProductsDetails from "../screens/productsDetails/ProductsDetails";
+import { Colors } from "../constant/Colors";
 
 const stack = createStackNavigator();
 
@@ -48,9 +51,28 @@ const AccountStackNavigation = () => {
   );
 };
 
+const HomeProducts = () => {
+  return (
+    <stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerTintColor: Colors.colorWhite,
+        headerStyle: {
+          backgroundColor: Colors.colorBlackAlpha,
+        },
+        headerTitleAlign: "center",
+      }}
+    >
+      <stack.Screen name="Home" component={Home} />
+      <stack.Screen name="Product Details" component={ProductsDetails} />
+    </stack.Navigator>
+  );
+};
+
 export {
   MainStackNavigator,
   OrderStackNavigation,
   BillsStackNavigation,
   AccountStackNavigation,
+  HomeProducts,
 };

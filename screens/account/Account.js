@@ -1,7 +1,6 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { onSignOut } from "../../firebase/Firebase";
 import { MyContext } from "../../context/MyContext";
 

@@ -79,6 +79,9 @@ const Login = () => {
       if (error.code === "auth/wrong-password") {
         er = "Mot de passe incorrect";
         setErrMsg(er);
+      } else if (error.code === "auth/user-not-found") {
+        er = "Utilisateur introuvable";
+        setErrMsg(er);
       } else if (error.code === "auth/invalid-email") {
         er = "Email incorrect";
         setErrMsg(er);
@@ -163,16 +166,21 @@ const Login = () => {
           </View>
         </KeyboardAvoidingView>
         <View style={styles.footer}>
-          <Text style={styles.textColorWhite}>
-            Vous n'avez pas de compte ?{" "}
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={styles.textColorRed}>Creer un compte</Text>
+          <View style={styles.footerRegsiter}>
+            <Text style={styles.textColorWhite}>
+              Vous n'avez pas de compte ?{" "}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text style={styles.textColorRed}>Creer un compte</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Forgotpassword")}
+            style={styles.footerPassword}
+          >
+            <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Forgotpassword")}>
-          <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
-        </TouchableOpacity>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -235,8 +243,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footer: {
+    alignItems: "center",
+    position: "relative",
+    bottom: 35,
+  },
+  footerRegsiter: {
     flexDirection: "row",
-    //justifyContent: "center",
+    marginBottom: 20,
   },
 });
 

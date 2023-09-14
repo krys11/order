@@ -223,6 +223,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
+    position: "relative",
+    bottom: 40,
     //justifyContent: "center",
   },
 });
