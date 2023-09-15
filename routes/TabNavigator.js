@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -10,16 +9,17 @@ import {
 } from "@expo/vector-icons";
 
 //Screen
-import Home from "../screens/home/Home";
 import Order from "../screens/order/Order";
 import Bills from "../screens/bills/Bills";
-import Account from "../screens/account/Account";
 
 //Color
 import { Colors } from "../constant/Colors";
-import ProductsDetails from "../screens/productsDetails/ProductsDetails";
-import { createStackNavigator } from "@react-navigation/stack";
-import { HomeProducts } from "./StackNavigator";
+
+//stack Navigator
+import {
+  HomeProductsStackNavigator,
+  AccountStackNavigator,
+} from "./StackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -93,14 +93,20 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen
         name="Acceuil"
-        component={HomeProducts}
+        component={HomeProductsStackNavigator}
         options={{
           headerShown: false,
         }}
       />
       <Tab.Screen name="Commandes" component={Order} />
       <Tab.Screen name="Factures" component={Bills} />
-      <Tab.Screen name="Compte" component={Account} />
+      <Tab.Screen
+        name="Compte"
+        component={AccountStackNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
   );
 };
