@@ -88,6 +88,9 @@ const Login = () => {
       } else if (error.code === "auth/too-many-requests") {
         er = "Patienter un peu, serveur occuper";
         setErrMsg(er);
+      } else if (error.code === "auth/network-request-failed") {
+        er = "Vérifier votre connexion internet";
+        setErrMsg(er);
       }
     }
   };
@@ -139,6 +142,7 @@ const Login = () => {
                 </Text>
 
                 <TextInput
+                  value={email}
                   placeholder="Email"
                   onChangeText={(txt) => setEmail(txt)}
                   style={styles.inputZone}
@@ -149,6 +153,7 @@ const Login = () => {
                   Mot de passe
                 </Text>
                 <TextInput
+                  value={password}
                   placeholder="Mot de passe"
                   secureTextEntry
                   onChangeText={(txt) => setPassword(txt)}
@@ -233,6 +238,9 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 10,
     paddingHorizontal: 15,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: Colors.colorBlack,
   },
   btnConnect: {
     backgroundColor: Colors.colorRed,

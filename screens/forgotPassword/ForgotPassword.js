@@ -33,7 +33,7 @@ const ForgotPassword = () => {
 
   //vider les champs
   const cleanVariable = () => {
-    setEmail(""), setTel(""), setPassword(""), setPassword2("");
+    setEmail("");
   };
 
   //Toast message
@@ -80,6 +80,9 @@ const ForgotPassword = () => {
         setErrMsg(er);
       } else if (error.code === "auth/too-many-requests") {
         er = "Patienter un peu, serveur occuper";
+        setErrMsg(er);
+      } else if (error.code === "auth/network-request-failed") {
+        er = "Vérifier votre connexion internet";
         setErrMsg(er);
       }
     }
@@ -133,6 +136,7 @@ const ForgotPassword = () => {
                 </Text>
 
                 <TextInput
+                  value={email}
                   placeholder="Email"
                   onChangeText={(txt) => setEmail(txt)}
                   style={styles.inputZone}
@@ -199,6 +203,9 @@ const styles = StyleSheet.create({
     height: 250,
     alignItems: "center",
     justifyContent: "space-around",
+    fontSize: 15,
+    fontWeight: "bold",
+    color: Colors.colorBlack,
   },
   inputViewMargin: {
     marginBottom: 20,

@@ -40,7 +40,12 @@ const Account = () => {
     try {
       await onSignOut();
     } catch (error) {
+      let er;
       console.log(error);
+      if (error.code === "auth/network-request-failed") {
+        er = "Vérifier votre connexion internet";
+        setErrMsg(er);
+      }
     }
   };
 
@@ -94,6 +99,7 @@ const Account = () => {
         <KeyboardAvoidingView behavior="position">
           <View style={styles.passwordChangeView}>
             <TextInput
+              value={newPassword}
               style={styles.inputZone}
               placeholder="Votre nouveau mot de passe"
               onChangeText={(txt) => setNewPassword(txt)}
@@ -154,6 +160,9 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 10,
     paddingHorizontal: 15,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: Colors.colorBlack,
   },
   btnChangePassword: {
     backgroundColor: Colors.colorRed,

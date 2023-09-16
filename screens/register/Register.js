@@ -90,6 +90,9 @@ const Register = () => {
         } else if (error.code === "auth/too-many-requests") {
           er = "Patienter un peu, serveur occuper";
           setErrMsg(er);
+        } else if (error.code === "auth/network-request-failed") {
+          er = "Vérifier votre connexion internet";
+          setErrMsg(er);
         }
       }
     } else {
@@ -153,6 +156,7 @@ const Register = () => {
                 </Text>
 
                 <TextInput
+                  value={email}
                   placeholder="Email"
                   onChangeText={(txt) => setEmail(txt)}
                   style={styles.inputZone}
@@ -163,6 +167,7 @@ const Register = () => {
                   Telephone
                 </Text>
                 <TextInput
+                  value={tel}
                   placeholder="Telephone"
                   onChangeText={(txt) => setTel(txt)}
                   style={styles.inputZone}
@@ -173,6 +178,7 @@ const Register = () => {
                   Mot de passe
                 </Text>
                 <TextInput
+                  value={password}
                   placeholder="Mot de passe"
                   secureTextEntry
                   onChangeText={(txt) => setPassword(txt)}
@@ -184,6 +190,7 @@ const Register = () => {
                   Confirme mot de passe
                 </Text>
                 <TextInput
+                  value={password2}
                   placeholder="Confirme mot de passe"
                   secureTextEntry
                   onChangeText={(txt) => setPassword2(txt)}
@@ -259,6 +266,9 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 10,
     paddingHorizontal: 15,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: Colors.colorBlack,
   },
   btnRegiste: {
     backgroundColor: Colors.colorRed,
