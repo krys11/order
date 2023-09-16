@@ -68,6 +68,8 @@ const Login = () => {
     try {
       const UserCredential = await onLogin(email, password);
       if (UserCredential) {
+        setActivityIndicator(false);
+        setDisableTouchable(true);
         cleanVariable();
         console.log("Login:::: ", UserCredential);
         showToastSuccess();
@@ -119,72 +121,74 @@ const Login = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Toast />
-        <View style={styles.viewImage}>
-          <Image source={imgLogoDefault} style={styles.imgLogo} />
-        </View>
-        <KeyboardAvoidingView behavior="position">
-          <View style={styles.containerZone}>
-            <Text
-              style={[
-                styles.textColorWhite,
-                styles.textBold,
-                styles.textConnectionSize,
-              ]}
-            >
-              Connexion
-            </Text>
-            <View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Email
-                </Text>
-
-                <TextInput
-                  value={email}
-                  placeholder="Email"
-                  onChangeText={(txt) => setEmail(txt)}
-                  style={styles.inputZone}
-                />
-              </View>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Toast />
+          <View style={styles.viewImage}>
+            <Image source={imgLogoDefault} style={styles.imgLogo} />
+          </View>
+          <KeyboardAvoidingView behavior="position">
+            <View style={styles.containerZone}>
+              <Text
+                style={[
+                  styles.textColorWhite,
+                  styles.textBold,
+                  styles.textConnectionSize,
+                ]}
+              >
+                Connexion
+              </Text>
               <View>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Mot de passe
-                </Text>
-                <TextInput
-                  value={password}
-                  placeholder="Mot de passe"
-                  secureTextEntry
-                  onChangeText={(txt) => setPassword(txt)}
-                  style={styles.inputZone}
-                />
+                <View style={styles.inputViewMargin}>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Email
+                  </Text>
+
+                  <TextInput
+                    value={email}
+                    placeholder="Email"
+                    onChangeText={(txt) => setEmail(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
+                <View>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Mot de passe
+                  </Text>
+                  <TextInput
+                    value={password}
+                    placeholder="Mot de passe"
+                    secureTextEntry
+                    onChangeText={(txt) => setPassword(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
               </View>
+              <TouchableOpacity
+                style={styles.btnConnect}
+                onPress={userLogin}
+                disabled={disableTouchable}
+              >
+                {btnLogin}
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+          <View style={styles.footer}>
+            <View style={styles.footerRegsiter}>
+              <Text style={styles.textColorWhite}>
+                Vous n'avez pas de compte ?{" "}
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <Text style={styles.textColorRed}>Creer un compte</Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={styles.btnConnect}
-              onPress={userLogin}
-              disabled={disableTouchable}
+              onPress={() => navigation.navigate("Forgotpassword")}
+              style={styles.footerPassword}
             >
-              {btnLogin}
+              <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-        <View style={styles.footer}>
-          <View style={styles.footerRegsiter}>
-            <Text style={styles.textColorWhite}>
-              Vous n'avez pas de compte ?{" "}
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.textColorRed}>Creer un compte</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Forgotpassword")}
-            style={styles.footerPassword}
-          >
-            <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

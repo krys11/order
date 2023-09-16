@@ -18,7 +18,7 @@ const Home = ({ route }) => {
   const { menu } = useContext(MyContext);
   const navigation = useNavigation();
 
-  const items = menu.map((item, index) => {
+  const itemsMenu = menu.map((item, index) => {
     return (
       <TouchableOpacity
         style={styles.itemView}
@@ -33,54 +33,64 @@ const Home = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <SafeAreaProvider>
-        <SafeAreaView>
-          <View style={styles.listMenu}>{items}</View>
-          <Text style={styles.itemName}>Commande Rapide:</Text>
-          <View style={styles.commandeRapide}>
-            <View style={styles.commandeRapideView}>
-              <View style={styles.productDetails}>
-                <Image source={menu[0].img1} style={styles.img} />
-                <View style={styles.details}>
-                  <Text style={styles.productName}>Pizza Mexicaine</Text>
-                  <Text style={styles.detailsView}>Details...</Text>
-                </View>
-                <Text style={{ color: Colors.colorRed }}>Format</Text>
-              </View>
-              <View style={styles.productPriceCommande}>
-                <Text style={styles.productPrice}>2000FCFA</Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{ color: Colors.colorGreen, fontWeight: "bold" }}
-                  >
-                    Commander
-                  </Text>
-                </TouchableOpacity>
-              </View>
+      <View style={styles.listMenu}>{itemsMenu}</View>
+      <Text style={styles.itemName}>Commande Rapide:</Text>
+      <View style={styles.commandeRapideContainer}>
+        <View style={styles.commandeRapideView}>
+          <View style={styles.productDetails}>
+            <Image source={menu[0].img1} style={styles.img} />
+            <View style={styles.details}>
+              <Text style={styles.productName}>Pizza Mexicaine</Text>
+              <Text style={styles.detailsView}>Details...</Text>
             </View>
-            <View style={styles.commandeRapideView}>
-              <View style={styles.productDetails}>
-                <Image source={menu[0].img1} style={styles.img} />
-                <View style={styles.details}>
-                  <Text style={styles.productName}>Pizza Mexicaine</Text>
-                  <Text style={styles.detailsView}>Details...</Text>
-                </View>
-                <Text style={{ color: Colors.colorRed }}>Format</Text>
-              </View>
-              <View style={styles.productPriceCommande}>
-                <Text style={styles.productPrice}>2000FCFA</Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{ color: Colors.colorGreen, fontWeight: "bold" }}
-                  >
-                    Commander
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <Text style={{ color: Colors.colorRed }}>Format</Text>
           </View>
-        </SafeAreaView>
-      </SafeAreaProvider>
+          <View style={styles.productPriceCommande}>
+            <Text style={styles.productPrice}>2000FCFA</Text>
+            <TouchableOpacity>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Commander
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.commandeRapideView}>
+          <View style={styles.productDetails}>
+            <Image source={menu[0].img1} style={styles.img} />
+            <View style={styles.details}>
+              <Text style={styles.productName}>Pizza Mexicaine</Text>
+              <Text style={styles.detailsView}>Details...</Text>
+            </View>
+            <Text style={{ color: Colors.colorRed }}>Format</Text>
+          </View>
+          <View style={styles.productPriceCommande}>
+            <Text style={styles.productPrice}>2000FCFA</Text>
+            <TouchableOpacity>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Commander
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.commandeRapideView}>
+          <View style={styles.productDetails}>
+            <Image source={menu[0].img1} style={styles.img} />
+            <View style={styles.details}>
+              <Text style={styles.productName}>Pizza Mexicaine</Text>
+              <Text style={styles.detailsView}>Details...</Text>
+            </View>
+            <Text style={{ color: Colors.colorRed }}>Format</Text>
+          </View>
+          <View style={styles.productPriceCommande}>
+            <Text style={styles.productPrice}>2000FCFA</Text>
+            <TouchableOpacity>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Commander
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -106,8 +116,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   img: {
-    width: 100,
-    height: 100,
+    width: 125,
+    height: 125,
     borderRadius: 999,
   },
   itemName: {
@@ -115,11 +125,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingTop: 5,
   },
-  commandeRapide: {
-    paddingBottom: 50,
-  },
   commandeRapideContainer: {
-    flexDirection: "row",
+    marginBottom: 50,
   },
   commandeRapideView: {
     backgroundColor: Colors.colorBlackAlpha,

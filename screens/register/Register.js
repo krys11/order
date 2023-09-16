@@ -67,6 +67,8 @@ const Register = () => {
       try {
         const UserCredential = await onRegister(email, password);
         if (UserCredential) {
+          setActivityIndicator(false);
+          setDisableTouchable(true);
           cleanVariable();
           showToastSuccess();
         }
@@ -133,86 +135,90 @@ const Register = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Toast />
-        <View style={styles.viewImage}>
-          <Image source={imgLogoDefault} style={styles.imgLogo} />
-        </View>
-        <KeyboardAvoidingView behavior="position">
-          <View style={styles.containerZone}>
-            <Text
-              style={[
-                styles.textColorWhite,
-                styles.textBold,
-                styles.textConnectionSize,
-              ]}
-            >
-              Inscription
-            </Text>
-            <View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Email
-                </Text>
-
-                <TextInput
-                  value={email}
-                  placeholder="Email"
-                  onChangeText={(txt) => setEmail(txt)}
-                  style={styles.inputZone}
-                />
-              </View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Telephone
-                </Text>
-                <TextInput
-                  value={tel}
-                  placeholder="Telephone"
-                  onChangeText={(txt) => setTel(txt)}
-                  style={styles.inputZone}
-                />
-              </View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Mot de passe
-                </Text>
-                <TextInput
-                  value={password}
-                  placeholder="Mot de passe"
-                  secureTextEntry
-                  onChangeText={(txt) => setPassword(txt)}
-                  style={styles.inputZone}
-                />
-              </View>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Toast />
+          <View style={styles.viewImage}>
+            <Image source={imgLogoDefault} style={styles.imgLogo} />
+          </View>
+          <KeyboardAvoidingView behavior="position">
+            <View style={styles.containerZone}>
+              <Text
+                style={[
+                  styles.textColorWhite,
+                  styles.textBold,
+                  styles.textConnectionSize,
+                ]}
+              >
+                Inscription
+              </Text>
               <View>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Confirme mot de passe
-                </Text>
-                <TextInput
-                  value={password2}
-                  placeholder="Confirme mot de passe"
-                  secureTextEntry
-                  onChangeText={(txt) => setPassword2(txt)}
-                  style={styles.inputZone}
-                />
+                <View style={styles.inputViewMargin}>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Email
+                  </Text>
+
+                  <TextInput
+                    value={email}
+                    placeholder="Email"
+                    onChangeText={(txt) => setEmail(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
+                <View style={styles.inputViewMargin}>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Telephone
+                  </Text>
+                  <TextInput
+                    value={tel}
+                    placeholder="Telephone"
+                    onChangeText={(txt) => setTel(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
+                <View style={styles.inputViewMargin}>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Mot de passe
+                  </Text>
+                  <TextInput
+                    value={password}
+                    placeholder="Mot de passe"
+                    secureTextEntry
+                    onChangeText={(txt) => setPassword(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
+                <View>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Confirmer mot de passe
+                  </Text>
+                  <TextInput
+                    value={password2}
+                    placeholder="Confirme mot de passe"
+                    secureTextEntry
+                    onChangeText={(txt) => setPassword2(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
               </View>
+              <TouchableOpacity
+                style={styles.btnRegiste}
+                onPress={userRegister}
+                disabled={disableTouchable}
+              >
+                {btnRegister}
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.btnRegiste}
-              onPress={userRegister}
-              disabled={disableTouchable}
-            >
-              {btnRegister}
+          </KeyboardAvoidingView>
+
+          <View style={styles.footer}>
+            <Text style={styles.textColorWhite}>
+              Vous avez deja un compte ?{" "}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.textColorRed}>Connectez vous</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-
-        <View style={styles.footer}>
-          <Text style={styles.textColorWhite}>Vous avez deja un compte ? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.textColorRed}>Connectez vous</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

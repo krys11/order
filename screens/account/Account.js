@@ -83,45 +83,47 @@ const Account = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Toast />
-        <View style={styles.userDetailsView}>
-          <Image
-            source={menu[0].img1}
-            resizeMode="cover"
-            style={styles.imgAccount}
-          />
-          <Text style={{ color: Colors.colorWhite, marginVertical: 10 }}>
-            Nom Prenom
-          </Text>
-          <Text style={{ color: Colors.colorWhite }}>Telephone</Text>
-        </View>
-        <KeyboardAvoidingView behavior="position">
-          <View style={styles.passwordChangeView}>
-            <TextInput
-              value={newPassword}
-              style={styles.inputZone}
-              placeholder="Votre nouveau mot de passe"
-              onChangeText={(txt) => setNewPassword(txt)}
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Toast />
+          <View style={styles.userDetailsView}>
+            <Image
+              source={menu[0].img1}
+              resizeMode="cover"
+              style={styles.imgAccount}
             />
-            <TouchableOpacity
-              style={styles.btnChangePassword}
-              onPress={ChangePassword}
-              disabled={disableTouchable}
-            >
-              {btnChangePassword}
+            <Text style={{ color: Colors.colorWhite, marginVertical: 10 }}>
+              Nom Prenom
+            </Text>
+            <Text style={{ color: Colors.colorWhite }}>Telephone</Text>
+          </View>
+          <KeyboardAvoidingView behavior="position">
+            <View style={styles.passwordChangeView}>
+              <TextInput
+                value={newPassword}
+                style={styles.inputZone}
+                placeholder="Votre nouveau mot de passe"
+                onChangeText={(txt) => setNewPassword(txt)}
+              />
+              <TouchableOpacity
+                style={styles.btnChangePassword}
+                onPress={ChangePassword}
+                disabled={disableTouchable}
+              >
+                {btnChangePassword}
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+          <View style={styles.listParams}>
+            <TouchableOpacity>
+              <Text style={{ color: Colors.colorWhite, marginBottom: 70 }}>
+                A propos
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnLOgout} onPress={() => logOut()}>
+              <Text style={{ color: Colors.colorWhite }}>Se Deconnecter</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-        <View style={styles.listParams}>
-          <TouchableOpacity>
-            <Text style={{ color: Colors.colorWhite, marginBottom: 70 }}>
-              A propos
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnLOgout} onPress={() => logOut()}>
-            <Text style={{ color: Colors.colorWhite }}>Se Deconnecter</Text>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

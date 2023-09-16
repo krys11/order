@@ -65,9 +65,12 @@ const ForgotPassword = () => {
       await onResetPassword(email);
       cleanVariable();
       showToastSuccess();
+      setActivityIndicator(false);
+      setDisableTouchable(true);
     } catch (error) {
       setActivityIndicator(false);
       setDisableTouchable(false);
+
       console.log(error.code);
       if (error.code === "auth/invalid-email") {
         er = "Email incorrect";
@@ -113,56 +116,58 @@ const ForgotPassword = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Toast />
-        <View style={styles.viewImage}>
-          <Image source={imgLogoDefault} style={styles.imgLogo} />
-        </View>
-        <KeyboardAvoidingView behavior="position">
-          <View style={styles.containerZone}>
-            <Text
-              style={[
-                styles.textColorWhite,
-                styles.textBold,
-                styles.textConnectionSize,
-              ]}
-            >
-              Reinitialisation
-            </Text>
-            <View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Email
-                </Text>
-
-                <TextInput
-                  value={email}
-                  placeholder="Email"
-                  onChangeText={(txt) => setEmail(txt)}
-                  style={styles.inputZone}
-                />
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.btnRegiste}
-              onPress={userPasswordForget}
-              disabled={disableTouchable}
-            >
-              {btnReset}
-            </TouchableOpacity>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Toast />
+          <View style={styles.viewImage}>
+            <Image source={imgLogoDefault} style={styles.imgLogo} />
           </View>
-        </KeyboardAvoidingView>
+          <KeyboardAvoidingView behavior="position">
+            <View style={styles.containerZone}>
+              <Text
+                style={[
+                  styles.textColorWhite,
+                  styles.textBold,
+                  styles.textConnectionSize,
+                ]}
+              >
+                Reinitialisation
+              </Text>
+              <View>
+                <View style={styles.inputViewMargin}>
+                  <Text style={[styles.textColorWhite, styles.textMargin]}>
+                    Email
+                  </Text>
 
-        <View style={styles.footer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.textColorRed}>Connectez vous ! </Text>
-          </TouchableOpacity>
+                  <TextInput
+                    value={email}
+                    placeholder="Email"
+                    onChangeText={(txt) => setEmail(txt)}
+                    style={styles.inputZone}
+                  />
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.btnRegiste}
+                onPress={userPasswordForget}
+                disabled={disableTouchable}
+              >
+                {btnReset}
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
 
-          {/* <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <View style={styles.footer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={styles.textColorRed}>Connectez vous ! </Text>
+            </TouchableOpacity>
+
+            {/* <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.textColorWhite}>
               Vous avez besoin d'aide ?{" "}
             </Text>
           </TouchableOpacity> */}
+          </View>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -219,6 +224,9 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 10,
     paddingHorizontal: 15,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: Colors.colorBlack,
   },
   btnRegiste: {
     backgroundColor: Colors.colorRed,
