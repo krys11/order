@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,18 +8,20 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
-import { onLogin } from "../../firebase/Firebase";
 
+//navigation
+import { useNavigation } from "@react-navigation/native";
+//firebase function
+import { onLogin } from "../../firebase/Firebase";
+//components
+import TextinputComponent from "../../components/TextinputComponent";
 //img
 import imgLogoDefault from "../../img/logo_default.jpeg";
-
 //Toast
 import Toast from "react-native-toast-message";
-
 //Color
 import { Colors } from "../../constant/Colors";
 
@@ -144,23 +146,22 @@ const Login = () => {
                     Email
                   </Text>
 
-                  <TextInput
+                  <TextinputComponent
                     value={email}
                     placeholder="Email"
-                    onChangeText={(txt) => setEmail(txt)}
-                    style={styles.inputZone}
+                    setValue={setEmail}
                   />
                 </View>
                 <View>
                   <Text style={[styles.textColorWhite, styles.textMargin]}>
                     Mot de passe
                   </Text>
-                  <TextInput
+
+                  <TextinputComponent
                     value={password}
                     placeholder="Mot de passe"
-                    secureTextEntry
-                    onChangeText={(txt) => setPassword(txt)}
-                    style={styles.inputZone}
+                    setValue={setPassword}
+                    secureTextEntry={true}
                   />
                 </View>
               </View>
@@ -235,16 +236,6 @@ const styles = StyleSheet.create({
   },
   textMargin: {
     paddingBottom: 5,
-  },
-  inputZone: {
-    backgroundColor: Colors.colorWhite,
-    height: 40,
-    width: 300,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 15,
-    fontWeight: "bold",
-    color: Colors.colorBlack,
   },
   btnConnect: {
     backgroundColor: Colors.colorRed,

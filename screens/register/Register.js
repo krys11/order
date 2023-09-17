@@ -7,19 +7,21 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
-import { onRegister } from "../../firebase/Firebase";
 
+//firebase function
+import { onRegister } from "../../firebase/Firebase";
+//navigation
+import { useNavigation } from "@react-navigation/native";
+//components
+import TextinputComponent from "../../components/TextinputComponent";
 //Toast
 import Toast from "react-native-toast-message";
-
 //img
 import imgLogoDefault from "../../img/logo_default.jpeg";
-
 //Color
 import { Colors } from "../../constant/Colors";
 
@@ -158,46 +160,45 @@ const Register = () => {
                     Email
                   </Text>
 
-                  <TextInput
+                  <TextinputComponent
                     value={email}
                     placeholder="Email"
-                    onChangeText={(txt) => setEmail(txt)}
-                    style={styles.inputZone}
+                    setValue={setEmail}
                   />
                 </View>
                 <View style={styles.inputViewMargin}>
                   <Text style={[styles.textColorWhite, styles.textMargin]}>
                     Telephone
                   </Text>
-                  <TextInput
+
+                  <TextinputComponent
                     value={tel}
                     placeholder="Telephone"
-                    onChangeText={(txt) => setTel(txt)}
-                    style={styles.inputZone}
+                    setValue={setTel}
                   />
                 </View>
                 <View style={styles.inputViewMargin}>
                   <Text style={[styles.textColorWhite, styles.textMargin]}>
                     Mot de passe
                   </Text>
-                  <TextInput
+
+                  <TextinputComponent
                     value={password}
                     placeholder="Mot de passe"
-                    secureTextEntry
-                    onChangeText={(txt) => setPassword(txt)}
-                    style={styles.inputZone}
+                    setValue={setPassword}
+                    secureTextEntry={true}
                   />
                 </View>
                 <View>
                   <Text style={[styles.textColorWhite, styles.textMargin]}>
                     Confirmer mot de passe
                   </Text>
-                  <TextInput
+
+                  <TextinputComponent
                     value={password2}
                     placeholder="Confirme mot de passe"
-                    secureTextEntry
-                    onChangeText={(txt) => setPassword2(txt)}
-                    style={styles.inputZone}
+                    setValue={setPassword2}
+                    secureTextEntry={true}
                   />
                 </View>
               </View>
@@ -265,16 +266,6 @@ const styles = StyleSheet.create({
   },
   textMargin: {
     paddingBottom: 5,
-  },
-  inputZone: {
-    backgroundColor: Colors.colorWhite,
-    height: 40,
-    width: 300,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 15,
-    fontWeight: "bold",
-    color: Colors.colorBlack,
   },
   btnRegiste: {
     backgroundColor: Colors.colorRed,

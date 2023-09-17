@@ -5,22 +5,22 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  TextInput,
   KeyboardAvoidingView,
   ActivityIndicator,
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { onSignOut } from "../../firebase/Firebase";
 
+//firebase function
+import { onSignOut } from "../../firebase/Firebase";
 //Toast
 import Toast from "react-native-toast-message";
-
 //context
 import { MyContext } from "../../context/MyContext";
-
 //color
 import { Colors } from "../../constant/Colors";
+//components
+import TextinputComponent from "../../components/TextinputComponent";
 
 const Account = () => {
   const { menu } = useContext(MyContext);
@@ -99,11 +99,11 @@ const Account = () => {
           </View>
           <KeyboardAvoidingView behavior="position">
             <View style={styles.passwordChangeView}>
-              <TextInput
+              <TextinputComponent
                 value={newPassword}
-                style={styles.inputZone}
                 placeholder="Votre nouveau mot de passe"
-                onChangeText={(txt) => setNewPassword(txt)}
+                setValue={setNewPassword}
+                secureTextEntry={true}
               />
               <TouchableOpacity
                 style={styles.btnChangePassword}

@@ -3,7 +3,7 @@ import { useKkiapay } from "@kkiapay-org/react-native-sdk";
 import { useEffect } from "react";
 import { Button, View } from "react-native";
 
-export default function TestComponent() {
+const TestComponent = () => {
   const { openKkiapayWidget, addSuccessListener } = useKkiapay();
 
   useEffect(() => {
@@ -20,9 +20,7 @@ export default function TestComponent() {
     });
   };
 
-  return (
-    <View>
-      <Button title="Pay now" onPress={openWidget} />
-    </View>
-  );
-}
+  return openWidget;
+};
+
+export { TestComponent };

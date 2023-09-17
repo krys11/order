@@ -4,15 +4,18 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Dimensions,
 } from "react-native";
 import React, { useContext } from "react";
+
+//img
 import { ImageSlider } from "react-native-image-slider-banner";
+//navigation param
 import { useRoute } from "@react-navigation/native";
+//context
 import { MyContext } from "../../context/MyContext";
+//Color
 import { Colors } from "../../constant/Colors";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const ProductsDetails = () => {
   const { params } = useRoute();

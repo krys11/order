@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainStackNavigator } from "./routes/StackNavigator";
 import BottomTabNavigator from "./routes/TabNavigator";
-import { MyContext } from "./context/MyContext";
-import { auth } from "./firebase/Firebase";
-import { onAuthStateChanged } from "firebase/auth";
 
+//contxt
+import { MyContext } from "./context/MyContext";
+//firebase
+import { auth } from "./firebase/Firebase";
+//firebase auth
+import { onAuthStateChanged } from "firebase/auth";
 //img
 import logoDefault from "./img/logo_default.jpeg";
 
 export default function App() {
-  const [authCurrentExist, setAuthCurrentExist] = useState();
   const [data, setData] = useState([]);
-  const [changeStat, setChangeStat] = useState(auth.currentUser ? true : false);
 
   const menu = [
     {

@@ -1,12 +1,7 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, ScrollView, Dimensions, StyleSheet } from "react-native";
 import React from "react";
+
+//Color
 import { Colors } from "../../constant/Colors";
 
 const Order = () => {

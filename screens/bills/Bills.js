@@ -10,7 +10,6 @@ import React from "react";
 
 //icons
 import { MaterialIcons } from "@expo/vector-icons";
-
 //color
 import { Colors } from "../../constant/Colors";
 

@@ -9,10 +9,14 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useContext } from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+//Color
 import { Colors } from "../../constant/Colors";
+//context
 import { MyContext } from "../../context/MyContext";
+//navigation
 import { useNavigation } from "@react-navigation/native";
+import { TestComponent } from "../../components/Testcomponents";
 
 const Home = ({ route }) => {
   const { menu } = useContext(MyContext);
@@ -32,66 +36,32 @@ const Home = ({ route }) => {
   });
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.listMenu}>{itemsMenu}</View>
-      <Text style={styles.itemName}>Commande Rapide:</Text>
-      <View style={styles.commandeRapideContainer}>
-        <View style={styles.commandeRapideView}>
-          <View style={styles.productDetails}>
-            <Image source={menu[0].img1} style={styles.img} />
-            <View style={styles.details}>
-              <Text style={styles.productName}>Pizza Mexicaine</Text>
-              <Text style={styles.detailsView}>Details...</Text>
+    <KkiapayProvider>
+      <ScrollView style={styles.container}>
+        <View style={styles.listMenu}>{itemsMenu}</View>
+        <Text style={styles.itemName}>Commande Rapide:</Text>
+        <View style={styles.commandeRapideContainer}>
+          <View style={styles.commandeRapideView}>
+            <View style={styles.productDetails}>
+              <Image source={menu[0].img1} style={styles.img} />
+              <View style={styles.details}>
+                <Text style={styles.productName}>Pizza Mexicaine</Text>
+                <Text style={styles.detailsView}>Details...</Text>
+              </View>
+              <Text style={{ color: Colors.colorRed }}>Format</Text>
             </View>
-            <Text style={{ color: Colors.colorRed }}>Format</Text>
-          </View>
-          <View style={styles.productPriceCommande}>
-            <Text style={styles.productPrice}>2000FCFA</Text>
-            <TouchableOpacity>
-              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                Commander
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.productPriceCommande}>
+              <Text style={styles.productPrice}>2000FCFA</Text>
+              <TouchableOpacity onPress={() => TestComponent(1)}>
+                <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                  Commander
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-        <View style={styles.commandeRapideView}>
-          <View style={styles.productDetails}>
-            <Image source={menu[0].img1} style={styles.img} />
-            <View style={styles.details}>
-              <Text style={styles.productName}>Pizza Mexicaine</Text>
-              <Text style={styles.detailsView}>Details...</Text>
-            </View>
-            <Text style={{ color: Colors.colorRed }}>Format</Text>
-          </View>
-          <View style={styles.productPriceCommande}>
-            <Text style={styles.productPrice}>2000FCFA</Text>
-            <TouchableOpacity>
-              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                Commander
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.commandeRapideView}>
-          <View style={styles.productDetails}>
-            <Image source={menu[0].img1} style={styles.img} />
-            <View style={styles.details}>
-              <Text style={styles.productName}>Pizza Mexicaine</Text>
-              <Text style={styles.detailsView}>Details...</Text>
-            </View>
-            <Text style={{ color: Colors.colorRed }}>Format</Text>
-          </View>
-          <View style={styles.productPriceCommande}>
-            <Text style={styles.productPrice}>2000FCFA</Text>
-            <TouchableOpacity>
-              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                Commander
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KkiapayProvider>
   );
 };
 
@@ -158,7 +128,7 @@ const styles = StyleSheet.create({
   productPrice: {
     color: Colors.colorRed,
     position: "relative",
-    left: 20,
+    left: 45,
   },
 });
 
