@@ -19,6 +19,8 @@ const ProductsDetails = () => {
     <ScrollView style={styles.container}>
       <View style={styles.productsDetailsView}>
         <Productdetailscomponent product={product} />
+        <Productdetailscomponent product={product} />
+        <Productdetailscomponent product={product} />
       </View>
     </ScrollView>
   );
