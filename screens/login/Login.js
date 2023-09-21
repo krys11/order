@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,8 +25,14 @@ import imgLogoDefault from "../../img/logo_default.jpeg";
 import Toast from "react-native-toast-message";
 //Color
 import { Colors } from "../../constant/Colors";
+//screen
+import Screenloader from "../screenLoader/Screenloader";
+//context
+import { MyContext } from "../../context/MyContext";
 
 const Login = () => {
+  const { isAuth } = useContext(MyContext);
+  //console.log("login::::::", isAuth);
   //variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -123,8 +130,8 @@ const Login = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.viewLogin}>
           <Toast />
           <View style={styles.viewImage}>
             <Image source={imgLogoDefault} style={styles.imgLogo} />
@@ -198,9 +205,11 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
+    flex: 1,
     backgroundColor: Colors.colorBlack,
+  },
+  viewLogin: {
+    flex: 1,
     justifyContent: "space-evenly",
     alignItems: "center",
   },

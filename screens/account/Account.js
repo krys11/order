@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   Image,
   KeyboardAvoidingView,
   ActivityIndicator,
@@ -23,7 +22,7 @@ import { Colors } from "../../constant/Colors";
 import TextinputComponent from "../../components/TextinputComponent";
 
 const Account = () => {
-  const { menu } = useContext(MyContext);
+  const { menu, setData } = useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -39,6 +38,7 @@ const Account = () => {
   const logOut = async () => {
     try {
       await onSignOut();
+      setData("");
     } catch (error) {
       let er;
       console.log(error);
@@ -83,8 +83,8 @@ const Account = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.viewContainer}>
           <Toast />
           <View style={styles.userDetailsView}>
             <Image
@@ -120,7 +120,7 @@ const Account = () => {
                 A propos
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnLOgout} onPress={() => logOut()}>
+            <TouchableOpacity style={styles.btnLOgout} onPress={logOut}>
               <Text style={{ color: Colors.colorWhite }}>Se Deconnecter</Text>
             </TouchableOpacity>
           </View>
@@ -132,8 +132,10 @@ const Account = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").height,
+    flex: 1,
+  },
+  viewContainer: {
+    flex: 1,
     backgroundColor: Colors.colorBlack,
     padding: 20,
   },
@@ -178,9 +180,6 @@ const styles = StyleSheet.create({
   listParams: {
     justifyContent: "center",
     alignItems: "center",
-    flex: 1,
-    position: "relative",
-    bottom: 30,
   },
   btnLOgout: {
     backgroundColor: Colors.colorRed,

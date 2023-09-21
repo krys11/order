@@ -8,14 +8,13 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 
-//img
-import { ImageSlider } from "react-native-image-slider-banner";
 //navigation param
 import { useRoute } from "@react-navigation/native";
 //context
 import { MyContext } from "../../context/MyContext";
 //Color
 import { Colors } from "../../constant/Colors";
+import Productdetailscomponent from "../../components/Productdetailscomponent";
 
 const ProductsDetails = () => {
   const { params } = useRoute();
@@ -26,144 +25,7 @@ const ProductsDetails = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.productsDetailsView}>
-        <View style={[styles.productsDetailsFormat]}>
-          <View style={{ width: "100%", height: 200 }}>
-            <ImageSlider
-              data={[
-                {
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-                },
-                {
-                  img: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-                },
-                {
-                  img: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-                },
-              ]}
-              autoPlay={true}
-              closeIconColor="#fff"
-              caroselImageStyle={{
-                resizeMode: "cover",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
-              timer={3000}
-            />
-          </View>
-          <View style={styles.format}>
-            <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-              Petit Format
-            </Text>
-            <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-              {product.title}
-            </Text>
-          </View>
-          <Text style={{ fontWeight: "400", color: Colors.colorWhite }}>
-            Sauce, Pain, Sel, Oignon
-          </Text>
-          <View style={styles.priceCommande}>
-            <Text style={{ color: Colors.colorRed, fontWeight: "bold" }}>
-              1000FCFA
-            </Text>
-            <TouchableOpacity>
-              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                Commander
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={[styles.productsDetailsFormat]}>
-          <View style={{ width: "100%", height: 200 }}>
-            <ImageSlider
-              data={[
-                {
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-                },
-                {
-                  img: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-                },
-                {
-                  img: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-                },
-              ]}
-              autoPlay={true}
-              closeIconColor="#fff"
-              caroselImageStyle={{
-                resizeMode: "cover",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
-              timer={4000}
-            />
-          </View>
-          <View style={styles.format}>
-            <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-              Format Moyen
-            </Text>
-            <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-              {product.title}
-            </Text>
-          </View>
-          <Text style={{ fontWeight: "400", color: Colors.colorWhite }}>
-            Sauce, Pain, Sel, Oignon
-          </Text>
-          <View style={styles.priceCommande}>
-            <Text style={{ color: Colors.colorRed, fontWeight: "bold" }}>
-              1000FCFA
-            </Text>
-            <TouchableOpacity>
-              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                Commander
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={[styles.productsDetailsFormat]}>
-          <View style={{ width: "100%", height: 200 }}>
-            <ImageSlider
-              data={[
-                {
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-                },
-                {
-                  img: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-                },
-                {
-                  img: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-                },
-              ]}
-              autoPlay={true}
-              closeIconColor="#fff"
-              caroselImageStyle={{
-                resizeMode: "cover",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
-              timer={2000}
-            />
-          </View>
-          <View style={styles.format}>
-            <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-              Grand Format
-            </Text>
-            <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-              {product.title}
-            </Text>
-          </View>
-          <Text style={{ fontWeight: "400", color: Colors.colorWhite }}>
-            Sauce, Pain, Sel, Oignon
-          </Text>
-          <View style={styles.priceCommande}>
-            <Text style={{ color: Colors.colorRed, fontWeight: "bold" }}>
-              1000FCFA
-            </Text>
-            <TouchableOpacity>
-              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                Commander
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Productdetailscomponent product={product} />
       </View>
     </ScrollView>
   );
@@ -171,11 +33,11 @@ const ProductsDetails = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").height,
+    flex: 1,
+    backgroundColor: Colors.colorBlack,
   },
   productsDetailsView: {
-    padding: 25,
+    padding: 20,
     backgroundColor: Colors.colorBlack,
   },
   productsDetailsFormat: {

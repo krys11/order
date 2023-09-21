@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainStackNavigator } from "./routes/StackNavigator";
 import BottomTabNavigator from "./routes/TabNavigator";
@@ -11,9 +11,11 @@ import { auth } from "./firebase/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 //img
 import logoDefault from "./img/logo_default.jpeg";
+import Screenloader from "./screens/screenLoader/Screenloader";
 
 export default function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
+  const [isAuth, setIsAuth] = useState(false);
 
   const menu = [
     {
@@ -44,8 +46,6 @@ export default function App() {
       id: "4",
       title: "Jus",
       // img1: "./img/logo_default.jpeg",
-      // img2: "./img/logo_default.jpeg",
-      // img3: "./img/logo_default.jpeg",
       img1: logoDefault,
       img2: logoDefault,
       img3: logoDefault,
@@ -66,6 +66,14 @@ export default function App() {
     },
   ];
 
+  const format = [
+    { key: "0", value: "Petit" },
+    { key: "1", value: "Moyen" },
+    { key: "2", value: "Large" },
+  ];
+
+  const price = [1000, 2000, 3000];
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setData(user);
@@ -73,7 +81,9 @@ export default function App() {
   });
 
   return (
-    <MyContext.Provider value={{ auth, menu }}>
+    <MyContext.Provider
+      value={{ auth, data, setData, setIsAuth, isAuth, menu, format, price }}
+    >
       <NavigationContainer>
         {data ? <BottomTabNavigator /> : <MainStackNavigator />}
       </NavigationContainer>

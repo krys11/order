@@ -8,7 +8,167 @@ const Order = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.commandeDetailsView}>
-        <View style={[styles.commandeDetailsFormat]}>
+        <View style={styles.commandeDetailsFormat}>
+          <Text style={{ color: Colors.colorWhite }}>
+            Date : 02/09/2023 13h:13
+          </Text>
+          <View style={styles.commandeDetails}>
+            <View style={styles.rowOne}>
+              <Text style={{ color: Colors.colorWhite }}>Nom</Text>
+              <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
+              <Text style={{ color: Colors.colorWhite }}>Montant</Text>
+              <Text style={{ color: Colors.colorWhite }}>Status</Text>
+            </View>
+            <View style={styles.rowTwo}>
+              <Text style={{ color: Colors.colorWhite }}>Piza</Text>
+              <Text style={{ color: Colors.colorWhite }}>2000</Text>
+              <Text
+                style={{
+                  color: Colors.colorWhite,
+                  position: "relative",
+                  left: 25,
+                }}
+              >
+                2000
+              </Text>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Confirmer
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={{ color: Colors.colorWhite }}>Petit Format</Text>
+          </View>
+        </View>
+        <View style={styles.commandeDetailsFormat}>
+          <Text style={{ color: Colors.colorWhite }}>
+            Date : 02/09/2023 13h:13
+          </Text>
+          <View style={styles.commandeDetails}>
+            <View style={styles.rowOne}>
+              <Text style={{ color: Colors.colorWhite }}>Nom</Text>
+              <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
+              <Text style={{ color: Colors.colorWhite }}>Montant</Text>
+              <Text style={{ color: Colors.colorWhite }}>Status</Text>
+            </View>
+            <View style={styles.rowTwo}>
+              <Text style={{ color: Colors.colorWhite }}>Piza</Text>
+              <Text style={{ color: Colors.colorWhite }}>2000</Text>
+              <Text
+                style={{
+                  color: Colors.colorWhite,
+                  position: "relative",
+                  left: 25,
+                }}
+              >
+                2000
+              </Text>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Confirmer
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={{ color: Colors.colorWhite }}>Petit Format</Text>
+          </View>
+        </View>
+        <View style={styles.commandeDetailsFormat}>
+          <Text style={{ color: Colors.colorWhite }}>
+            Date : 02/09/2023 13h:13
+          </Text>
+          <View style={styles.commandeDetails}>
+            <View style={styles.rowOne}>
+              <Text style={{ color: Colors.colorWhite }}>Nom</Text>
+              <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
+              <Text style={{ color: Colors.colorWhite }}>Montant</Text>
+              <Text style={{ color: Colors.colorWhite }}>Status</Text>
+            </View>
+            <View style={styles.rowTwo}>
+              <Text style={{ color: Colors.colorWhite }}>Piza</Text>
+              <Text style={{ color: Colors.colorWhite }}>2000</Text>
+              <Text
+                style={{
+                  color: Colors.colorWhite,
+                  position: "relative",
+                  left: 25,
+                }}
+              >
+                2000
+              </Text>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Confirmer
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={{ color: Colors.colorWhite }}>Petit Format</Text>
+          </View>
+        </View>
+        <View style={styles.commandeDetailsFormat}>
+          <Text style={{ color: Colors.colorWhite }}>
+            Date : 02/09/2023 13h:13
+          </Text>
+          <View style={styles.commandeDetails}>
+            <View style={styles.rowOne}>
+              <Text style={{ color: Colors.colorWhite }}>Nom</Text>
+              <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
+              <Text style={{ color: Colors.colorWhite }}>Montant</Text>
+              <Text style={{ color: Colors.colorWhite }}>Status</Text>
+            </View>
+            <View style={styles.rowTwo}>
+              <Text style={{ color: Colors.colorWhite }}>Piza</Text>
+              <Text style={{ color: Colors.colorWhite }}>2000</Text>
+              <Text
+                style={{
+                  color: Colors.colorWhite,
+                  position: "relative",
+                  left: 25,
+                }}
+              >
+                2000
+              </Text>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Confirmer
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={{ color: Colors.colorWhite }}>Petit Format</Text>
+          </View>
+        </View>
+        <View style={styles.commandeDetailsFormat}>
+          <Text style={{ color: Colors.colorWhite }}>
+            Date : 02/09/2023 13h:13
+          </Text>
+          <View style={styles.commandeDetails}>
+            <View style={styles.rowOne}>
+              <Text style={{ color: Colors.colorWhite }}>Nom</Text>
+              <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
+              <Text style={{ color: Colors.colorWhite }}>Montant</Text>
+              <Text style={{ color: Colors.colorWhite }}>Status</Text>
+            </View>
+            <View style={styles.rowTwo}>
+              <Text style={{ color: Colors.colorWhite }}>Piza</Text>
+              <Text style={{ color: Colors.colorWhite }}>2000</Text>
+              <Text
+                style={{
+                  color: Colors.colorWhite,
+                  position: "relative",
+                  left: 25,
+                }}
+              >
+                2000
+              </Text>
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Confirmer
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={{ color: Colors.colorWhite }}>Petit Format</Text>
+          </View>
+        </View>
+        <View style={styles.commandeDetailsFormat}>
           <Text style={{ color: Colors.colorWhite }}>
             Date : 02/09/2023 13h:13
           </Text>
@@ -47,10 +207,9 @@ const Order = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").height,
+    flex: 1,
     backgroundColor: Colors.colorBlack,
-    padding: 25,
+    padding: 20,
   },
   commandeDetailsView: {
     marginVertical: 10,

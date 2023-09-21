@@ -16,7 +16,8 @@ import { Colors } from "../../constant/Colors";
 import { MyContext } from "../../context/MyContext";
 //navigation
 import { useNavigation } from "@react-navigation/native";
-import { TestComponent } from "../../components/Testcomponents";
+//components
+import Comanderapidecomponent from "../../components/Comanderapidecomponent";
 
 const Home = ({ route }) => {
   const { menu } = useContext(MyContext);
@@ -38,26 +39,12 @@ const Home = ({ route }) => {
   return (
     <KkiapayProvider>
       <ScrollView style={styles.container}>
-        <View style={styles.listMenu}>{itemsMenu}</View>
-        <Text style={styles.itemName}>Commande Rapide:</Text>
-        <View style={styles.commandeRapideContainer}>
-          <View style={styles.commandeRapideView}>
-            <View style={styles.productDetails}>
-              <Image source={menu[0].img1} style={styles.img} />
-              <View style={styles.details}>
-                <Text style={styles.productName}>Pizza Mexicaine</Text>
-                <Text style={styles.detailsView}>Details...</Text>
-              </View>
-              <Text style={{ color: Colors.colorRed }}>Format</Text>
-            </View>
-            <View style={styles.productPriceCommande}>
-              <Text style={styles.productPrice}>2000FCFA</Text>
-              <TouchableOpacity onPress={() => TestComponent(1)}>
-                <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-                  Commander
-                </Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.viewContainer}>
+          <View style={styles.listMenu}>{itemsMenu}</View>
+          <Text style={styles.itemName}>Commande Rapide:</Text>
+          <View style={styles.commandeRapideContainer}>
+            <Comanderapidecomponent />
+            <Comanderapidecomponent />
           </View>
         </View>
       </ScrollView>
@@ -67,10 +54,12 @@ const Home = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
+    flex: 1,
     backgroundColor: Colors.colorBlack,
-    padding: 30,
+  },
+  viewContainer: {
+    flex: 1,
+    padding: 20,
   },
   listMenu: {
     flexDirection: "row",
@@ -95,41 +84,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingTop: 5,
   },
-  commandeRapideContainer: {
-    marginBottom: 50,
-  },
-  commandeRapideView: {
-    backgroundColor: Colors.colorBlackAlpha,
-    marginVertical: 5,
-    padding: 10,
-  },
-  productDetails: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  details: {
-    marginLeft: 15,
-  },
-  productName: {
-    color: Colors.colorWhite,
-    fontWeight: "bold",
-    fontSize: 20,
-    marginBottom: 15,
-  },
-  detailsView: {
-    color: Colors.colorWhite,
-  },
-  productPriceCommande: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 10,
-  },
-  productPrice: {
-    color: Colors.colorRed,
-    position: "relative",
-    left: 45,
-  },
+  commandeRapideContainer: {},
 });
-
 export default Home;

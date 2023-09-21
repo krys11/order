@@ -118,8 +118,8 @@ const ForgotPassword = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.viewForgotPassword}>
           <Toast />
           <View style={styles.viewImage}>
             <Image source={imgLogoDefault} style={styles.imgLogo} />
@@ -177,9 +177,11 @@ const ForgotPassword = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
+    flex: 1,
     backgroundColor: Colors.colorBlack,
+  },
+  viewForgotPassword: {
+    flex: 1,
     justifyContent: "space-evenly",
     alignItems: "center",
   },
