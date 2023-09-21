@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 
 //navigation param

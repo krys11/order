@@ -3,13 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   Image,
   ActivityIndicator,
   KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 

@@ -3,11 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   Image,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+//mycontext
 import React, { useContext } from "react";
 
 //Color

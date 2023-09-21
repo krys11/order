@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   ActivityIndicator,

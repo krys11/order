@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+//react_list_select
 import { SelectList } from "react-native-dropdown-select-list";
 import { useContext } from "react";
+//mycontext
 import { MyContext } from "../context/MyContext";
+//color
 import { Colors } from "../constant/Colors";
 
 const Selectformacomponent = ({ format, setSelectFormat, setFixPrice }) => {
