@@ -14,14 +14,17 @@ const ProductsDetails = () => {
   const { menu } = useContext(MyContext);
 
   const product = menu.find((item) => item.id === params.id);
+  const itemFormat = product["format"].map((item, index) => {
+    return (
+      <View key={index}>
+        <Productdetailscomponent product={product} item={item} />
+      </View>
+    );
+  });
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.productsDetailsView}>
-        <Productdetailscomponent product={product} />
-        <Productdetailscomponent product={product} />
-        <Productdetailscomponent product={product} />
-      </View>
+      <View style={styles.productsDetailsView}>{itemFormat}</View>
     </ScrollView>
   );
 };

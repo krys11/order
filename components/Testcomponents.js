@@ -15,12 +15,16 @@ const TestComponent = () => {
   const openWidget = () => {
     openKkiapayWidget({
       amount: 100,
-      key: "7acd0660528c11eebc8313ef873f17d5",
+      key: "3425dc6035d711eca8f5b92f2997955b",
       sandbox: true,
     });
   };
 
-  return openWidget;
+  return (
+    <View>
+      <Button title="Pay now" onPress={openWidget} />
+    </View>
+  );
 };
 
-export { TestComponent };
+export default TestComponent;

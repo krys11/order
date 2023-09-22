@@ -5,20 +5,20 @@ import { Colors } from "../constant/Colors";
 //img
 import { ImageSlider } from "react-native-image-slider-banner";
 
-const Productdetailscomponent = ({ product }) => {
+const Productdetailscomponent = ({ product, item }) => {
   return (
     <View style={styles.productsDetailsFormat}>
       <View style={{ width: "100%", height: 200 }}>
         <ImageSlider
           data={[
             {
-              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+              img: item.img1,
             },
             {
-              img: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+              img: item.img2,
             },
             {
-              img: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+              img: item.img3,
             },
           ]}
           autoPlay={true}
@@ -33,18 +33,18 @@ const Productdetailscomponent = ({ product }) => {
       </View>
       <View style={styles.format}>
         <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
-          Petit Format
+          Format: {item.nom}
         </Text>
         <Text style={{ fontWeight: "bold", color: Colors.colorWhite }}>
           {product.title}
         </Text>
       </View>
       <Text style={{ fontWeight: "400", color: Colors.colorWhite }}>
-        Sauce, Pain, Sel, Oignon
+        {item.details}
       </Text>
       <View style={styles.priceCommande}>
         <Text style={{ color: Colors.colorRed, fontWeight: "bold" }}>
-          1000FCFA
+          {item.price}FCFA
         </Text>
         <TouchableOpacity>
           <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>

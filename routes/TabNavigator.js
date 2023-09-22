@@ -9,8 +9,8 @@ import {
 } from "@expo/vector-icons";
 
 //Screen
-import Order from "../screens/order/Order";
-import Bills from "../screens/bills/Bills";
+import Commande from "../screens/commande/Commande";
+import Facture from "../screens/facture/Facture";
 
 //Color
 import { Colors } from "../constant/Colors";
@@ -98,8 +98,8 @@ const BottomTabNavigator = () => {
           headerShown: false,
         }}
       />
-      <Tab.Screen name="Commandes" component={Order} />
-      <Tab.Screen name="Factures" component={Bills} />
+      <Tab.Screen name="Commandes" component={Commande} />
+      <Tab.Screen name="Factures" component={Facture} />
       <Tab.Screen
         name="Compte"
         component={AccountStackNavigator}

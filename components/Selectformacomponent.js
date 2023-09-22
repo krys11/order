@@ -8,23 +8,29 @@ import { MyContext } from "../context/MyContext";
 //color
 import { Colors } from "../constant/Colors";
 
-const Selectformacomponent = ({ format, setSelectFormat, setFixPrice }) => {
+const Selectformacomponent = ({
+  itemformat,
+  setSelectFormat,
+  setFixPrice,
+  placeholder,
+  itemPrice,
+}) => {
   const { price } = useContext(MyContext);
 
   //function select format fix price
   const selectFormatAndAutoPrice = (val) => {
-    setSelectFormat(format[val].value);
-    setFixPrice(price[val]);
+    setSelectFormat(itemformat[val].value);
+    setFixPrice(itemPrice[val]);
   };
   return (
     <SelectList
-      placeholder="Format"
+      placeholder={placeholder}
       setSelected={(val) => selectFormatAndAutoPrice(val)}
-      data={format}
+      data={itemformat}
       dropdownShown={false}
-      dropdownTextStyles={{ color: Colors.colorRed }}
+      dropdownTextStyles={{ color: Colors.colorWhite }}
       boxStyles={{
-        width: 85,
+        height: 45,
         justifyContent: "center",
         alignItems: "center",
         borderColor: Colors.colorRed,

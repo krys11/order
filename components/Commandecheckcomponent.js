@@ -1,41 +1,53 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-//
+import React, { useContext, useState } from "react";
+//color
 import { Colors } from "../constant/Colors";
+//mycontext
+import { MyContext } from "../context/MyContext";
 
 const Commandecheckcomponent = () => {
-  return (
-    <View style={styles.commandeDetailsFormat}>
-      <Text style={{ color: Colors.colorWhite }}>Date : 02/09/2023 13h:13</Text>
-      <View style={styles.commandeDetails}>
-        <View style={styles.rowOne}>
-          <Text style={{ color: Colors.colorWhite }}>Nom</Text>
-          <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
-          <Text style={{ color: Colors.colorWhite }}>Montant</Text>
-          <Text style={{ color: Colors.colorWhite }}>Status</Text>
+  const { commande } = useContext(MyContext);
+
+  const itemCommande = commande.map((item, index) => {
+    return (
+      <View style={styles.commandeDetailsFormat} key={index}>
+        <Text style={{ color: Colors.colorWhite }}>
+          Date : {item.date} {item.heure}
+        </Text>
+        <View style={styles.commandeDetails}>
+          <View style={styles.rowOne}>
+            <Text style={{ color: Colors.colorWhite }}>Nom</Text>
+            <Text style={{ color: Colors.colorWhite }}>Nombres</Text>
+            <Text style={{ color: Colors.colorWhite }}>Montant</Text>
+            <Text style={{ color: Colors.colorWhite }}>Status</Text>
+          </View>
+          <View style={styles.rowTwo}>
+            <Text style={{ color: Colors.colorWhite }}>{item.name}</Text>
+            <Text style={{ color: Colors.colorWhite }}>{item.nombres}</Text>
+            <Text
+              style={{
+                color: Colors.colorWhite,
+                position: "relative",
+                left: 25,
+              }}
+            >
+              {item.montant}
+            </Text>
+            <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+              {item.status}
+            </Text>
+          </View>
         </View>
-        <View style={styles.rowTwo}>
-          <Text style={{ color: Colors.colorWhite }}>Piza</Text>
-          <Text style={{ color: Colors.colorWhite }}>2000</Text>
-          <Text
-            style={{
-              color: Colors.colorWhite,
-              position: "relative",
-              left: 25,
-            }}
-          >
-            2000
-          </Text>
-          <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-            Confirmer
+        <View>
+          <Text style={{ color: Colors.colorWhite }}>
+            Format: {item.format}
           </Text>
         </View>
       </View>
-      <View>
-        <Text style={{ color: Colors.colorWhite }}>Petit Format</Text>
-      </View>
-    </View>
-  );
+    );
+  });
+
+  return itemCommande;
 };
 
 const styles = StyleSheet.create({

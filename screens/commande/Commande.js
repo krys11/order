@@ -5,14 +5,10 @@ import React from "react";
 import { Colors } from "../../constant/Colors";
 import Commandecheckcomponent from "../../components/Commandecheckcomponent";
 
-const Order = () => {
+const Commande = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.commandeDetailsView}>
-        <Commandecheckcomponent />
-        <Commandecheckcomponent />
-        <Commandecheckcomponent />
-        <Commandecheckcomponent />
         <Commandecheckcomponent />
       </View>
     </ScrollView>
@@ -41,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Order;
+export default Commande;

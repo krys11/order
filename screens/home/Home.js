@@ -1,4 +1,3 @@
-import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 import {
   View,
   Text,
@@ -6,14 +5,18 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from "react-native";
 //mycontext
-import React, { useContext } from "react";
-
+import React, { useContext, Fragment } from "react";
+//Kkiapay
+import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 //Color
 import { Colors } from "../../constant/Colors";
 //context
 import { MyContext } from "../../context/MyContext";
+//Toast
+import Toast from "react-native-toast-message";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //components
@@ -23,6 +26,7 @@ const Home = ({ route }) => {
   const { menu } = useContext(MyContext);
   const navigation = useNavigation();
 
+  //item and click view details
   const itemsMenu = menu.map((item, index) => {
     return (
       <TouchableOpacity
@@ -30,9 +34,33 @@ const Home = ({ route }) => {
         key={index}
         onPress={() => navigation.navigate("Product Details", { id: item.id })}
       >
-        <Image source={item.img1} resizeMode="cover" style={styles.img} />
+        <Image source={item.img0} resizeMode="cover" style={styles.img} />
         <Text style={styles.itemName}>{item.title}</Text>
       </TouchableOpacity>
+    );
+  });
+
+  //item and click view details
+  const itemsCommandeRapide = menu.map((item, index) => {
+    const itemformat = [
+      { key: "0", value: item.format[0].nom },
+      { key: "1", value: item.format[1].nom },
+      { key: "2", value: item.format[2].nom },
+    ];
+    const itemPrice = [
+      item.format[0].price,
+      item.format[1].price,
+      item.format[2].price,
+    ];
+
+    return (
+      <Fragment key={index}>
+        <Comanderapidecomponent
+          item={item}
+          itemformat={itemformat}
+          itemPrice={itemPrice}
+        />
+      </Fragment>
     );
   });
 
@@ -43,8 +71,7 @@ const Home = ({ route }) => {
           <View style={styles.listMenu}>{itemsMenu}</View>
           <Text style={styles.itemName}>Commande Rapide:</Text>
           <View style={styles.commandeRapideContainer}>
-            <Comanderapidecomponent />
-            <Comanderapidecomponent />
+            {itemsCommandeRapide}
           </View>
         </View>
       </ScrollView>
@@ -54,11 +81,12 @@ const Home = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").height,
     backgroundColor: Colors.colorBlack,
+    padding: 20,
   },
   viewContainer: {
-    flex: 1,
     padding: 20,
   },
   listMenu: {
