@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
+//AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //firebase function
@@ -27,11 +28,10 @@ import { Colors } from "../../constant/Colors";
 import Screenloader from "../screenLoader/Screenloader";
 //context
 import { MyContext } from "../../context/MyContext";
+import { getUserData } from "../../firebase/Firebase";
 
 const Login = () => {
-  const { isAuth } = useContext(MyContext);
-  //console.log("login::::::", isAuth);
-  //variables
+  const { setDataLogin, setUserUID } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -66,6 +66,14 @@ const Login = () => {
     });
   };
 
+  const saveUserUIDLocal = async (useruid) => {
+    try {
+      await AsyncStorage.setItem("userUid", useruid);
+    } catch (error) {
+      console.log("AsynLogin::::::", error);
+    }
+  };
+
   const userLogin = async () => {
     let er;
     Keyboard.dismiss();
@@ -75,11 +83,22 @@ const Login = () => {
     try {
       const UserCredential = await onLogin(email, password);
       if (UserCredential) {
-        setActivityIndicator(false);
-        setDisableTouchable(true);
-        cleanVariable();
-        console.log("Login:::: ", UserCredential);
-        showToastSuccess();
+        try {
+          await saveUserUIDLocal(UserCredential.user.uid);
+          try {
+            const dataCheck = await getUserData(UserCredential.user.uid);
+            console.log("Login:::: ", UserCredential);
+            setDataLogin(dataCheck.data());
+            setActivityIndicator(false);
+            setDisableTouchable(true);
+            cleanVariable();
+            showToastSuccess();
+          } catch (error) {
+            console.log("LoginErrorgetUserData:::::::::", error);
+          }
+        } catch (error) {
+          console.log("LoginErrorAsyncSave::::::::", error);
+        }
       }
     } catch (error) {
       setActivityIndicator(false);

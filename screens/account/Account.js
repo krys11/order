@@ -20,9 +20,11 @@ import { MyContext } from "../../context/MyContext";
 import { Colors } from "../../constant/Colors";
 //components
 import TextinputComponent from "../../components/TextinputComponent";
+//AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account = () => {
-  const { menu, setData } = useContext(MyContext);
+  const { menu, setData, dataLogin } = useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -37,14 +39,27 @@ const Account = () => {
 
   const logOut = async () => {
     try {
-      await onSignOut();
-      setData("");
+      await AsyncStorage.removeItem("userUid");
+      console.log("remove succes");
+      try {
+        await onSignOut();
+        setData("");
+      } catch (error) {
+        if (error.code === "auth/network-request-failed") {
+          er = "Vérifier votre connexion internet";
+          setErrMsg(er);
+        } else {
+          console.log(error);
+        }
+      }
     } catch (error) {
       let er;
       console.log(error);
       if (error.code === "auth/network-request-failed") {
         er = "Vérifier votre connexion internet";
         setErrMsg(er);
+      } else {
+        console.log(error);
       }
     }
   };
@@ -93,9 +108,9 @@ const Account = () => {
               style={styles.imgAccount}
             />
             <Text style={{ color: Colors.colorWhite, marginVertical: 10 }}>
-              Nom Prenom
+              {dataLogin.name}
             </Text>
-            <Text style={{ color: Colors.colorWhite }}>Telephone</Text>
+            <Text style={{ color: Colors.colorWhite }}> {dataLogin.tel}</Text>
           </View>
           <KeyboardAvoidingView behavior="position">
             <View style={styles.passwordChangeView}>
@@ -114,10 +129,15 @@ const Account = () => {
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
+          <View>
+            <TouchableOpacity>
+              <Text style={{ color: Colors.colorWhite }}>Supprimer Compte</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.listParams}>
             <TouchableOpacity>
               <Text style={{ color: Colors.colorWhite, marginBottom: 70 }}>
-                A propos
+                A proposs
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnLOgout} onPress={logOut}>

@@ -12,7 +12,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 //firebase function
-import { onRegister } from "../../firebase/Firebase";
+import { onRegister, setUserCollection } from "../../firebase/Firebase";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //components
@@ -26,6 +26,7 @@ import { Colors } from "../../constant/Colors";
 
 const Register = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [tel, setTel] = useState("");
   const [password, setPassword] = useState("");
@@ -68,12 +69,22 @@ const Register = () => {
       try {
         const UserCredential = await onRegister(email, password);
         if (UserCredential) {
-          setActivityIndicator(false);
-          setDisableTouchable(true);
-          cleanVariable();
-          showToastSuccess();
+          try {
+            await setUserCollection(UserCredential.user.uid, {
+              email,
+              tel,
+              name,
+            });
+            setActivityIndicator(false);
+            setDisableTouchable(true);
+            cleanVariable();
+            showToastSuccess();
+          } catch (error) {
+            console.log("Register:::::", error);
+          }
+        } else {
+          return;
         }
-        setLoader(false);
       } catch (error) {
         setActivityIndicator(false);
         setDisableTouchable(false);
@@ -109,16 +120,17 @@ const Register = () => {
   //useEffect
   useEffect(() => {
     if (
-      email.length != 0 &&
-      tel.length != 0 &&
-      password.length &&
-      password2.length
+      name.length !== 0 &&
+      email.length !== 0 &&
+      tel.length !== 0 &&
+      password.length !== 0 &&
+      password2.length !== 0
     ) {
       setDisableTouchable(false);
     } else {
       setDisableTouchable(true);
     }
-  }, [email, password]);
+  }, [email, password, name]);
 
   useEffect(() => {
     if (errMsg !== "") {
@@ -137,79 +149,89 @@ const Register = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <View style={styles.viewRegister}>
+        <KeyboardAvoidingView behavior="height" style={styles.viewRegister}>
           <Toast />
           <View style={styles.viewImage}>
             <Image source={imgLogoDefault} style={styles.imgLogo} />
           </View>
-          <KeyboardAvoidingView behavior="position">
-            <View style={styles.containerZone}>
-              <Text
-                style={[
-                  styles.textColorWhite,
-                  styles.textBold,
-                  styles.textConnectionSize,
-                ]}
-              >
-                Inscription
-              </Text>
-              <View>
-                <View style={styles.inputViewMargin}>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Email
-                  </Text>
 
-                  <TextinputComponent
-                    value={email}
-                    placeholder="Email"
-                    setValue={setEmail}
-                  />
-                </View>
-                <View style={styles.inputViewMargin}>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Telephone
-                  </Text>
+          <View style={styles.containerZone}>
+            <Text
+              style={[
+                styles.textColorWhite,
+                styles.textBold,
+                styles.textConnectionSize,
+              ]}
+            >
+              Inscription
+            </Text>
+            <View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Prénom
+                </Text>
 
-                  <TextinputComponent
-                    value={tel}
-                    placeholder="Telephone"
-                    setValue={setTel}
-                  />
-                </View>
-                <View style={styles.inputViewMargin}>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Mot de passe
-                  </Text>
-
-                  <TextinputComponent
-                    value={password}
-                    placeholder="Mot de passe"
-                    setValue={setPassword}
-                    secureTextEntry={true}
-                  />
-                </View>
-                <View>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Confirmer mot de passe
-                  </Text>
-
-                  <TextinputComponent
-                    value={password2}
-                    placeholder="Confirme mot de passe"
-                    setValue={setPassword2}
-                    secureTextEntry={true}
-                  />
-                </View>
+                <TextinputComponent
+                  value={name}
+                  placeholder="Prénom"
+                  setValue={setName}
+                />
               </View>
-              <TouchableOpacity
-                style={styles.btnRegiste}
-                onPress={userRegister}
-                disabled={disableTouchable}
-              >
-                {btnRegister}
-              </TouchableOpacity>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Email
+                </Text>
+
+                <TextinputComponent
+                  value={email}
+                  placeholder="Email"
+                  setValue={setEmail}
+                />
+              </View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Telephone
+                </Text>
+
+                <TextinputComponent
+                  value={tel}
+                  placeholder="Telephone"
+                  setValue={setTel}
+                />
+              </View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Mot de passe
+                </Text>
+
+                <TextinputComponent
+                  value={password}
+                  placeholder="Mot de passe"
+                  setValue={setPassword}
+                  secureTextEntry={true}
+                />
+              </View>
+              <View>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Confirmer mot de passe
+                </Text>
+
+                <TextinputComponent
+                  value={password2}
+                  placeholder="Confirme mot de passe"
+                  setValue={setPassword2}
+                  secureTextEntry={true}
+                />
+              </View>
             </View>
-          </KeyboardAvoidingView>
+            <TouchableOpacity
+              style={styles.btnRegiste}
+              onPress={userRegister}
+              disabled={disableTouchable}
+            >
+              {btnRegister}
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.footer}>
             <Text style={styles.textColorWhite}>
@@ -219,7 +241,7 @@ const Register = () => {
               <Text style={styles.textColorRed}>Connectez vous</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -263,7 +285,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   inputViewMargin: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   textMargin: {
     paddingBottom: 5,
