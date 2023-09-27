@@ -12,13 +12,14 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logoDefault from "./img/logo_default.jpeg";
 //AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Screenloader from "./screens/screenLoader/Screenloader";
 
 export default function App() {
   const auth = getAuth(app);
   const [data, setData] = useState();
   const [dataLogin, setDataLogin] = useState();
   const [userUID, setUserUID] = useState();
-  const [isAuth, setIsAuth] = useState(false);
+  const [loading, setLoading] = useState();
   console.log("app::::::::::::", userUID);
 
   const [menu, setMenu] = useState([
@@ -92,6 +93,7 @@ export default function App() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
+      console.log(user);
       setData(user);
     });
   }, []);
@@ -103,6 +105,7 @@ export default function App() {
           const dataCheck = await getUserData(userUID);
           console.log("datacheck::::", dataCheck.data());
           setDataLogin(dataCheck.data());
+          setLoading(true);
         } catch (error) {
           console.log(error);
         }
@@ -142,29 +145,31 @@ export default function App() {
     getDataAsyncLocal();
   }, []);
 
-  return (
-    <MyContext.Provider
-      value={{
-        auth,
-        data,
-        setData,
-        isAuth,
-        setIsAuth,
-        menu,
-        setMenu,
-        commande,
-        setCommande,
-        facture,
-        setFacture,
-        dataLogin,
-        setDataLogin,
-        userUID,
-        setUserUID,
-      }}
-    >
-      <NavigationContainer>
-        {data ? <BottomTabNavigator /> : <MainStackNavigator />}
-      </NavigationContainer>
-    </MyContext.Provider>
-  );
+  if (!loading) {
+    return <Screenloader />;
+  } else {
+    return (
+      <MyContext.Provider
+        value={{
+          auth,
+          data,
+          setData,
+          menu,
+          setMenu,
+          commande,
+          setCommande,
+          facture,
+          setFacture,
+          dataLogin,
+          setDataLogin,
+          userUID,
+          setUserUID,
+        }}
+      >
+        <NavigationContainer>
+          {data ? <BottomTabNavigator /> : <MainStackNavigator />}
+        </NavigationContainer>
+      </MyContext.Provider>
+    );
+  }
 }
