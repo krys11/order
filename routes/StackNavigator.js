@@ -1,5 +1,5 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import { Header, createStackNavigator } from "@react-navigation/stack";
 
 //Screen
 import Home from "../screens/home/Home";
@@ -17,12 +17,26 @@ const stack = createStackNavigator();
 
 const MainStackNavigator = () => {
   return (
-    <stack.Navigator
-      initialRouteName="welcome"
-      screenOptions={{ header: () => null }}
-    >
+    <stack.Navigator initialRouteName="welcome">
       <stack.Screen name="Welcome" component={Welcome} />
-      <stack.Screen name="Login" component={Login} />
+      <stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerTitle: "Connexion",
+          headerTitleAlign: "center",
+          headerBackgroundContainerStyle: {
+            backgroundColor: Colors.colorBlack,
+          },
+          headerStyle: {
+            height: 100,
+            borderBottomLeftRadius: 50,
+            borderBottomRightRadius: 50,
+            backgroundColor: Colors.colorWhiteFade,
+            borderColor: Colors.colorWhiteFade,
+          },
+        }}
+      />
       <stack.Screen name="Register" component={Register} />
       <stack.Screen name="Forgotpassword" component={ForgotPassword} />
     </stack.Navigator>

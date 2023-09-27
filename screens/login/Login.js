@@ -146,89 +146,89 @@ const Login = () => {
   );
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.viewLogin}>
-          <Toast />
-          <View style={styles.viewImage}>
-            <Image source={imgLogoDefault} style={styles.imgLogo} />
-          </View>
-          <KeyboardAvoidingView behavior="position">
-            <View style={styles.containerZone}>
-              <Text
-                style={[
-                  styles.textColorWhite,
-                  styles.textBold,
-                  styles.textConnectionSize,
-                ]}
-              >
-                Connexion
-              </Text>
-              <View>
-                <View style={styles.inputViewMargin}>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Email
-                  </Text>
+    <View style={styles.container}>
+      <View style={styles.viewLogin}>
+        <Toast />
+        <View style={styles.viewImage}>
+          <Image source={imgLogoDefault} style={styles.imgLogo} />
+        </View>
+        <KeyboardAvoidingView behavior="position">
+          <View style={styles.containerZone}>
+            <Text
+              style={[
+                styles.textColorWhite,
+                styles.textBold,
+                styles.textConnectionSize,
+              ]}
+            >
+              Connexion
+            </Text>
+            <View>
+              <View style={styles.inputViewMargin}>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Email
+                </Text>
 
-                  <TextinputComponent
-                    value={email}
-                    placeholder="Email"
-                    setValue={setEmail}
-                  />
-                </View>
-                <View>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Mot de passe
-                  </Text>
-
-                  <TextinputComponent
-                    value={password}
-                    placeholder="Mot de passe"
-                    setValue={setPassword}
-                    secureTextEntry={true}
-                  />
-                </View>
+                <TextinputComponent
+                  value={email}
+                  placeholder="Email"
+                  setValue={setEmail}
+                />
               </View>
-              <TouchableOpacity
-                style={styles.btnConnect}
-                onPress={userLogin}
-                disabled={disableTouchable}
-              >
-                {btnLogin}
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
-          <View style={styles.footer}>
-            <View style={styles.footerRegsiter}>
-              <Text style={styles.textColorWhite}>
-                Vous n'avez pas de compte ?{" "}
-              </Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                <Text style={styles.textColorRed}>Creer un compte</Text>
-              </TouchableOpacity>
+              <View>
+                <Text style={[styles.textColorWhite, styles.textMargin]}>
+                  Mot de passe
+                </Text>
+
+                <TextinputComponent
+                  value={password}
+                  placeholder="Mot de passe"
+                  setValue={setPassword}
+                  secureTextEntry={true}
+                />
+              </View>
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Forgotpassword")}
-              style={styles.footerPassword}
+              style={styles.btnConnect}
+              onPress={userLogin}
+              disabled={disableTouchable}
             >
-              <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
+              {btnLogin}
             </TouchableOpacity>
           </View>
+        </KeyboardAvoidingView>
+        <View style={styles.footer}>
+          <View style={styles.footerRegsiter}>
+            <Text style={styles.textColorWhite}>
+              Vous n'avez pas de compte ?{" "}
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text style={styles.textColorRed}>Creer un compte</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Forgotpassword")}
+            style={styles.footerPassword}
+          >
+            <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
     backgroundColor: Colors.colorBlack,
   },
   viewLogin: {
-    flex: 1,
+    flex: 0.8,
     justifyContent: "space-evenly",
-    alignItems: "center",
+    backgroundColor: Colors.colorBlackAlpha,
   },
   viewImage: {
     justifyContent: "center",
