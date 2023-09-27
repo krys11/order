@@ -24,7 +24,7 @@ import TextinputComponent from "../../components/TextinputComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account = () => {
-  const { menu, setData, dataLogin } = useContext(MyContext);
+  const { menu, setData, dataLogin, setDataLogin } = useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -43,7 +43,7 @@ const Account = () => {
       console.log("remove succes");
       try {
         await onSignOut();
-        setData("");
+        setDataLogin("");
       } catch (error) {
         if (error.code === "auth/network-request-failed") {
           er = "Vérifier votre connexion internet";

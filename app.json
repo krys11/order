@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "order",
-    "slug": "order",
+    "slug": "orderapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4223707b-1811-472c-b2e5-da3176e497ee"
+      }
+    },
+    "owner": "krysdario1996"
   }
 }

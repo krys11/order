@@ -20,7 +20,7 @@ export default function App() {
   const [dataLogin, setDataLogin] = useState();
   const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState();
-  console.log("app::::::::::::", userUID);
+  // console.log("app::::::::::::", userUID);
 
   const [menu, setMenu] = useState([
     {
@@ -91,33 +91,8 @@ export default function App() {
 
   const [facture, setFacture] = useState([]);
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      console.log(user);
-      setData(user);
-    });
-  }, []);
-
   useLayoutEffect(() => {
-    async function checkData() {
-      if (userUID) {
-        try {
-          const dataCheck = await getUserData(userUID);
-          console.log("datacheck::::", dataCheck.data());
-          setDataLogin(dataCheck.data());
-          setLoading(true);
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        return;
-      }
-    }
-
-    checkData();
-  }, [userUID]);
-
-  useLayoutEffect(() => {
+    console.log("1");
     async function getDataAsyncLocal() {
       try {
         const nameLocalAsyncVariable = await AsyncStorage.getItem("userUid");
@@ -128,13 +103,16 @@ export default function App() {
             try {
               const dataCheck = await getUserData(data.uid);
               setDataLogin(dataCheck.data());
+              setLoading(true);
             } catch (error) {
-              console.log(error);
+              console.log("premier use:::", error);
             }
-            // .then((userData) => setDataLogin(userData.data()))
-            // .catch((error) => console.log(error));
           } else {
-            return;
+            console.log("personne");
+            setLoading(true);
+            // if (!data) {
+            //   setLoading(true);
+            // }
           }
         }
       } catch (error) {
@@ -145,6 +123,39 @@ export default function App() {
     getDataAsyncLocal();
   }, []);
 
+  useLayoutEffect(() => {
+    console.log("2");
+    async function checkData() {
+      if (userUID) {
+        try {
+          const dataCheck = await getUserData(userUID);
+          // console.log("datacheck::::", dataCheck.data());
+          setDataLogin(dataCheck.data());
+          setLoading(true);
+        } catch (error) {
+          console.log("second use:::", error);
+        }
+      } else {
+        return;
+      }
+    }
+
+    checkData();
+  }, [userUID]);
+
+  // useEffect(() => {
+  //   console.log("3");
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setData(user);
+  //     } else {
+  //       if (!data) {
+  //         setLoading(true);
+  //       }
+  //     }
+  //   });
+  // });
+
   if (!loading) {
     return <Screenloader />;
   } else {
@@ -152,8 +163,6 @@ export default function App() {
       <MyContext.Provider
         value={{
           auth,
-          data,
-          setData,
           menu,
           setMenu,
           commande,
@@ -167,7 +176,7 @@ export default function App() {
         }}
       >
         <NavigationContainer>
-          {data ? <BottomTabNavigator /> : <MainStackNavigator />}
+          {dataLogin ? <BottomTabNavigator /> : <MainStackNavigator />}
         </NavigationContainer>
       </MyContext.Provider>
     );

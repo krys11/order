@@ -31,7 +31,7 @@ import { MyContext } from "../../context/MyContext";
 import { getUserData } from "../../firebase/Firebase";
 
 const Login = () => {
-  const { setDataLogin, setUserUID } = useContext(MyContext);
+  const { setDataLogin } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
