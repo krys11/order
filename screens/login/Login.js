@@ -148,21 +148,11 @@ const Login = () => {
   return (
     <View style={styles.container}>
       <View style={styles.viewLogin}>
-        <Toast />
         <View style={styles.viewImage}>
           <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
         <KeyboardAvoidingView behavior="position">
           <View style={styles.containerZone}>
-            <Text
-              style={[
-                styles.textColorWhite,
-                styles.textBold,
-                styles.textConnectionSize,
-              ]}
-            >
-              Connexion
-            </Text>
             <View>
               <View style={styles.inputViewMargin}>
                 <Text style={[styles.textColorWhite, styles.textMargin]}>
@@ -214,6 +204,7 @@ const Login = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <Toast />
     </View>
   );
 };
@@ -228,7 +219,6 @@ const styles = StyleSheet.create({
   viewLogin: {
     flex: 0.8,
     justifyContent: "space-evenly",
-    backgroundColor: Colors.colorBlackAlpha,
   },
   viewImage: {
     justifyContent: "center",
