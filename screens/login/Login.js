@@ -24,10 +24,9 @@ import imgLogoDefault from "../../img/logo_default.jpeg";
 import Toast from "react-native-toast-message";
 //Color
 import { Colors } from "../../constant/Colors";
-//screen
-import Screenloader from "../screenLoader/Screenloader";
 //context
 import { MyContext } from "../../context/MyContext";
+//Firestore
 import { getUserData } from "../../firebase/Firebase";
 
 const Login = () => {
@@ -66,6 +65,7 @@ const Login = () => {
     });
   };
 
+  //save user UID LOCAL
   const saveUserUIDLocal = async (useruid) => {
     try {
       await AsyncStorage.setItem("userUid", useruid);
@@ -74,6 +74,7 @@ const Login = () => {
     }
   };
 
+  //function login
   const userLogin = async () => {
     let er;
     Keyboard.dismiss();
@@ -151,7 +152,7 @@ const Login = () => {
         <View style={styles.viewImage}>
           <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
-        <KeyboardAvoidingView behavior="position">
+        <KeyboardAvoidingView behavior="padding">
           <View style={styles.containerZone}>
             <View>
               <View style={styles.inputViewMargin}>
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
   },
   viewLogin: {
     flex: 0.8,
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
   },
   viewImage: {
     justifyContent: "center",
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
   containerZone: {
     backgroundColor: Colors.colorBlackAlpha,
     width: 350,
-    height: 300,
+    height: 250,
     alignItems: "center",
     justifyContent: "space-around",
   },
