@@ -19,7 +19,7 @@ import { onLogin } from "../../firebase/Firebase";
 //components
 import TextinputComponent from "../../components/TextinputComponent";
 //img
-import imgLogoDefault from "../../img/logo_default.jpeg";
+import imgLogoDefault from "../../assets/img/logo_default.jpeg";
 //Toast
 import Toast from "react-native-toast-message";
 //Color

@@ -9,7 +9,7 @@ import { app, getUserData } from "./firebase/Firebase";
 //firebase auth
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 //img
-import logoDefault from "./img/logo_default.jpeg";
+import logoDefault from "./assets/img/logo_default.jpeg";
 //AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screenloader from "./screens/screenLoader/Screenloader";

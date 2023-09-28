@@ -5,6 +5,7 @@ const Colors = {
   colorRed: "#BD0000",
   colorBlackAlpha: "rgba(18,18,18,0.5)",
   colorGreen: "#1D4D01",
+  colorsEffectBackgroung: "rgba(255,255,255,0.3)",
 };
 
 export { Colors };

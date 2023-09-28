@@ -20,7 +20,7 @@ import TextinputComponent from "../../components/TextinputComponent";
 //Toast
 import Toast from "react-native-toast-message";
 //img
-import imgLogoDefault from "../../img/logo_default.jpeg";
+import imgLogoDefault from "../../assets/img/logo_default.jpeg";
 //Color
 import { Colors } from "../../constant/Colors";
 
