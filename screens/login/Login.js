@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
@@ -21,13 +20,65 @@ import TextinputComponent from "../../components/TextinputComponent";
 //img
 import imgLogoDefault from "../../assets/img/logo_default.jpeg";
 //Toast
-import Toast from "react-native-toast-message";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 //Color
 import { Colors } from "../../constant/Colors";
 //context
 import { MyContext } from "../../context/MyContext";
 //Firestore
 import { getUserData } from "../../firebase/Firebase";
+//react native paper
+import {
+  TextInput,
+  Button,
+  ActivityIndicator,
+  MD2Colors,
+} from "react-native-paper";
+//lottie animmation
+import LottieView from "lottie-react-native";
+
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: "pink" }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: Colors.colorBlack,
+      }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: "400",
+        color: Colors.colorWhite,
+      }}
+    />
+  ),
+  /*
+    Overwrite 'error' type,
+    by modifying the existing `ErrorToast` component
+  */
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: Colors.colorBlack,
+      }}
+      text1Style={{
+        fontSize: 15,
+        color: Colors.colorWhite,
+      }}
+      text2Style={{
+        fontSize: 15,
+        color: Colors.colorWhite,
+      }}
+    />
+  ),
+};
 
 const Login = () => {
   const { setDataLogin } = useContext(MyContext);
@@ -35,7 +86,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
-  const [disableTouchable, setDisableTouchable] = useState();
+  const [disableTouchable, setDisableTouchable] = useState(false);
 
   //vider les champs
   const cleanVariable = () => {
@@ -79,60 +130,55 @@ const Login = () => {
     let er;
     Keyboard.dismiss();
     setActivityIndicator(true);
-    setDisableTouchable(true);
 
-    try {
-      const UserCredential = await onLogin(email, password);
-      if (UserCredential) {
-        try {
-          await saveUserUIDLocal(UserCredential.user.uid);
+    if (email.length != 0 && password.length) {
+      try {
+        const UserCredential = await onLogin(email, password);
+        if (UserCredential) {
           try {
-            const dataCheck = await getUserData(UserCredential.user.uid);
-            console.log("Login:::: ", UserCredential);
-            setDataLogin(dataCheck.data());
-            setActivityIndicator(false);
-            setDisableTouchable(true);
-            cleanVariable();
-            showToastSuccess();
+            await saveUserUIDLocal(UserCredential.user.uid);
+            try {
+              const dataCheck = await getUserData(UserCredential.user.uid);
+              console.log("Login:::: ", UserCredential);
+              setDataLogin(dataCheck.data());
+              setActivityIndicator(false);
+              cleanVariable();
+              showToastSuccess();
+            } catch (error) {
+              console.log("LoginErrorgetUserData:::::::::", error);
+            }
           } catch (error) {
-            console.log("LoginErrorgetUserData:::::::::", error);
+            console.log("LoginErrorAsyncSave::::::::", error);
           }
-        } catch (error) {
-          console.log("LoginErrorAsyncSave::::::::", error);
+        }
+      } catch (error) {
+        setActivityIndicator(false);
+        console.log(error.code);
+        if (error.code === "auth/wrong-password") {
+          er = "Mot de passe incorrect";
+          setErrMsg(er);
+        } else if (error.code === "auth/user-not-found") {
+          er = "Utilisateur introuvable";
+          setErrMsg(er);
+        } else if (error.code === "auth/invalid-email") {
+          er = "Email incorrect";
+          setErrMsg(er);
+        } else if (error.code === "auth/too-many-requests") {
+          er = "Patienter un peu, serveur occuper";
+          setErrMsg(er);
+        } else if (error.code === "auth/network-request-failed") {
+          er = "Vérifier votre connexion internet";
+          setErrMsg(er);
         }
       }
-    } catch (error) {
+    } else {
       setActivityIndicator(false);
-      setDisableTouchable(false);
-      console.log(error.code);
-      if (error.code === "auth/wrong-password") {
-        er = "Mot de passe incorrect";
-        setErrMsg(er);
-      } else if (error.code === "auth/user-not-found") {
-        er = "Utilisateur introuvable";
-        setErrMsg(er);
-      } else if (error.code === "auth/invalid-email") {
-        er = "Email incorrect";
-        setErrMsg(er);
-      } else if (error.code === "auth/too-many-requests") {
-        er = "Patienter un peu, serveur occuper";
-        setErrMsg(er);
-      } else if (error.code === "auth/network-request-failed") {
-        er = "Vérifier votre connexion internet";
-        setErrMsg(er);
-      }
+      er = "Veillez remplire les deux champs";
+      setErrMsg(er);
     }
   };
 
   //useEffect
-  useEffect(() => {
-    if (email.length != 0 && password.length) {
-      setDisableTouchable(false);
-    } else {
-      setDisableTouchable(true);
-    }
-  }, [email, password]);
-
   useEffect(() => {
     if (errMsg !== "") {
       showToastError(errMsg);
@@ -140,19 +186,58 @@ const Login = () => {
     setErrMsg("");
   }, [errMsg]);
 
-  const btnLogin = !activityIndicator ? (
-    <Text style={[styles.textColorWhite, styles.textBold]}>Se connecter</Text>
+  //btnSeConnecter
+  const btnSeConnecter = activityIndicator ? (
+    <ActivityIndicator animating={true} size="small" color={MD2Colors.white} />
   ) : (
-    <ActivityIndicator animated={activityIndicator} color={Colors.colorWhite} />
+    <Button
+      icon="lock-outline"
+      mode="contained"
+      style={styles.largeur}
+      onPress={userLogin}
+      buttonColor={Colors.colorBlack}
+    >
+      Se connecter
+    </Button>
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.viewLogin}>
+      <LottieView
+        autoPlay
+        loop
+        resizeMode="cover"
+        source={require("../../assets/lotties/Burger_and_hot_dog.json")}
+        style={styles.lottie}
+      />
+      <View style={styles.section}>
+        <TextInput
+          label="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          mode="flat"
+          style={styles.textinput}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
+
+        <TextInput
+          label="Mot de passe"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          mode="flat"
+          style={styles.textinput}
+          secureTextEntry={true}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
+        {btnSeConnecter}
+      </View>
+      {/* <View style={styles.viewLogin}>
         <View style={styles.viewImage}>
           <Image source={imgLogoDefault} style={styles.imgLogo} />
         </View>
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAvoidingView behavior="height">
           <View style={styles.containerZone}>
             <View>
               <View style={styles.inputViewMargin}>
@@ -204,72 +289,39 @@ const Login = () => {
             <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
           </TouchableOpacity>
         </View>
-      </View>
-      <Toast />
+      </View> */}
+      <Toast config={toastConfig} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    backgroundColor: Colors.colorBlack,
-  },
-  viewLogin: {
-    flex: 0.8,
-    justifyContent: "space-between",
-  },
-  viewImage: {
+    height: "100%",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
-  imgLogo: {
-    height: 150,
-    width: 150,
+  lottie: {
+    height: "100%",
+    width: "100%",
+    position: "absolute",
   },
-  textColorWhite: {
-    color: Colors.colorWhite,
-  },
-  textColorRed: {
-    color: Colors.colorRed,
-  },
-  textBold: {
-    fontWeight: "bold",
-  },
-  textConnectionSize: {
-    fontSize: 30,
-  },
-  containerZone: {
-    backgroundColor: Colors.colorBlackAlpha,
-    width: 350,
-    height: 250,
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  inputViewMargin: {
-    marginVertical: 20,
-  },
-  textMargin: {
-    paddingBottom: 5,
-  },
-  btnConnect: {
-    backgroundColor: Colors.colorRed,
-    height: 35,
+  section: {
     width: 300,
-    borderRadius: 10,
+    height: 250,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 20,
   },
-  footer: {
-    alignItems: "center",
-    position: "relative",
-    bottom: 35,
+  textinput: {
+    width: "90%",
+    marginBottom: 10,
   },
-  footerRegsiter: {
-    flexDirection: "row",
-    marginBottom: 20,
+  activity: {
+    color: "red",
+    backgroundColor: "red",
   },
 });
 

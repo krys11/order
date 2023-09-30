@@ -43,12 +43,12 @@ const MainStackNavigator = () => {
       <stack.Screen
         name="Login"
         component={Login}
-        options={{ headerTitle: "Connexion" }}
+        options={{ headerShown: false }}
       />
       <stack.Screen
         name="Register"
         component={Register}
-        options={{ headerTitle: "Inscription" }}
+        options={{ headerShown: false }}
       />
       <stack.Screen
         name="Forgotpassword"
