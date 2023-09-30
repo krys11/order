@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image,
   KeyboardAvoidingView,
-  ActivityIndicator,
   Keyboard,
   TouchableOpacity,
 } from "react-native";
@@ -18,11 +17,64 @@ import { useNavigation } from "@react-navigation/native";
 //components
 import TextinputComponent from "../../components/TextinputComponent";
 //Toast
-import Toast from "react-native-toast-message";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 //img
 import imgLogoDefault from "../../assets/img/logo_default.jpeg";
 //Color
 import { Colors } from "../../constant/Colors";
+//react native paper
+import {
+  TextInput,
+  Button,
+  ActivityIndicator,
+  MD2Colors,
+} from "react-native-paper";
+//lottie animmation
+import LottieView from "lottie-react-native";
+
+//costum config Toast
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: "pink" }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: Colors.colorBlack,
+      }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: "400",
+        color: Colors.colorWhite,
+      }}
+    />
+  ),
+  /*
+    Overwrite 'error' type,
+    by modifying the existing `ErrorToast` component
+  */
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: Colors.colorBlack,
+      }}
+      text1Style={{
+        fontSize: 15,
+        color: Colors.colorWhite,
+      }}
+      text2Style={{
+        fontSize: 15,
+        color: Colors.colorWhite,
+      }}
+    />
+  ),
+};
 
 const Register = () => {
   const navigation = useNavigation();
@@ -139,170 +191,197 @@ const Register = () => {
     setErrMsg("");
   }, [errMsg]);
 
-  //btn option
-  const btnRegister = !activityIndicator ? (
-    <Text style={[styles.textColorWhite, styles.textBold]}>S'inscrire</Text>
+  //btnSinscrire
+  const btnSinscrire = activityIndicator ? (
+    <ActivityIndicator animating={true} size="small" color={MD2Colors.white} />
   ) : (
-    <ActivityIndicator animated={activityIndicator} color={Colors.colorWhite} />
+    <Button
+      icon="lock-outline"
+      mode="contained"
+      style={styles.largeur}
+      onPress={userRegister}
+      buttonColor={Colors.colorBlack}
+    >
+      Inscription
+    </Button>
   );
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView behavior="height" style={styles.viewRegister}>
-          <Toast />
-          <View style={styles.viewImage}>
-            <Image source={imgLogoDefault} style={styles.imgLogo} />
-          </View>
+    <View style={styles.container}>
+      <LottieView
+        autoPlay
+        loop
+        resizeMode="cover"
+        source={require("../../assets/lotties/Burger_and_hot_dog.json")}
+        style={styles.lottie}
+      />
+      <View style={styles.section}>
+        <TextInput
+          label="Prénom"
+          value={name}
+          onChangeText={(text) => setName(text)}
+          mode="flat"
+          style={styles.textinput}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
 
-          <View style={styles.containerZone}>
-            <Text
-              style={[
-                styles.textColorWhite,
-                styles.textBold,
-                styles.textConnectionSize,
-              ]}
-            >
-              Inscription
+        <TextInput
+          label="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          mode="flat"
+          style={styles.textinput}
+          // secureTextEntry={true}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
+        <TextInput
+          label="Téléphone"
+          value={tel}
+          onChangeText={(text) => setTel(text)}
+          mode="flat"
+          style={styles.textinput}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
+        <TextInput
+          label="Créer un mot de passe"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          mode="flat"
+          style={styles.textinput}
+          secureTextEntry={true}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
+        <TextInput
+          label="Confimer votre mot de passe"
+          value={password2}
+          onChangeText={(text) => setPassword2(text)}
+          mode="flat"
+          style={styles.textinput}
+          secureTextEntry={true}
+          textColor={Colors.colorBlack}
+          outlineColor={Colors.colorBlack}
+        />
+
+        {btnSinscrire}
+        {/* <Text
+          style={[
+            styles.textColorWhite,
+            styles.textBold,
+            styles.textConnectionSize,
+          ]}
+        >
+          Inscription
+        </Text>
+        <View>
+          <View style={styles.inputViewMargin}>
+            <Text style={[styles.textColorWhite, styles.textMargin]}>
+              Prénom
             </Text>
-            <View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Prénom
-                </Text>
 
-                <TextinputComponent
-                  value={name}
-                  placeholder="Prénom"
-                  setValue={setName}
-                />
-              </View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Email
-                </Text>
-
-                <TextinputComponent
-                  value={email}
-                  placeholder="Email"
-                  setValue={setEmail}
-                />
-              </View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Telephone
-                </Text>
-
-                <TextinputComponent
-                  value={tel}
-                  placeholder="Telephone"
-                  setValue={setTel}
-                />
-              </View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Mot de passe
-                </Text>
-
-                <TextinputComponent
-                  value={password}
-                  placeholder="Mot de passe"
-                  setValue={setPassword}
-                  secureTextEntry={true}
-                />
-              </View>
-              <View>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Confirmer mot de passe
-                </Text>
-
-                <TextinputComponent
-                  value={password2}
-                  placeholder="Confirme mot de passe"
-                  setValue={setPassword2}
-                  secureTextEntry={true}
-                />
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.btnRegiste}
-              onPress={userRegister}
-              disabled={disableTouchable}
-            >
-              {btnRegister}
-            </TouchableOpacity>
+            <TextinputComponent
+              value={name}
+              placeholder="Prénom"
+              setValue={setName}
+            />
           </View>
-
-          <View style={styles.footer}>
-            <Text style={styles.textColorWhite}>
-              Vous avez deja un compte ?{" "}
+          <View style={styles.inputViewMargin}>
+            <Text style={[styles.textColorWhite, styles.textMargin]}>
+              Email
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.textColorRed}>Connectez vous</Text>
-            </TouchableOpacity>
+
+            <TextinputComponent
+              value={email}
+              placeholder="Email"
+              setValue={setEmail}
+            />
           </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </SafeAreaProvider>
+          <View style={styles.inputViewMargin}>
+            <Text style={[styles.textColorWhite, styles.textMargin]}>
+              Telephone
+            </Text>
+
+            <TextinputComponent
+              value={tel}
+              placeholder="Telephone"
+              setValue={setTel}
+            />
+          </View>
+          <View style={styles.inputViewMargin}>
+            <Text style={[styles.textColorWhite, styles.textMargin]}>
+              Mot de passe
+            </Text>
+
+            <TextinputComponent
+              value={password}
+              placeholder="Mot de passe"
+              setValue={setPassword}
+              secureTextEntry={true}
+            />
+          </View>
+          <View>
+            <Text style={[styles.textColorWhite, styles.textMargin]}>
+              Confirmer mot de passe
+            </Text>
+
+            <TextinputComponent
+              value={password2}
+              placeholder="Confirme mot de passe"
+              setValue={setPassword2}
+              secureTextEntry={true}
+            />
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.btnRegiste}
+          onPress={userRegister}
+          disabled={disableTouchable}
+        >
+          {btnSeConnecter}
+        </TouchableOpacity> */}
+      </View>
+
+      {/* <View style={styles.footer}>
+        <Text style={styles.textColorWhite}>Vous avez deja un compte ? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.textColorRed}>Connectez vous</Text>
+        </TouchableOpacity>
+      </View> */}
+      <Toast config={toastConfig} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: Colors.colorBlack,
-  },
-  viewRegister: {
-    flex: 1,
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-  viewImage: {
+    height: "100%",
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
-  imgLogo: {
-    height: 150,
-    width: 150,
+  lottie: {
+    height: "100%",
+    width: "100%",
+    position: "absolute",
   },
-  textColorWhite: {
-    color: Colors.colorWhite,
-  },
-  textColorRed: {
-    color: Colors.colorRed,
-  },
-  textBold: {
-    fontWeight: "bold",
-  },
-  textConnectionSize: {
-    fontSize: 30,
-  },
-  containerZone: {
-    backgroundColor: Colors.colorBlackAlpha,
-    width: 350,
-    height: 500,
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  inputViewMargin: {
-    marginBottom: 15,
-  },
-  textMargin: {
-    paddingBottom: 5,
-  },
-  btnRegiste: {
-    backgroundColor: Colors.colorRed,
-    height: 35,
+  section: {
     width: 300,
-    borderRadius: 10,
+    height: 550,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 20,
   },
-  footer: {
-    flexDirection: "row",
-    position: "relative",
-    bottom: 30,
-    //justifyContent: "center",
+  textinput: {
+    width: "90%",
+    marginBottom: 10,
+  },
+  activity: {
+    color: "red",
+    backgroundColor: "red",
   },
 });
 

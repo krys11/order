@@ -37,6 +37,7 @@ import {
 //lottie animmation
 import LottieView from "lottie-react-native";
 
+//costum config Toast
 const toastConfig = {
   /*
     Overwrite 'success' type,
@@ -86,7 +87,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
-  const [disableTouchable, setDisableTouchable] = useState(false);
 
   //vider les champs
   const cleanVariable = () => {
