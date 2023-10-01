@@ -43,9 +43,9 @@ const Account = () => {
       await AsyncStorage.clear();
       console.log("remove succes");
       try {
-        await onSignOut();
         setFireBaseDataLogin();
         setLocalDataLogin();
+        await onSignOut();
       } catch (error) {
         if (error.code === "auth/network-request-failed") {
           er = "Vérifier votre connexion internet";
