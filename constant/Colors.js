@@ -3,7 +3,7 @@ const Colors = {
   colorWhite: "#FFFFFF",
   colorWhiteFade: "rgb(255, 251, 232)",
   colorRed: "#BD0000",
-  colorBlackAlpha: "rgba(18,18,18,0.5)",
+  colorBlackAlpha: "rgba(18,18,18,0.95)",
   colorGreen: "#1D4D01",
   colorsEffectBackgroung: "rgba(255,255,255,0.3)",
 };

@@ -67,7 +67,7 @@ const toastConfig = {
 };
 
 const Login = () => {
-  const { setDataLogin } = useContext(MyContext);
+  const { setLocalDataLogin } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -102,9 +102,12 @@ const Login = () => {
   };
 
   //save user UID LOCAL
-  const saveUserUIDLocal = async (useruid) => {
+  const saveUserUIDLocal = async (userid) => {
     try {
-      await AsyncStorage.setItem("userUid", useruid);
+      const localstorage = {
+        userid: userid,
+      };
+      await AsyncStorage.setItem("userUid", JSON.stringify(localstorage));
     } catch (error) {
       console.log("AsynLogin::::::", error);
     }
@@ -121,11 +124,13 @@ const Login = () => {
         const UserCredential = await onLogin(email, password);
         if (UserCredential) {
           try {
-            await saveUserUIDLocal(UserCredential.user.uid);
+            const dataCheck = await getUserData(UserCredential.user.uid);
+            if (dataCheck) {
+              setLocalDataLogin(dataCheck.data());
+              console.log(dataCheck.data());
+            }
             try {
-              const dataCheck = await getUserData(UserCredential.user.uid);
-              console.log("Login:::: ", UserCredential);
-              setDataLogin(dataCheck.data());
+              await saveUserUIDLocal(UserCredential.user.uid);
               setActivityIndicator(false);
               cleanVariable();
               showToastSuccess();

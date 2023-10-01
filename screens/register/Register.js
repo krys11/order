@@ -1,5 +1,5 @@
 import { View, StyleSheet, Keyboard } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 //firebase function
 import { onRegister, setUserCollection } from "../../firebase/Firebase";
 //navigation
@@ -15,6 +15,8 @@ import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { Colors } from "../../constant/Colors";
 //globales styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
+//mycontext
+import { MyContext } from "../../context/MyContext";
 
 //costum config Toast
 const toastConfig = {
@@ -72,7 +74,7 @@ const Register = () => {
 
   //vider les champs
   const cleanVariable = () => {
-    setEmail(""), setTel(""), setPassword(""), setPassword2("");
+    setName(""), setEmail(""), setTel(""), setPassword(""), setPassword2("");
   };
 
   //Toast message
@@ -119,6 +121,8 @@ const Register = () => {
                 email,
                 tel,
                 name,
+                commande: [],
+                facture: [],
               });
               setActivityIndicator(false);
               cleanVariable();
@@ -176,9 +180,7 @@ const Register = () => {
   const btnSinscrire = activityIndicator ? (
     <Activityindicatorcomponent />
   ) : (
-    <Btncomponents onPress={userRegister} style={{ width: 150 }}>
-      Inscription
-    </Btncomponents>
+    <Btncomponents onPress={userRegister}>Inscription</Btncomponents>
   );
 
   return (
@@ -188,16 +190,18 @@ const Register = () => {
         <TextinputComponent label="Prénom" value={name} setValue={setName} />
 
         <TextinputComponent label="Email" value={email} setValue={setEmail} />
-        <TextinputComponent label="Téléphone" value={tel} setValue={setEmail} />
+        <TextinputComponent label="Téléphone" value={tel} setValue={setTel} />
         <TextinputComponent
           label="Créer un mot de passe"
           value={password}
           setValue={setPassword}
+          secureTextEntry={true}
         />
         <TextinputComponent
           label="Confimer votre mot de passe"
           value={password2}
           setValue={setPassword2}
+          secureTextEntry={true}
         />
 
         {btnSinscrire}

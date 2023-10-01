@@ -24,7 +24,8 @@ import TextinputComponent from "../../components/TextinputComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account = () => {
-  const { menu, setData, dataLogin, setDataLogin } = useContext(MyContext);
+  const { menu, setFireBaseDataLogin, localDataLogin, setLocalDataLogin } =
+    useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -39,11 +40,12 @@ const Account = () => {
 
   const logOut = async () => {
     try {
-      await AsyncStorage.removeItem("userUid");
+      await AsyncStorage.clear();
       console.log("remove succes");
       try {
         await onSignOut();
-        setDataLogin("");
+        setFireBaseDataLogin();
+        setLocalDataLogin();
       } catch (error) {
         if (error.code === "auth/network-request-failed") {
           er = "Vérifier votre connexion internet";
@@ -108,9 +110,11 @@ const Account = () => {
               style={styles.imgAccount}
             />
             <Text style={{ color: Colors.colorWhite, marginVertical: 10 }}>
-              {dataLogin.name}
+              {localDataLogin.name}
             </Text>
-            <Text style={{ color: Colors.colorWhite }}> {dataLogin.tel}</Text>
+            <Text style={{ color: Colors.colorWhite }}>
+              {localDataLogin.tel}
+            </Text>
           </View>
           <KeyboardAvoidingView behavior="position">
             <View style={styles.passwordChangeView}>

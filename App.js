@@ -16,11 +16,12 @@ import Screenloader from "./screens/screenLoader/Screenloader";
 
 export default function App() {
   const auth = getAuth(app);
-  const [data, setData] = useState();
-  const [dataLogin, setDataLogin] = useState();
+  const [fireBaseDataLogin, setFireBaseDataLogin] = useState();
+  const [localDataLogin, setLocalDataLogin] = useState();
   const [userUID, setUserUID] = useState();
-  const [loading, setLoading] = useState();
-  // console.log("app::::::::::::", userUID);
+  const [loading, setLoading] = useState(true);
+  const [save, setSave] = useState(false);
+  console.log("app::::::::::::", localDataLogin);
 
   const [menu, setMenu] = useState([
     {
@@ -96,24 +97,32 @@ export default function App() {
     async function getDataAsyncLocal() {
       try {
         const nameLocalAsyncVariable = await AsyncStorage.getItem("userUid");
-        if (nameLocalAsyncVariable !== null) {
-          setUserUID(`${nameLocalAsyncVariable}`);
+        const data = JSON.parse(nameLocalAsyncVariable);
+        console.log("data:::", data);
+        if (data !== null) {
+          setUserUID(data.userid);
+          setLocalDataLogin(data);
+          setCommande(data.commande);
+          setFacture(data.facture);
+          setLoading(false);
         } else {
-          if (auth.currentUser?.uid) {
-            try {
-              const dataCheck = await getUserData(data.uid);
-              setDataLogin(dataCheck.data());
-              setLoading(true);
-            } catch (error) {
-              console.log("premier use:::", error);
-            }
-          } else {
-            console.log("personne");
-            setLoading(true);
-            // if (!data) {
-            //   setLoading(true);
-            // }
-          }
+          setLoading(false);
+          //   console.log("else");
+          //   if (auth.currentUser?.uid) {
+          //     try {
+          //       const dataCheck = await getUserData(data.uid);
+          //       setLocalDataLogin(dataCheck.data());
+          //       setLoading(true);
+          //     } catch (error) {
+          //       console.log("premier use:::", error);
+          //     }
+          //   } else {
+          //     console.log("personne");
+          //     setLoading(true);
+          //     if (!data) {
+          //       setLoading(true);
+          //     }
+          //   }
         }
       } catch (error) {
         console.log("AsynApp::::::", error);
@@ -128,10 +137,12 @@ export default function App() {
     async function checkData() {
       if (userUID) {
         try {
-          const dataCheck = await getUserData(userUID);
-          // console.log("datacheck::::", dataCheck.data());
-          setDataLogin(dataCheck.data());
-          setLoading(true);
+          const dataCheck = await getUserData(userUID.userID);
+          if (dataCheck.data()) {
+            console.log("datacheck::::", dataCheck.data());
+            setFireBaseDataLogin(dataCheck.data());
+            setLoading(false);
+          }
         } catch (error) {
           console.log("second use:::", error);
         }
@@ -143,20 +154,44 @@ export default function App() {
     checkData();
   }, [userUID]);
 
-  // useEffect(() => {
-  //   console.log("3");
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setData(user);
-  //     } else {
-  //       if (!data) {
-  //         setLoading(true);
-  //       }
-  //     }
-  //   });
-  // });
+  useEffect(() => {
+    async function setParam() {
+      console.log("3");
+      if (localDataLogin) {
+        const updateFirebase = {
+          email: localDataLogin.email,
+          tel: localDataLogin.tel,
+          name: localDataLogin.name,
+          commande: commande,
+          facture: facture,
+        };
 
-  if (!loading) {
+        const updateLocalStorage = {
+          userID: userUID,
+          email: localDataLogin.email,
+          tel: localDataLogin.tel,
+          name: localDataLogin.name,
+          commande: commande,
+          facture: facture,
+        };
+
+        setLocalDataLogin(updateLocalStorage);
+
+        try {
+          await AsyncStorage.setItem(
+            "userUid",
+            JSON.stringify(updateLocalStorage)
+          );
+          console.log("save succes");
+        } catch (error) {
+          console.log("error clg3::::::", error);
+        }
+      }
+    }
+    setParam();
+  }, [commande, facture]);
+
+  if (loading) {
     return <Screenloader />;
   } else {
     return (
@@ -169,14 +204,18 @@ export default function App() {
           setCommande,
           facture,
           setFacture,
-          dataLogin,
-          setDataLogin,
+          fireBaseDataLogin,
+          setFireBaseDataLogin,
+          localDataLogin,
+          setLocalDataLogin,
           userUID,
           setUserUID,
+          save,
+          setSave,
         }}
       >
         <NavigationContainer>
-          {dataLogin ? <BottomTabNavigator /> : <MainStackNavigator />}
+          {localDataLogin ? <BottomTabNavigator /> : <MainStackNavigator />}
         </NavigationContainer>
       </MyContext.Provider>
     );
