@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableOpacity,
-} from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { View, StyleSheet, Keyboard } from "react-native";
 //AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //navigation
@@ -16,9 +7,10 @@ import { useNavigation } from "@react-navigation/native";
 //firebase function
 import { onLogin } from "../../firebase/Firebase";
 //components
+import Lottiecomponents from "../../components/Lottiecomponents";
 import TextinputComponent from "../../components/TextinputComponent";
-//img
-import imgLogoDefault from "../../assets/img/logo_default.jpeg";
+import Btncomponents from "../../components/Btncomponents";
+import Activityindicatorcomponent from "../../components/Activityindicatorcomponent";
 //Toast
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 //Color
@@ -27,15 +19,8 @@ import { Colors } from "../../constant/Colors";
 import { MyContext } from "../../context/MyContext";
 //Firestore
 import { getUserData } from "../../firebase/Firebase";
-//react native paper
-import {
-  TextInput,
-  Button,
-  ActivityIndicator,
-  MD2Colors,
-} from "react-native-paper";
-//lottie animmation
-import LottieView from "lottie-react-native";
+//globale styles
+import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 
 //costum config Toast
 const toastConfig = {
@@ -188,141 +173,36 @@ const Login = () => {
 
   //btnSeConnecter
   const btnSeConnecter = activityIndicator ? (
-    <ActivityIndicator animating={true} size="small" color={MD2Colors.white} />
+    <Activityindicatorcomponent />
   ) : (
-    <Button
-      icon="lock-outline"
-      mode="contained"
-      style={styles.largeur}
-      onPress={userLogin}
-      buttonColor={Colors.colorBlack}
-    >
-      Se connecter
-    </Button>
+    <Btncomponents onPress={userLogin}>Se connecter </Btncomponents>
   );
 
   return (
-    <View style={styles.container}>
-      <LottieView
-        autoPlay
-        loop
-        resizeMode="cover"
-        source={require("../../assets/lotties/Burger_and_hot_dog.json")}
-        style={styles.lottie}
-      />
-      <View style={styles.section}>
-        <TextInput
-          label="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          mode="flat"
-          style={styles.textinput}
-          textColor={Colors.colorBlack}
-          outlineColor={Colors.colorBlack}
-        />
-
-        <TextInput
+    <View style={GlobaleStyles.container}>
+      <Lottiecomponents />
+      <View style={[GlobaleStyles.section, { height: 250 }]}>
+        <TextinputComponent label="Email" value={email} setValue={setEmail} />
+        <TextinputComponent
           label="Mot de passe"
           value={password}
-          onChangeText={(text) => setPassword(text)}
-          mode="flat"
-          style={styles.textinput}
+          setValue={setPassword}
           secureTextEntry={true}
-          textColor={Colors.colorBlack}
-          outlineColor={Colors.colorBlack}
         />
         {btnSeConnecter}
       </View>
-      {/* <View style={styles.viewLogin}>
-        <View style={styles.viewImage}>
-          <Image source={imgLogoDefault} style={styles.imgLogo} />
-        </View>
-        <KeyboardAvoidingView behavior="height">
-          <View style={styles.containerZone}>
-            <View>
-              <View style={styles.inputViewMargin}>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Email
-                </Text>
-
-                <TextinputComponent
-                  value={email}
-                  placeholder="Email"
-                  setValue={setEmail}
-                />
-              </View>
-              <View>
-                <Text style={[styles.textColorWhite, styles.textMargin]}>
-                  Mot de passe
-                </Text>
-
-                <TextinputComponent
-                  value={password}
-                  placeholder="Mot de passe"
-                  setValue={setPassword}
-                  secureTextEntry={true}
-                />
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.btnConnect}
-              onPress={userLogin}
-              disabled={disableTouchable}
-            >
-              {btnLogin}
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-        <View style={styles.footer}>
-          <View style={styles.footerRegsiter}>
-            <Text style={styles.textColorWhite}>
-              Vous n'avez pas de compte ?{" "}
-            </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={styles.textColorRed}>Creer un compte</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Forgotpassword")}
-            style={styles.footerPassword}
-          >
-            <Text style={styles.textColorWhite}>Mot de passe oublier</Text>
-          </TouchableOpacity>
-        </View>
-      </View> */}
+      <Btncomponents
+        onPress={() => navigation.navigate("Forgetpassword")}
+        style={GlobaleStyles.btncustom}
+        mode="contained-tonal"
+      >
+        Mot de Passe Oublié
+      </Btncomponents>
       <Toast config={toastConfig} />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  lottie: {
-    height: "100%",
-    width: "100%",
-    position: "absolute",
-  },
-  section: {
-    width: 300,
-    height: 250,
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-  },
-  textinput: {
-    width: "90%",
-    marginBottom: 10,
-  },
-  activity: {
-    color: "red",
-    backgroundColor: "red",
-  },
-});
+const styles = StyleSheet.create({});
 
 export default Login;

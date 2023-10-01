@@ -20,20 +20,20 @@ const stack = createStackNavigator();
 const MainStackNavigator = () => {
   return (
     <stack.Navigator
-      initialRouteName="welcome"
-      screenOptions={{
-        headerTitleAlign: "center",
-        headerBackgroundContainerStyle: {
-          backgroundColor: Colors.colorBlack,
-        },
-        headerStyle: {
-          height: 100,
-          borderBottomLeftRadius: Platform.OS === "ios" ? 30 : 35,
-          borderBottomRightRadius: Platform.OS === "ios" ? 30 : 35,
-          backgroundColor: Colors.colorWhiteFade,
-          borderColor: Colors.colorWhiteFade,
-        },
-      }}
+      initialRouteName="Welcome"
+      // screenOptions={{
+      //   headerTitleAlign: "center",
+      //   headerBackgroundContainerStyle: {
+      //     backgroundColor: Colors.colorBlack,
+      //   },
+      //   headerStyle: {
+      //     height: 100,
+      //     borderBottomLeftRadius: Platform.OS === "ios" ? 30 : 35,
+      //     borderBottomRightRadius: Platform.OS === "ios" ? 30 : 35,
+      //     backgroundColor: Colors.colorWhiteFade,
+      //     borderColor: Colors.colorWhiteFade,
+      //   },
+      // }}
     >
       <stack.Screen
         name="Welcome"
@@ -51,9 +51,9 @@ const MainStackNavigator = () => {
         options={{ headerShown: false }}
       />
       <stack.Screen
-        name="Forgotpassword"
+        name="Forgetpassword"
         component={ForgotPassword}
-        options={{ headerTitle: "Mot de passe oublié" }}
+        options={{ headerShown: false }}
       />
     </stack.Navigator>
   );

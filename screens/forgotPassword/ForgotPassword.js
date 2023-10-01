@@ -1,28 +1,64 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Keyboard,
-  KeyboardAvoidingView,
-  ActivityIndicator,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, Keyboard } from "react-native";
 import React, { useState, useEffect } from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //firebase function
 import { onResetPassword } from "../../firebase/Firebase";
 //components
 import TextinputComponent from "../../components/TextinputComponent";
+import Btncomponents from "../../components/Btncomponents";
+import Lottiecomponents from "../../components/Lottiecomponents";
+import Activityindicatorcomponent from "../../components/Activityindicatorcomponent";
 //Toast
-import Toast from "react-native-toast-message";
-//img
-import imgLogoDefault from "../../assets/img/logo_default.jpeg";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 //Color
 import { Colors } from "../../constant/Colors";
+//globales styles
+import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
+
+//costum config Toast
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: "pink" }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: Colors.colorBlack,
+      }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: "400",
+        color: Colors.colorWhite,
+      }}
+    />
+  ),
+  /*
+    Overwrite 'error' type,
+    by modifying the existing `ErrorToast` component
+  */
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: Colors.colorBlack,
+      }}
+      text1Style={{
+        fontSize: 15,
+        color: Colors.colorWhite,
+      }}
+      text2Style={{
+        fontSize: 15,
+        color: Colors.colorWhite,
+      }}
+    />
+  ),
+};
 
 const ForgotPassword = () => {
   //variables
@@ -30,7 +66,6 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
-  const [disableTouchable, setDisableTouchable] = useState();
 
   //vider les champs
   const cleanVariable = () => {
@@ -59,48 +94,42 @@ const ForgotPassword = () => {
   const userPasswordForget = async () => {
     let er;
     setActivityIndicator(true);
-    setDisableTouchable(true);
     Keyboard.dismiss();
 
-    try {
-      await onResetPassword(email);
-      cleanVariable();
-      showToastSuccess();
-      setActivityIndicator(false);
-      setDisableTouchable(true);
-    } catch (error) {
-      setActivityIndicator(false);
-      setDisableTouchable(false);
-
-      console.log(error.code);
-      if (error.code === "auth/invalid-email") {
-        er = "Email incorrect";
-        setErrMsg(er);
-      } else if (error.code === "auth/user-not-found") {
-        er = "Utilisateur Introuvable";
-        setErrMsg(er);
-      } else if (error.code === "auth/missing-email") {
-        er = "Veillez remplir le champ d'Email";
-        setErrMsg(er);
-      } else if (error.code === "auth/too-many-requests") {
-        er = "Patienter un peu, serveur occuper";
-        setErrMsg(er);
-      } else if (error.code === "auth/network-request-failed") {
-        er = "Vérifier votre connexion internet";
-        setErrMsg(er);
+    if (email.length !== 0) {
+      try {
+        await onResetPassword(email);
+        cleanVariable();
+        showToastSuccess();
+        setActivityIndicator(false);
+      } catch (error) {
+        setActivityIndicator(false);
+        console.log(error.code);
+        if (error.code === "auth/invalid-email") {
+          er = "Email incorrect";
+          setErrMsg(er);
+        } else if (error.code === "auth/user-not-found") {
+          er = "Utilisateur Introuvable";
+          setErrMsg(er);
+        } else if (error.code === "auth/missing-email") {
+          er = "Veillez remplir le champ d'Email";
+          setErrMsg(er);
+        } else if (error.code === "auth/too-many-requests") {
+          er = "Patienter un peu, serveur occuper";
+          setErrMsg(er);
+        } else if (error.code === "auth/network-request-failed") {
+          er = "Vérifier votre connexion internet";
+          setErrMsg(er);
+        }
       }
+    } else {
+      setActivityIndicator(false);
+      er = "Veillez remplire le champs Email";
+      setErrMsg(er);
     }
   };
 
   //useEffect
-  useEffect(() => {
-    if (email.length !== 0) {
-      setDisableTouchable(false);
-    } else {
-      setDisableTouchable(true);
-    }
-  }, [email]);
-
   useEffect(() => {
     if (errMsg !== "") {
       showToastError(errMsg);
@@ -108,132 +137,32 @@ const ForgotPassword = () => {
     setErrMsg("");
   }, [errMsg]);
 
-  //btn option
-  const btnReset = !activityIndicator ? (
-    <Text style={[styles.textColorWhite, styles.textBold]}>Soumettre</Text>
+  //btnSeConnecter
+  const btnMotDePasseOublier = activityIndicator ? (
+    <Activityindicatorcomponent />
   ) : (
-    <ActivityIndicator animated={activityIndicator} color={Colors.colorWhite} />
+    <Btncomponents onPress={userPasswordForget}>Reinitialisé</Btncomponents>
   );
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.viewForgotPassword}>
-          <Toast />
-          <View style={styles.viewImage}>
-            <Image source={imgLogoDefault} style={styles.imgLogo} />
-          </View>
-          <KeyboardAvoidingView behavior="position">
-            <View style={styles.containerZone}>
-              <Text
-                style={[
-                  styles.textColorWhite,
-                  styles.textBold,
-                  styles.textConnectionSize,
-                ]}
-              >
-                Reinitialisation
-              </Text>
-              <View>
-                <View style={styles.inputViewMargin}>
-                  <Text style={[styles.textColorWhite, styles.textMargin]}>
-                    Email
-                  </Text>
-
-                  <TextinputComponent
-                    value={email}
-                    placeholder="Email"
-                    setValue={setEmail}
-                  />
-                </View>
-              </View>
-              <TouchableOpacity
-                style={styles.btnRegiste}
-                onPress={userPasswordForget}
-                disabled={disableTouchable}
-              >
-                {btnReset}
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
-
-          <View style={styles.footer}>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.textColorRed}>Connectez vous ! </Text>
-            </TouchableOpacity>
-
-            {/* <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.textColorWhite}>
-              Vous avez besoin d'aide ?{" "}
-            </Text>
-          </TouchableOpacity> */}
-          </View>
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={GlobaleStyles.container}>
+      <Lottiecomponents />
+      <View style={GlobaleStyles.section}>
+        <TextinputComponent label="Email" value={email} setValue={setEmail} />
+        {btnMotDePasseOublier}
+      </View>
+      <Btncomponents
+        onPress={() => navigation.navigate("Login")}
+        style={GlobaleStyles.btncustom}
+        mode="contained-tonal"
+      >
+        Se Connecter
+      </Btncomponents>
+      <Toast config={toastConfig} />
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.colorBlack,
-  },
-  viewForgotPassword: {
-    flex: 1,
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-  viewImage: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  imgLogo: {
-    height: 150,
-    width: 150,
-  },
-  textColorWhite: {
-    color: Colors.colorWhite,
-  },
-  textColorRed: {
-    color: Colors.colorRed,
-  },
-  textBold: {
-    fontWeight: "bold",
-  },
-  textConnectionSize: {
-    fontSize: 30,
-  },
-  containerZone: {
-    backgroundColor: Colors.colorBlackAlpha,
-    width: 350,
-    height: 250,
-    alignItems: "center",
-    justifyContent: "space-around",
-    fontSize: 15,
-    fontWeight: "bold",
-    color: Colors.colorBlack,
-  },
-  inputViewMargin: {
-    marginBottom: 20,
-  },
-  textMargin: {
-    paddingBottom: 5,
-  },
-  btnRegiste: {
-    backgroundColor: Colors.colorRed,
-    height: 35,
-    width: 300,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footer: {
-    flexDirection: "row",
-    position: "relative",
-    bottom: 40,
-    //justifyContent: "center",
-  },
-});
+const styles = StyleSheet.create({});
 
 export default ForgotPassword;

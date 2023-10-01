@@ -29,7 +29,7 @@ const Welcome = () => {
           icon="lock-outline"
           mode="contained"
           buttonColor={Colors.colorBlack}
-          style={[styles.marges, styles.largeur]}
+          style={[styles.marges, styles.btnstyle]}
           onPress={() => navigation.navigate("Login")}
         >
           Se connecter
@@ -38,7 +38,7 @@ const Welcome = () => {
           icon="lock-outline"
           mode="contained"
           buttonColor={Colors.colorBlack}
-          style={styles.largeur}
+          style={styles.btnstyle}
           onPress={() => navigation.navigate("Register")}
         >
           S'enregistrer
@@ -68,9 +68,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
   },
-  largeur: {
+  btnstyle: {
     width: 150,
-    height: 45,
+    height: 50,
+    justifyContent: "center",
   },
   marges: {
     marginBottom: 10,

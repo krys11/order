@@ -1,37 +1,26 @@
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+//colors
 import { Colors } from "../../constant/Colors";
+//globale styles
+import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
+//component
+import Lottiecomponents from "../../components/Lottiecomponents";
 
 const Screenloader = () => {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loaderContainer}>
-          <Text style={styles.textchargment}>Patientez...</Text>
-          <ActivityIndicator
-            animating={true}
-            size="large"
-            color={Colors.colorWhite}
-          />
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={GlobaleStyles.container}>
+      <Text style={styles.textchargment}>Patientez...</Text>
+      <Lottiecomponents
+        source={require("../../assets/lotties/food_loading.json")}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loaderContainer: {
-    flex: 1,
-    backgroundColor: Colors.colorBlackAlpha,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   textchargment: {
-    color: Colors.colorWhite,
+    color: Colors.colorBlack,
     marginBottom: 10,
     fontSize: 20,
   },

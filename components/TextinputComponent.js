@@ -1,5 +1,6 @@
-import { TextInput, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
+import { TextInput } from "react-native-paper";
 
 //Colors
 import { Colors } from "../constant/Colors";
@@ -8,24 +9,22 @@ const TextinputComponent = (props) => {
   return (
     <TextInput
       {...props}
+      label={props.label}
       value={props.value}
-      placeholder={props.placeholder}
-      onChangeText={(txt) => props.setValue(txt)}
-      style={{ ...styles.inputZone, ...props.style }}
+      onChangeText={(text) => props.setValue(text)}
+      mode="flat"
+      style={{ ...styles.textinput, ...props.styles }}
+      underlineColor={Colors.colorWhite}
+      activeUnderlineColor={Colors.colorBlack}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  inputZone: {
+  textinput: {
+    width: "90%",
+    marginBottom: 10,
     backgroundColor: Colors.colorWhite,
-    height: 40,
-    width: 300,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 15,
-    fontWeight: "bold",
-    color: Colors.colorBlack,
   },
 });
 

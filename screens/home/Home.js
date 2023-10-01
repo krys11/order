@@ -15,8 +15,6 @@ import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 import { Colors } from "../../constant/Colors";
 //context
 import { MyContext } from "../../context/MyContext";
-//Toast
-import Toast from "react-native-toast-message";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //components
