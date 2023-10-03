@@ -20,8 +20,7 @@ export default function App() {
   const [localDataLogin, setLocalDataLogin] = useState();
   const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState(true);
-  const [save, setSave] = useState(false);
-  console.log("app::::::::::::", localDataLogin);
+  const [update, setUpdate] = useState(false);
 
   const [menu, setMenu] = useState([
     {
@@ -96,11 +95,11 @@ export default function App() {
     console.log("1");
     async function getDataAsyncLocal() {
       try {
-        const nameLocalAsyncVariable = await AsyncStorage.getItem("userUid");
+        const nameLocalAsyncVariable = await AsyncStorage.getItem("userData");
         const data = JSON.parse(nameLocalAsyncVariable);
         console.log("data:::", data);
         if (data !== null) {
-          setUserUID(data.userid);
+          setUserUID(data.userID);
           setLocalDataLogin(data);
           setCommande(data.commande);
           setFacture(data.facture);
@@ -132,40 +131,32 @@ export default function App() {
     getDataAsyncLocal();
   }, []);
 
-  useLayoutEffect(() => {
-    console.log("2");
-    async function checkData() {
-      if (userUID) {
-        try {
-          const dataCheck = await getUserData(userUID.userID);
-          if (dataCheck.data()) {
-            console.log("datacheck::::", dataCheck.data());
-            setFireBaseDataLogin(dataCheck.data());
-            setLoading(false);
-          }
-        } catch (error) {
-          console.log("second use:::", error);
-        }
-      } else {
-        return;
-      }
-    }
+  // useLayoutEffect(() => {
+  //   console.log("2");
+  //   async function checkData() {
+  //     if (userUID) {
+  //       try {
+  //         const dataCheck = await getUserData(userUID.userID);
+  //         if (dataCheck.data()) {
+  //           console.log("datacheck::::", dataCheck.data());
+  //           setFireBaseDataLogin(dataCheck.data());
+  //           setLoading(false);
+  //         }
+  //       } catch (error) {
+  //         console.log("second use:::", error);
+  //       }
+  //     } else {
+  //       return;
+  //     }
+  //   }
 
-    checkData();
-  }, [userUID]);
+  //   checkData();
+  // }, [userUID]);
 
   useEffect(() => {
-    async function setParam() {
-      console.log("3");
-      if (localDataLogin) {
-        const updateFirebase = {
-          email: localDataLogin.email,
-          tel: localDataLogin.tel,
-          name: localDataLogin.name,
-          commande: commande,
-          facture: facture,
-        };
-
+    async function updateFactureCommande() {
+      if (update) {
+        console.log("3");
         const updateLocalStorage = {
           userID: userUID,
           email: localDataLogin.email,
@@ -175,20 +166,21 @@ export default function App() {
           facture: facture,
         };
 
-        setLocalDataLogin(updateLocalStorage);
-
         try {
           await AsyncStorage.setItem(
             "userUid",
             JSON.stringify(updateLocalStorage)
           );
+          setUpdate(false);
           console.log("save succes");
         } catch (error) {
+          setUpdate(false);
           console.log("error clg3::::::", error);
         }
       }
     }
-    setParam();
+
+    updateFactureCommande();
   }, [commande, facture]);
 
   if (loading) {
@@ -210,8 +202,8 @@ export default function App() {
           setLocalDataLogin,
           userUID,
           setUserUID,
-          save,
-          setSave,
+          update,
+          setUpdate,
         }}
       >
         <NavigationContainer>

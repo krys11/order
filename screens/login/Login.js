@@ -67,7 +67,7 @@ const toastConfig = {
 };
 
 const Login = () => {
-  const { setLocalDataLogin } = useContext(MyContext);
+  const { setLocalDataLogin, setUserUID } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -102,12 +102,9 @@ const Login = () => {
   };
 
   //save user UID LOCAL
-  const saveUserUIDLocal = async (userid) => {
+  const saveUserUIDLocal = async (data) => {
     try {
-      const localstorage = {
-        userid: userid,
-      };
-      await AsyncStorage.setItem("userUid", JSON.stringify(localstorage));
+      await AsyncStorage.setItem("userData", JSON.stringify(data));
     } catch (error) {
       console.log("AsynLogin::::::", error);
     }
@@ -121,21 +118,28 @@ const Login = () => {
 
     if (email.length != 0 && password.length) {
       try {
-        const UserCredential = await onLogin(email, password);
+        const UserCredential = await onLogin(email.trim(), password);
         if (UserCredential) {
+          setUserUID(UserCredential.user.uid);
           try {
             const dataCheck = await getUserData(UserCredential.user.uid);
             if (dataCheck) {
-              setLocalDataLogin(dataCheck.data());
-              console.log(dataCheck.data());
-            }
-            try {
-              await saveUserUIDLocal(UserCredential.user.uid);
-              setActivityIndicator(false);
-              cleanVariable();
-              showToastSuccess();
-            } catch (error) {
-              console.log("LoginErrorgetUserData:::::::::", error);
+              try {
+                const data = {
+                  ...dataCheck.data(),
+                  userID: UserCredential.user.uid,
+                };
+                console.log("loginCheck", data);
+                await saveUserUIDLocal(data);
+                setActivityIndicator(false);
+                cleanVariable();
+                showToastSuccess();
+                setTimeout(() => {
+                  setLocalDataLogin(dataCheck.data());
+                }, 1000);
+              } catch (error) {
+                console.log("LoginErrorgetUserData:::::::::", error);
+              }
             }
           } catch (error) {
             console.log("LoginErrorAsyncSave::::::::", error);

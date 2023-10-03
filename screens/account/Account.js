@@ -40,23 +40,12 @@ const Account = () => {
 
   const logOut = async () => {
     try {
-      await AsyncStorage.clear();
-      console.log("remove succes");
-      try {
-        setFireBaseDataLogin();
-        setLocalDataLogin();
-        await onSignOut();
-      } catch (error) {
-        if (error.code === "auth/network-request-failed") {
-          er = "Vérifier votre connexion internet";
-          setErrMsg(er);
-        } else {
-          console.log(error);
-        }
-      }
+      await onSignOut();
+      setFireBaseDataLogin();
+      setLocalDataLogin();
+      console.log("Logout");
+      // console.log("remove succes");
     } catch (error) {
-      let er;
-      console.log(error);
       if (error.code === "auth/network-request-failed") {
         er = "Vérifier votre connexion internet";
         setErrMsg(er);

@@ -16,7 +16,7 @@ import TestComponent from "./Testcomponents";
 import Selectformacomponent from "./Selectformacomponent";
 
 const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
-  const { setCommande, setFacture, setSave } = useContext(MyContext);
+  const { setCommande, setFacture, setUpdate } = useContext(MyContext);
   const [selectFormat, setSelectFormat] = React.useState("");
   const [fixPrice, setFixPrice] = React.useState("");
 
@@ -40,7 +40,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
 
   const genererCommandeAndFacture = () => {
     if (selectFormat) {
-      setSave(false);
+      setUpdate(true);
       setCommande((previousCommande) => [
         ...previousCommande,
         {
@@ -70,7 +70,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
       ]);
 
       Alert.alert("Commande", "Votre commande a été effectuée avec succes", [
-        { text: "OK", onPress: () => setSave(true) },
+        { text: "OK" },
       ]);
     } else {
       Alert.alert("Format", "Veillez selectionner un format", [{ text: "OK" }]);

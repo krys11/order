@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import React, { useContext } from "react";
 //color
 import { Colors } from "../constant/Colors";
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomWidth: 2,
     borderBottomColor: Colors.colorGreen,
-    borderStyle: "dashed",
+    borderStyle: Platform.OS === "ios" ? "solid" : "dashed",
   },
 });
 
