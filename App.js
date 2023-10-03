@@ -97,7 +97,6 @@ export default function App() {
       try {
         const nameLocalAsyncVariable = await AsyncStorage.getItem("userData");
         const data = JSON.parse(nameLocalAsyncVariable);
-        console.log("data:::", data);
         if (data !== null) {
           setUserUID(data.userID);
           setLocalDataLogin(data);
@@ -124,34 +123,12 @@ export default function App() {
           //   }
         }
       } catch (error) {
-        console.log("AsynApp::::::", error);
+        console.log("App::getDataAsyncLocal::", error);
       }
     }
 
     getDataAsyncLocal();
   }, []);
-
-  // useLayoutEffect(() => {
-  //   console.log("2");
-  //   async function checkData() {
-  //     if (userUID) {
-  //       try {
-  //         const dataCheck = await getUserData(userUID.userID);
-  //         if (dataCheck.data()) {
-  //           console.log("datacheck::::", dataCheck.data());
-  //           setFireBaseDataLogin(dataCheck.data());
-  //           setLoading(false);
-  //         }
-  //       } catch (error) {
-  //         console.log("second use:::", error);
-  //       }
-  //     } else {
-  //       return;
-  //     }
-  //   }
-
-  //   checkData();
-  // }, [userUID]);
 
   useEffect(() => {
     async function updateFactureCommande() {
