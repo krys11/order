@@ -14,9 +14,16 @@ import { MyContext } from "../context/MyContext";
 //components
 import TestComponent from "./Testcomponents";
 import Selectformacomponent from "./Selectformacomponent";
+import Activityindicatorcomponent from "./Activityindicatorcomponent";
 
 const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
-  const { setCommande, setFacture, setUpdate } = useContext(MyContext);
+  const {
+    setCommande,
+    setFacture,
+    setUpdate,
+    loadingLocalAndFirebaseSave,
+    setLoadingLocalAndFirebaseSave,
+  } = useContext(MyContext);
   const [selectFormat, setSelectFormat] = React.useState("");
   const [fixPrice, setFixPrice] = React.useState("");
 
@@ -40,6 +47,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
 
   const genererCommandeAndFacture = () => {
     if (selectFormat) {
+      setLoadingLocalAndFirebaseSave(true);
       setUpdate(true);
       setCommande((previousCommande) => [
         ...previousCommande,
@@ -68,10 +76,6 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           num: "+22998521478",
         },
       ]);
-
-      Alert.alert("Commande", "Votre commande a été effectuée avec succes", [
-        { text: "OK" },
-      ]);
     } else {
       Alert.alert("Format", "Veillez selectionner un format", [{ text: "OK" }]);
     }
@@ -98,11 +102,15 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
       </View>
       <View style={styles.productPriceCommande}>
         <Text style={styles.productPrice}>{fixPrice ? fixPrice : 0}FCFA</Text>
-        <TouchableOpacity onPress={genererCommandeAndFacture}>
-          <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-            Commander
-          </Text>
-        </TouchableOpacity>
+        {loadingLocalAndFirebaseSave ? (
+          <Activityindicatorcomponent />
+        ) : (
+          <TouchableOpacity onPress={genererCommandeAndFacture}>
+            <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+              Commander
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <TestComponent />
     </View>

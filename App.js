@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
+import { Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainStackNavigator } from "./routes/StackNavigator";
 import BottomTabNavigator from "./routes/TabNavigator";
 //contxt
 import { MyContext } from "./context/MyContext";
 //firebase
-import { app, getUserData } from "./firebase/Firebase";
+import { app, updateUserData } from "./firebase/Firebase";
 //firebase auth
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 //img
@@ -21,6 +22,8 @@ export default function App() {
   const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState(true);
   const [update, setUpdate] = useState(false);
+  const [loadingLocalAndFirebaseSave, setLoadingLocalAndFirebaseSave] =
+    useState(false);
 
   const [menu, setMenu] = useState([
     {
@@ -142,15 +145,37 @@ export default function App() {
           facture: facture,
         };
 
+        const updateFirebaseStorage = {
+          // email: localDataLogin.email,
+          // tel: localDataLogin.tel,
+          // name: localDataLogin.name,
+          commande: commande,
+          facture: facture,
+        };
+
         try {
           await AsyncStorage.setItem(
             "userData",
             JSON.stringify(updateLocalStorage)
           );
-          setUpdate(false);
+          try {
+            await updateUserData(userUID, updateFirebaseStorage);
+            setUpdate(false);
+            setLoadingLocalAndFirebaseSave(false);
+            Alert.alert(
+              "Commande",
+              "Votre commande a été effectuée avec succes",
+              [{ text: "OK" }]
+            );
+          } catch (error) {
+            setUpdate(false);
+            setLoadingLocalAndFirebaseSave(false);
+            console.log("error clg3::::::", error);
+          }
           console.log("save succes");
         } catch (error) {
           setUpdate(false);
+          setLoadingLocalAndFirebaseSave(false);
           console.log("error clg3::::::", error);
         }
       }
@@ -180,6 +205,8 @@ export default function App() {
           setUserUID,
           update,
           setUpdate,
+          loadingLocalAndFirebaseSave,
+          setLoadingLocalAndFirebaseSave,
         }}
       >
         <NavigationContainer>

@@ -15,7 +15,7 @@ import {
   getDoc,
   setDoc,
   doc,
-  collection,
+  updateDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -38,12 +38,20 @@ const db = getFirestore(app);
 
 //save User Data
 const setUserCollection = async (userID, data) => {
-  return await setDoc(doc(db, `users/${userID}`), data);
+  const ref = doc(db, `users/${userID}`);
+  return await setDoc(ref, data);
 };
 
 //get User Data
 const getUserData = async (userID) => {
-  return await getDoc(doc(db, `users/${userID}`));
+  const ref = doc(db, `users/${userID}`);
+  return await getDoc(ref);
+};
+
+//update User Data
+const updateUserData = async (userID, updateData) => {
+  const ref = doc(db, `users/${userID}`);
+  return await updateDoc(ref, updateData);
 };
 
 const onRegister = async (email, password) => {
@@ -75,4 +83,5 @@ export {
   onSignOut,
   setUserCollection,
   getUserData,
+  updateUserData,
 };
