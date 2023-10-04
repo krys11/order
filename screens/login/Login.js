@@ -67,7 +67,8 @@ const toastConfig = {
 };
 
 const Login = () => {
-  const { setLocalDataLogin, setUserUID } = useContext(MyContext);
+  const { setLocalDataLogin, setUserUID, setCommande, setFacture } =
+    useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -135,6 +136,8 @@ const Login = () => {
                 cleanVariable();
                 showToastSuccess();
                 setTimeout(() => {
+                  setCommande(dataCheck.data().commande);
+                  setFacture(dataCheck.data().facture);
                   setLocalDataLogin(dataCheck.data());
                 }, 1000);
               } catch (error) {
