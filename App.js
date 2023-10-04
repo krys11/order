@@ -92,8 +92,8 @@ export default function App() {
   const [facture, setFacture] = useState([]);
 
   useLayoutEffect(() => {
-    console.log("1");
     async function getDataAsyncLocal() {
+      console.log("1");
       try {
         const nameLocalAsyncVariable = await AsyncStorage.getItem("userData");
         const data = JSON.parse(nameLocalAsyncVariable);
@@ -126,7 +126,6 @@ export default function App() {
         console.log("App::getDataAsyncLocal::", error);
       }
     }
-
     getDataAsyncLocal();
   }, []);
 
@@ -145,7 +144,7 @@ export default function App() {
 
         try {
           await AsyncStorage.setItem(
-            "userUid",
+            "userData",
             JSON.stringify(updateLocalStorage)
           );
           setUpdate(false);
