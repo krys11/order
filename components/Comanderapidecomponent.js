@@ -112,7 +112,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           </TouchableOpacity>
         )}
       </View>
-      <TestComponent />
+      <TestComponent genererCommandeAndFacture={genererCommandeAndFacture} />
     </View>
   );
 };

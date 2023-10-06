@@ -1,14 +1,22 @@
 // In your component -- TestComponent
 import { useKkiapay } from "@kkiapay-org/react-native-sdk";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, View } from "react-native";
+import { MyContext } from "../context/MyContext";
 
-const TestComponent = () => {
-  const { openKkiapayWidget, addSuccessListener } = useKkiapay();
+const TestComponent = ({ genererCommandeAndFacture }) => {
+  const { openKkiapayWidget, addSuccessListener, addFailedListener } =
+    useKkiapay();
 
   useEffect(() => {
     addSuccessListener((data) => {
-      console.log("transactionId: ", data);
+      console.log("succes: ", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    addFailedListener((data) => {
+      console.log("failed: ", data);
     });
   }, []);
 
