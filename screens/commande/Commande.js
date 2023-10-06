@@ -1,11 +1,19 @@
 import { View, Text, ScrollView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
 //Color
 import { Colors } from "../../constant/Colors";
 import Commandecheckcomponent from "../../components/Commandecheckcomponent";
+//mycontext
+import { MyContext } from "../../context/MyContext";
 
 const Commande = () => {
+  const { setBadgeCommande } = useContext(MyContext);
+
+  useEffect(() => {
+    setBadgeCommande(false);
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.commandeDetailsView}>

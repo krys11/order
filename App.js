@@ -22,6 +22,8 @@ export default function App() {
   const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState(true);
   const [update, setUpdate] = useState(false);
+  const [badgeCommande, setBadgeCommande] = useState(false);
+  const [badgeFacture, setBadgeFacture] = useState(false);
   const [loadingLocalAndFirebaseSave, setLoadingLocalAndFirebaseSave] =
     useState(false);
 
@@ -162,6 +164,8 @@ export default function App() {
             await updateUserData(userUID, updateFirebaseStorage);
             setUpdate(false);
             setLoadingLocalAndFirebaseSave(false);
+            setBadgeCommande(true);
+            setBadgeFacture(true);
             Alert.alert(
               "Commande",
               "Votre commande a été effectuée avec succes",
@@ -207,6 +211,10 @@ export default function App() {
           setUpdate,
           loadingLocalAndFirebaseSave,
           setLoadingLocalAndFirebaseSave,
+          badgeCommande,
+          setBadgeCommande,
+          badgeFacture,
+          setBadgeFacture,
         }}
       >
         <NavigationContainer>

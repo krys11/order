@@ -50,7 +50,6 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
       setLoadingLocalAndFirebaseSave(true);
       setUpdate(true);
       setCommande((previousCommande) => [
-        ...previousCommande,
         {
           date: getDates(),
           heure: getHours(),
@@ -60,10 +59,10 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           status: "Confirmer",
           format: selectFormat,
         },
+        ...previousCommande,
       ]);
 
       setFacture((previousFacture) => [
-        ...previousFacture,
         {
           date: getDates(),
           heure: getHours(),
@@ -75,6 +74,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           client: "Kry's Hyppo",
           num: "+22998521478",
         },
+        ...previousFacture,
       ]);
     } else {
       Alert.alert("Format", "Veillez selectionner un format", [{ text: "OK" }]);

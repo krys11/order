@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, Fragment } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Badge, IconButton, MD3Colors } from "react-native-paper";
 
 //icons
 import {
@@ -21,74 +29,131 @@ import {
   AccountStackNavigator,
 } from "./StackNavigator";
 
+//mycontext
+import { MyContext } from "../context/MyContext";
+import { useNavigation } from "@react-navigation/native";
+
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const navigation = useNavigation();
+
+  const { badgeCommande, setBadgeCommande, badgeFacture, setBadgeFacture } =
+    useContext(MyContext);
+
+  const setC = (focused) => {
+    if (focused) {
+      setBadgeCommande(false);
+      return Colors.colorRed;
+    }
+    return Colors.colorWhite;
+  };
+
+  const setF = (focused) => {
+    if (focused) {
+      setBadgeFacture(false);
+      return Colors.colorRed;
+    }
+    return Colors.colorWhite;
+  };
+
   return (
     <Tab.Navigator
       initialRouteName="home"
       screenOptions={({ route }) => ({
-        headerTitleAlign: "center",
-        headerStyle: {
-          backgroundColor: Colors.colorBlackAlpha,
-          borderWidth: 1,
-          borderBottomColor: Colors.colorWhite,
-        },
-        headerTitleStyle: {
-          fontWeight: "bold",
-          textTransform: "uppercase",
-        },
-        headerTintColor: Colors.colorWhite,
-        tabBarIcon: ({ focused }) => {
-          let iconName;
-          if (route.name == "Acceuil") {
-            iconName = "home";
-            return (
-              <AntDesign
-                name={iconName}
-                size={24}
-                color={focused ? Colors.colorRed : Colors.colorWhite}
-              />
-            );
-          } else if (route.name == "Commandes") {
-            iconName = "local-grocery-store";
-            return (
-              <MaterialIcons
-                name={iconName}
-                size={24}
-                color={focused ? Colors.colorRed : Colors.colorWhite}
-              />
-            );
-          } else if (route.name == "Factures") {
-            iconName = "switcher";
-            return (
-              <AntDesign
-                name={iconName}
-                size={24}
-                color={focused ? Colors.colorRed : Colors.colorWhite}
-              />
-            );
-          } else if (route.name == "Compte") {
-            iconName = "account";
-            return (
-              <MaterialCommunityIcons
-                name={iconName}
-                size={24}
-                color={focused ? Colors.colorRed : Colors.colorWhite}
-              />
-            );
-          }
-        },
+        tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: Colors.colorBlackAlpha,
-          paddingBottom: 5,
+          position: "absolute",
+          bottom: 10,
+          height: 50,
+          left: 15,
+          right: 15,
+          elevation: 0,
+          backgroundColor: Colors.colorWhite,
+          borderRadius: 20,
         },
-        tabBarLabelStyle: {
-          color: Colors.colorWhite,
-          marginBottom: 1,
-          fontSize: 12,
-          fontWeight: "bold",
-        },
+        // headerTitleAlign: "center",
+        // headerStyle: {
+        //   backgroundColor: Colors.colorBlackAlpha,
+        //   borderWidth: 1,
+        //   borderBottomColor: Colors.colorWhite,
+        // },
+        // headerTitleStyle: {
+        //   fontWeight: "bold",
+        //   textTransform: "uppercase",
+        // },
+        // headerTintColor: Colors.colorRed,
+        // //TabHeader
+        // tabBarIcon: ({ focused }) => {
+        //   let iconName;
+        //   if (route.name == "Acceuil") {
+        //     iconName = "home";
+        //     return (
+        //       <IconButton
+        //         icon={iconName}
+        //         iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //         size={20}
+        //       />
+        //     );
+        //   } else if (route.name == "Commandes") {
+        //     iconName = "android-messages";
+        //     return (
+        //       <View style={styles.badgeAndIcon}>
+        //         <IconButton
+        //           icon={iconName}
+        //           iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //           size={20}
+        //         />
+        //         {badgeCommande ? (
+        //           <Badge
+        //             size={10}
+        //             style={{ position: "absolute", top: 20, left: 35 }}
+        //           ></Badge>
+        //         ) : (
+        //           ""
+        //         )}
+        //       </View>
+        //     );
+        //   } else if (route.name == "Factures") {
+        //     iconName = "animation";
+        //     return (
+        //       <View style={styles.badgeAndIcon}>
+        //         <IconButton
+        //           icon={iconName}
+        //           iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //           size={20}
+        //         />
+        //         {badgeFacture ? (
+        //           <Badge
+        //             size={10}
+        //             style={{ position: "absolute", top: 20, left: 35 }}
+        //           ></Badge>
+        //         ) : (
+        //           ""
+        //         )}
+        //       </View>
+        //     );
+        //   } else if (route.name == "Compte") {
+        //     iconName = "account";
+        //     return (
+        //       <IconButton
+        //         icon={iconName}
+        //         iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //         size={20}
+        //       />
+        //     );
+        //   }
+        // },
+        // tabBarStyle: {
+        //   backgroundColor: Colors.colorBlack,
+        //   paddingBottom: 5,
+        // },
+        // tabBarLabelStyle: {
+        //   color: Colors.colorWhite,
+        //   paddingBottom: 5,
+        //   fontSize: 10,
+        //   fontWeight: "bold",
+        // },
       })}
     >
       <Tab.Screen
@@ -96,19 +161,156 @@ const BottomTabNavigator = () => {
         component={HomeProductsStackNavigator}
         options={{
           headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              style={{ alignItems: "center" }}
+              onPress={() => navigation.navigate("Acceuil")}
+            >
+              <IconButton
+                icon="home"
+                iconColor={focused ? Colors.colorRed : Colors.colorBlack}
+                size={20}
+              />
+              <Text
+                style={{
+                  color: focused ? Colors.colorRed : Colors.colorBlack,
+                  fontSize: 12,
+                  position: "relative",
+                  bottom: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Acceuil
+              </Text>
+            </TouchableOpacity>
+          ),
         }}
       />
-      <Tab.Screen name="Commandes" component={Commande} />
-      <Tab.Screen name="Factures" component={Facture} />
+      <Tab.Screen
+        name="Commandes"
+        component={Commande}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              style={{ alignItems: "center" }}
+              onPress={() => {
+                setBadgeCommande(false);
+                navigation.navigate("Commandes");
+              }}
+            >
+              <View>
+                <IconButton
+                  icon="android-messages"
+                  iconColor={focused ? Colors.colorRed : Colors.colorBlack}
+                  size={20}
+                />
+                {badgeCommande ? (
+                  <Badge
+                    size={10}
+                    style={{ position: "absolute", top: 20, left: 35 }}
+                  ></Badge>
+                ) : (
+                  ""
+                )}
+              </View>
+              <Text
+                style={{
+                  color: focused ? Colors.colorRed : Colors.colorBlack,
+                  position: "relative",
+                  bottom: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Commandes
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Factures"
+        component={Facture}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              style={{ alignItems: "center" }}
+              onPress={() => {
+                setBadgeFacture(false);
+                navigation.navigate("Factures");
+              }}
+            >
+              <View>
+                <IconButton
+                  icon="animation"
+                  iconColor={focused ? Colors.colorRed : Colors.colorBlack}
+                  size={20}
+                />
+                {badgeFacture ? (
+                  <Badge
+                    size={10}
+                    style={{ position: "absolute", top: 20, left: 35 }}
+                  ></Badge>
+                ) : (
+                  ""
+                )}
+              </View>
+              <Text
+                style={{
+                  color: focused ? Colors.colorRed : Colors.colorBlack,
+                  position: "relative",
+                  bottom: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Factures
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <Tab.Screen
         name="Compte"
         component={AccountStackNavigator}
         options={{
           headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              style={{ alignItems: "center" }}
+              onPress={() => navigation.navigate("Compte")}
+            >
+              <IconButton
+                icon="account"
+                iconColor={focused ? Colors.colorRed : Colors.colorBlack}
+                size={20}
+              />
+              <Text
+                style={{
+                  color: focused ? Colors.colorRed : Colors.colorBlack,
+                  position: "relative",
+                  bottom: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Compte
+              </Text>
+            </TouchableOpacity>
+          ),
         }}
       />
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  badgeAndIcon: {
+    position: "relative",
+    flexDirection: "row",
+  },
+  back: {
+    backgroundColor: Colors.colorRed,
+  },
+});
 
 export default BottomTabNavigator;
