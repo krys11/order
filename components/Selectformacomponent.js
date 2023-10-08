@@ -29,6 +29,7 @@ const Selectformacomponent = ({
       data={itemformat}
       dropdownShown={false}
       dropdownTextStyles={{ color: Colors.colorWhite }}
+      dropdownStyles={{ height: 110 }}
       boxStyles={{
         height: 45,
         justifyContent: "center",

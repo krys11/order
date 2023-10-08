@@ -66,6 +66,9 @@ const Home = ({ route }) => {
     <KkiapayProvider>
       <ScrollView style={styles.container}>
         <View style={styles.viewContainer}>
+          <Text style={[styles.itemName, { marginBottom: 10 }]}>
+            Disponible:
+          </Text>
           <View style={styles.listMenu}>{itemsMenu}</View>
           <Text style={styles.itemName}>Commande Rapide:</Text>
           <View style={styles.commandeRapideContainer}>

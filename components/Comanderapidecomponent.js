@@ -15,6 +15,7 @@ import { MyContext } from "../context/MyContext";
 import TestComponent from "./Testcomponents";
 import Selectformacomponent from "./Selectformacomponent";
 import Activityindicatorcomponent from "./Activityindicatorcomponent";
+import TextinputComponent from "./TextinputComponent";
 
 const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
   const {
@@ -26,6 +27,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
   } = useContext(MyContext);
   const [selectFormat, setSelectFormat] = React.useState("");
   const [fixPrice, setFixPrice] = React.useState("");
+  const [quantity, setQuantity] = React.useState("");
 
   const getDates = () => {
     const dateAll = new Date();
@@ -45,37 +47,53 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
     return `${hours}:${minutes}:${seconds}`;
   };
 
+  const priceFinale = () => {
+    if (fixPrice && quantity) {
+      return fixPrice * parseInt(quantity);
+    } else {
+      return 0;
+    }
+  };
+
   const genererCommandeAndFacture = () => {
     if (selectFormat) {
-      setLoadingLocalAndFirebaseSave(true);
-      setUpdate(true);
-      setCommande((previousCommande) => [
-        {
-          date: getDates(),
-          heure: getHours(),
-          name: item.title,
-          nombres: "2",
-          montant: fixPrice,
-          status: "Confirmer",
-          format: selectFormat,
-        },
-        ...previousCommande,
-      ]);
+      if (parseInt(quantity) > 0) {
+        setLoadingLocalAndFirebaseSave(true);
+        setUpdate(true);
+        setCommande((previousCommande) => [
+          {
+            date: getDates(),
+            heure: getHours(),
+            name: item.title,
+            nombres: quantity,
+            montant: priceFinale(),
+            status: "Confirmer",
+            format: selectFormat,
+          },
+          ...previousCommande,
+        ]);
 
-      setFacture((previousFacture) => [
-        {
-          date: getDates(),
-          heure: getHours(),
-          ref: "4844168484",
-          name: item.title,
-          format: selectFormat,
-          nombres: "2",
-          montant: fixPrice,
-          client: "Kry's Hyppo",
-          num: "+22998521478",
-        },
-        ...previousFacture,
-      ]);
+        setFacture((previousFacture) => [
+          {
+            date: getDates(),
+            heure: getHours(),
+            ref: "4844168484",
+            name: item.title,
+            format: selectFormat,
+            nombres: quantity,
+            montant: priceFinale(),
+            client: "Kry's Hyppo",
+            num: "+22998521478",
+          },
+          ...previousFacture,
+        ]);
+
+        setSelectFormat("");
+        setFixPrice("");
+        setQuantity("");
+      } else {
+        Alert.alert("Quantité", "Veillez définir un nombre", [{ text: "OK" }]);
+      }
     } else {
       Alert.alert("Format", "Veillez selectionner un format", [{ text: "OK" }]);
     }
@@ -83,25 +101,34 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
 
   return (
     <View style={styles.commandeRapideView}>
-      <View style={styles.productDetails}>
+      <View style={{ alignItems: "center" }}>
         <Image source={item.img0} style={styles.img} />
-        <View style={styles.details}>
-          <Text style={styles.productName}>{item.title}</Text>
-          <Text style={styles.detailsView}>Details...</Text>
-        </View>
-        <View style={styles.formatView}>
-          <Selectformacomponent
-            itemformat={itemformat}
-            selectFormat={selectFormat}
-            setSelectFormat={setSelectFormat}
-            setFixPrice={setFixPrice}
-            itemPrice={itemPrice}
-            placeholder="Format"
-          />
-        </View>
+        <Text style={styles.productPrice}> {priceFinale()} FCFA </Text>
       </View>
-      <View style={styles.productPriceCommande}>
-        <Text style={styles.productPrice}>{fixPrice ? fixPrice : 0}FCFA</Text>
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Text style={styles.productNameAndDetails}>{item.title}</Text>
+        <Text style={[styles.productNameAndDetails, { fontWeight: 300 }]}>
+          Details...
+        </Text>
+      </View>
+      <View style={{ alignItems: "center", justifyContent: "space-evenly" }}>
+        <Selectformacomponent
+          itemformat={itemformat}
+          selectFormat={selectFormat}
+          setSelectFormat={setSelectFormat}
+          setFixPrice={setFixPrice}
+          itemPrice={itemPrice}
+          placeholder="Format"
+        />
+        <TextinputComponent
+          label=""
+          value={quantity}
+          setValue={setQuantity}
+          keyboardType="numeric"
+          styles={{ marginVertical: 5, borderRadius: 10, height: 30 }}
+          placeholder="Nombres"
+        />
+
         {loadingLocalAndFirebaseSave ? (
           <Activityindicatorcomponent />
         ) : (
@@ -112,50 +139,33 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           </TouchableOpacity>
         )}
       </View>
-      <TestComponent genererCommandeAndFacture={genererCommandeAndFacture} />
+      {/* <TestComponent genererCommandeAndFacture={genererCommandeAndFacture} /> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   commandeRapideView: {
-    backgroundColor: Colors.colorBlackAlpha,
-    marginVertical: 5,
-    padding: 10,
-  },
-  productDetails: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+    backgroundColor: Colors.colorBlackAlpha,
+    marginVertical: 10,
+    padding: 10,
   },
   img: {
     width: 100,
     height: 100,
     borderRadius: 999,
   },
-  details: {
-    marginLeft: 5,
+  productPrice: {
+    color: Colors.colorRed,
+    marginTop: 10,
   },
-  formatView: {
-    flexDirection: "column",
-    width: 90,
-  },
-  productName: {
+  productNameAndDetails: {
     color: Colors.colorWhite,
     fontWeight: "bold",
     fontSize: 15,
     marginBottom: 15,
-  },
-  detailsView: {
-    color: Colors.colorWhite,
-  },
-  productPriceCommande: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginVertical: 10,
-  },
-  productPrice: {
-    color: Colors.colorRed,
   },
 });
 

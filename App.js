@@ -174,7 +174,7 @@ export default function App() {
           } catch (error) {
             setUpdate(false);
             setLoadingLocalAndFirebaseSave(false);
-            console.log("error clg3::::::", error);
+            console.log("error clg2::::::", error);
           }
           console.log("save succes");
         } catch (error) {
