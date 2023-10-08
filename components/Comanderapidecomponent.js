@@ -125,7 +125,12 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           value={quantity}
           setValue={setQuantity}
           keyboardType="numeric"
-          styles={{ marginVertical: 5, borderRadius: 10, height: 30 }}
+          styles={{
+            marginVertical: 5,
+            borderRadius: 10,
+            height: 30,
+            textAlign: "center",
+          }}
           placeholder="Nombres"
         />
 
