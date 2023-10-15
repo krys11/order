@@ -8,7 +8,7 @@ import { MyContext } from "./context/MyContext";
 //firebase
 import { app, updateUserData } from "./firebase/Firebase";
 //firebase auth
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 //img
 import logoDefault from "./assets/img/logo_default.jpeg";
 //AsyncStorage
@@ -148,9 +148,6 @@ export default function App() {
         };
 
         const updateFirebaseStorage = {
-          // email: localDataLogin.email,
-          // tel: localDataLogin.tel,
-          // name: localDataLogin.name,
           commande: commande,
           facture: facture,
         };
