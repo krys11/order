@@ -15,6 +15,7 @@ import logoDefault from "./assets/img/logo_default.jpeg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screenloader from "./screens/screenLoader/Screenloader";
 import axios from "axios";
+import Instance from "./firebase/Instance";
 
 export default function App() {
   const auth = getAuth(app);
@@ -121,6 +122,10 @@ export default function App() {
     async function getDataAsyncLocal() {
       console.log("1");
       const storeToken = await AsyncStorage.getItem("token");
+
+      const res = await Instance.get("/users.json");
+      setLocalDataLogin(res.data["-Nhrtuf96JR26SHVUFn_"]);
+      console.log(res.data["-Nhrtuf96JR26SHVUFn_"]);
 
       if (storeToken) {
         setAuthToken(storeToken);
