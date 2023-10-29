@@ -14,10 +14,12 @@ import logoDefault from "./assets/img/logo_default.jpeg";
 //AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screenloader from "./screens/screenLoader/Screenloader";
+import axios from "axios";
 
 export default function App() {
   const auth = getAuth(app);
   const [fireBaseDataLogin, setFireBaseDataLogin] = useState();
+  const [authToken, setAuthToken] = useState();
   const [localDataLogin, setLocalDataLogin] = useState();
   const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,25 @@ export default function App() {
   const [badgeFacture, setBadgeFacture] = useState(false);
   const [loadingLocalAndFirebaseSave, setLoadingLocalAndFirebaseSave] =
     useState(false);
+
+  function authenticate(token) {
+    setAuthToken(token);
+    AsyncStorage.setItem("token", token);
+  }
+
+  function logout() {
+    setAuthToken(null);
+    AsyncStorage.removeItem("token");
+  }
+
+  const valueUser = {
+    token: authToken,
+    isAuthnticated: !!authToken,
+    authenticate: authenticate,
+    logout: logout,
+  };
+
+  console.log("app:::", valueUser.token);
 
   const [menu, setMenu] = useState([
     {
@@ -99,40 +120,65 @@ export default function App() {
   useLayoutEffect(() => {
     async function getDataAsyncLocal() {
       console.log("1");
-      try {
-        const nameLocalAsyncVariable = await AsyncStorage.getItem("userData");
-        const data = JSON.parse(nameLocalAsyncVariable);
-        if (data !== null) {
-          setUserUID(data.userID);
-          setLocalDataLogin(data);
-          setCommande(data.commande);
-          setFacture(data.facture);
-          setLoading(false);
-        } else {
-          setLoading(false);
-          //   console.log("else");
-          //   if (auth.currentUser?.uid) {
-          //     try {
-          //       const dataCheck = await getUserData(data.uid);
-          //       setLocalDataLogin(dataCheck.data());
-          //       setLoading(true);
-          //     } catch (error) {
-          //       console.log("premier use:::", error);
-          //     }
-          //   } else {
-          //     console.log("personne");
-          //     setLoading(true);
-          //     if (!data) {
-          //       setLoading(true);
-          //     }
-          //   }
-        }
-      } catch (error) {
-        console.log("App::getDataAsyncLocal::", error);
+      const storeToken = await AsyncStorage.getItem("token");
+
+      if (storeToken) {
+        setAuthToken(storeToken);
+        setLoading(false);
+      } else {
+        setLoading(false);
       }
+      // try {
+      //   const storeToken = await AsyncStorage.getItem("userData");
+      //   const data = JSON.parse(storeToken);
+      //   if (data !== null) {
+      //     setUserUID(data.userID);
+      //     setLocalDataLogin(data);
+      //     setCommande(data.commande);
+      //     setFacture(data.facture);
+      //     setLoading(false);
+      //   } else {
+      //     setLoading(false);
+      //     //   console.log("else");
+      //     //   if (auth.currentUser?.uid) {
+      //     //     try {
+      //     //       const dataCheck = await getUserData(data.uid);
+      //     //       setLocalDataLogin(dataCheck.data());
+      //     //       setLoading(true);
+      //     //     } catch (error) {
+      //     //       console.log("premier use:::", error);
+      //     //     }
+      //     //   } else {
+      //     //     console.log("personne");
+      //     //     setLoading(true);
+      //     //     if (!data) {
+      //     //       setLoading(true);
+      //     //     }
+      //     //   }
+      //   }
+      // } catch (error) {
+      //   console.log("App::getDataAsyncLocal::", error);
+      // }
     }
     getDataAsyncLocal();
   }, []);
+
+  /*Fetch Value on Document*/
+  // const projectID = "order-4b768";
+  // const key = "AIzaSyAovnZJ1crT3cKUKD4QF5tzjjh33J-9WxI";
+  // const doc = "users";
+  // const url = `https://firestore.googleapis.com/v1beta1/projects/${projectID}/databases/(default)/documents/${doc}?key=${key}`;
+  // // Use fetch to request the API information
+  // axios
+  //   .get(url)
+  //   .then((response) => console.log(response.data.documents[0].fields))
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+  // fetch(url)
+  //   .then(response => response.json())
+  //   .then(json => FireStoreParser(json))
+  //   .then(json => console.log(json))
 
   useEffect(() => {
     async function updateFactureCommande() {
@@ -212,10 +258,13 @@ export default function App() {
           setBadgeCommande,
           badgeFacture,
           setBadgeFacture,
+          valueUser,
         }}
       >
         <NavigationContainer>
-          {localDataLogin ? <BottomTabNavigator /> : <MainStackNavigator />}
+          {/* {localDataLogin ? <BottomTabNavigator /> : <MainStackNavigator />} */}
+          {valueUser.isAuthnticated && <BottomTabNavigator />}
+          {!valueUser.isAuthnticated && <MainStackNavigator />}
         </NavigationContainer>
       </MyContext.Provider>
     );

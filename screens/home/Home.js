@@ -21,7 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import Comanderapidecomponent from "../../components/Comanderapidecomponent";
 
 const Home = ({ route }) => {
-  const { menu } = useContext(MyContext);
+  const { menu, valueUser } = useContext(MyContext);
   const navigation = useNavigation();
 
   //item and click view details
@@ -30,7 +30,7 @@ const Home = ({ route }) => {
       <TouchableOpacity
         style={styles.itemView}
         key={index}
-        onPress={() => navigation.navigate("Product Details", { id: item.id })}
+        onPress={() => valueUser.logout()} //navigation.navigate("Product Details", { id: item.id })}
       >
         <Image source={item.img0} resizeMode="cover" style={styles.img} />
         <Text style={styles.itemName}>{item.title}</Text>

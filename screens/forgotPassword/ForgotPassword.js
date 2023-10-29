@@ -15,6 +15,8 @@ import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { Colors } from "../../constant/Colors";
 //globales styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
+//firebase api
+import { resetPasswordUser } from "../../firebase/ApiFirebase";
 
 //costum config Toast
 const toastConfig = {
@@ -98,7 +100,8 @@ const ForgotPassword = () => {
 
     if (email.length !== 0) {
       try {
-        await onResetPassword(email);
+        // await onResetPassword(email);
+        await resetPasswordUser(email.trim());
         cleanVariable();
         showToastSuccess();
         setActivityIndicator(false);
@@ -119,6 +122,9 @@ const ForgotPassword = () => {
           setErrMsg(er);
         } else if (error.code === "auth/network-request-failed") {
           er = "Vérifier votre connexion internet";
+          setErrMsg(er);
+        } else if (error.code === "ERR_BAD_REQUEST") {
+          er = "Vérifiez vos informations de connexion svp";
           setErrMsg(er);
         }
       }

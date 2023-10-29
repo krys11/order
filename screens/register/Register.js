@@ -17,6 +17,10 @@ import { Colors } from "../../constant/Colors";
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 //mycontext
 import { MyContext } from "../../context/MyContext";
+//FireBase Api
+import { createUser } from "../../firebase/ApiFirebase";
+import axios from "axios";
+import Instance from "../../firebase/Instance";
 
 //costum config Toast
 const toastConfig = {
@@ -71,6 +75,7 @@ const Register = () => {
   const [password2, setPassword2] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
+  const { valueUser, commande, facture } = useContext(MyContext);
 
   //vider les champs
   const cleanVariable = () => {
@@ -114,25 +119,38 @@ const Register = () => {
     ) {
       if (password === password2) {
         try {
-          const UserCredential = await onRegister(email, password);
-          if (UserCredential) {
-            try {
-              await setUserCollection(UserCredential.user.uid, {
-                email,
-                tel,
-                name,
-                commande: [],
-                facture: [],
-              });
-              setActivityIndicator(false);
-              cleanVariable();
-              showToastSuccess();
-            } catch (error) {
-              console.log("Register:::::", error);
-            }
-          } else {
-            return;
-          }
+          const dataRegister = await createUser(email.trim(), password);
+          await Instance.post("/users.json", {
+            id: dataRegister.idToken,
+            name: name.trim(),
+            email: email.trim(),
+            tel: tel.trim(),
+            commande: [""],
+            facture: [""],
+          });
+          cleanVariable();
+          showToastSuccess();
+          setActivityIndicator(false);
+          valueUser.authenticate(dataRegister.idToken);
+          // const UserCredential = await onRegister(email, password);
+          // if (UserCredential) {
+          //   try {
+          //     await setUserCollection(UserCredential.user.uid, {
+          //       email,
+          //       tel,
+          //       name,
+          //       commande: [],
+          //       facture: [],
+          //     });
+          //     setActivityIndicator(false);
+          //     cleanVariable();
+          //     showToastSuccess();
+          //   } catch (error) {
+          //     console.log("Register:::::", error);
+          //   }
+          // } else {
+          //   return;
+          // }
         } catch (error) {
           setActivityIndicator(false);
           console.log(error.code);
@@ -153,6 +171,9 @@ const Register = () => {
             setErrMsg(er);
           } else if (error.code === "auth/network-request-failed") {
             er = "Vérifier votre connexion internet";
+            setErrMsg(er);
+          } else if (error.code === "ERR_BAD_REQUEST") {
+            er = "Vérifier vos informations de connexion";
             setErrMsg(er);
           }
         }

@@ -19,6 +19,8 @@ import { Colors } from "../../constant/Colors";
 import { MyContext } from "../../context/MyContext";
 //Firestore
 import { getUserData } from "../../firebase/Firebase";
+//FirebaseApi
+import { loginUser } from "../../firebase/ApiFirebase";
 //globale styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 
@@ -67,7 +69,7 @@ const toastConfig = {
 };
 
 const Login = () => {
-  const { setLocalDataLogin, setUserUID, setCommande, setFacture } =
+  const { setLocalDataLogin, setUserUID, setCommande, setFacture, valueUser } =
     useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,35 +121,40 @@ const Login = () => {
 
     if (email.length != 0 && password.length) {
       try {
-        const UserCredential = await onLogin(email.trim(), password);
-        if (UserCredential) {
-          setUserUID(UserCredential.user.uid);
-          try {
-            const dataCheck = await getUserData(UserCredential.user.uid);
-            if (dataCheck) {
-              try {
-                const data = {
-                  ...dataCheck.data(),
-                  userID: UserCredential.user.uid,
-                };
-                console.log("loginCheck", data);
-                await saveUserUIDLocal(data);
-                setActivityIndicator(false);
-                cleanVariable();
-                showToastSuccess();
-                setTimeout(() => {
-                  setCommande(dataCheck.data().commande);
-                  setFacture(dataCheck.data().facture);
-                  setLocalDataLogin(dataCheck.data());
-                }, 1000);
-              } catch (error) {
-                console.log("LoginErrorgetUserData:::::::::", error);
-              }
-            }
-          } catch (error) {
-            console.log("LoginErrorAsyncSave::::::::", error);
-          }
-        }
+        const dataLogin = await loginUser(email.trim(), password);
+        cleanVariable();
+        showToastSuccess();
+        setActivityIndicator(false);
+        valueUser.authenticate(dataLogin.idToken);
+        // const UserCredential = await onLogin(email.trim(), password);
+        // if (UserCredential) {
+        //   setUserUID(UserCredential.user.uid);
+        //   try {
+        //     const dataCheck = await getUserData(UserCredential.user.uid);
+        //     if (dataCheck) {
+        //       try {
+        //         const data = {
+        //           ...dataCheck.data(),
+        //           userID: UserCredential.user.uid,
+        //         };
+        //         console.log("loginCheck", data);
+        //         await saveUserUIDLocal(data);
+        //         setActivityIndicator(false);
+        //         cleanVariable();
+        //         showToastSuccess();
+        //         setTimeout(() => {
+        //           setCommande(dataCheck.data().commande);
+        //           setFacture(dataCheck.data().facture);
+        //           setLocalDataLogin(dataCheck.data());
+        //         }, 1000);
+        //       } catch (error) {
+        //         console.log("LoginErrorgetUserData:::::::::", error);
+        //       }
+        //     }
+        //   } catch (error) {
+        //     console.log("LoginErrorAsyncSave::::::::", error);
+        //   }
+        // }
       } catch (error) {
         setActivityIndicator(false);
         console.log(error.code);
@@ -165,6 +172,9 @@ const Login = () => {
           setErrMsg(er);
         } else if (error.code === "auth/network-request-failed") {
           er = "Vérifier votre connexion internet";
+          setErrMsg(er);
+        } else if (error.code === "ERR_BAD_REQUEST") {
+          er = "Vérifiez vos informations de connexion svp";
           setErrMsg(er);
         }
       }
