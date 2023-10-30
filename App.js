@@ -20,7 +20,7 @@ import Instance from "./firebase/Instance";
 export default function App() {
   const auth = getAuth(app);
   const [fireBaseDataLogin, setFireBaseDataLogin] = useState();
-  const [authToken, setAuthToken] = useState();
+  const [authToken, setAuthToken] = useState(null);
   const [localDataLogin, setLocalDataLogin] = useState();
   const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState(true);
@@ -29,15 +29,81 @@ export default function App() {
   const [badgeFacture, setBadgeFacture] = useState(false);
   const [loadingLocalAndFirebaseSave, setLoadingLocalAndFirebaseSave] =
     useState(false);
+  // console.log("localDataLogin", localDataLogin);
 
-  function authenticate(token) {
-    setAuthToken(token);
-    AsyncStorage.setItem("token", token);
+  async function getLocalData() {
+    const data = await AsyncStorage.getItem("USERDATA");
+    const store = JSON.parse(data);
+    return store;
   }
 
-  function logout() {
+  async function saveLocalData(data) {
+    return await AsyncStorage.setItem("USERDATA", JSON.stringify(data));
+  }
+
+  async function getOnlineAllUsersData() {
+    return await Instance.get("/users.json");
+  }
+
+  async function authenticate(dataLogin) {
+    const onlineAllUsersDatas = await getOnlineAllUsersData();
+    for (const userDataAll in onlineAllUsersDatas.data) {
+      if (userDataAll === dataLogin.localId) {
+        for (const userData in onlineAllUsersDatas.data[userDataAll]) {
+          const data = onlineAllUsersDatas.data[userDataAll][userData];
+          console.log(data);
+          const saveLocal = {
+            idLocal: data.idLocal,
+            name: data.name,
+            email: data.email,
+            tel: data.tel,
+            commande: data.commande,
+            facture: data.facture,
+          };
+          await saveLocalData(saveLocal);
+          setLocalDataLogin(saveLocal);
+          setAuthToken(saveLocal.idLocal);
+        }
+      }
+
+      // for (const userData in onlineAllUsersDatas.data[userDataAll]) {
+      //   if (
+      //     onlineAllUsersDatas.data[userDataAll][userData].idLocal ===
+      //     dataLogin.localId
+      //   ) {
+      //     console.log(onlineAllUsersDatas.data[userDataAll][userData]);
+      //   }
+      // }
+    }
+    // console.log("onlineAllUsersData", onlineAllUsersData.datas);
+    // console.log("dataLogin", dataLogin);
+    // console.log("localData", localData);
+    // let id;
+    // console.log("data:::", res.data);
+    // for (const dataUser in res.data) {
+    //   if (res.data[dataUser].idLocal === dataLogin.idLocal) {
+    //     id = res.data[dataUser].id;
+    //     setLocalDataLogin(res.data[dataUser]);
+    //   }
+    // }
+    // const data = {
+    //   idLocal: dataLogin.localId,
+    //   name: dataLogin.name,
+    //   email: dataLogin.email,
+    //   tel: dataLogin.tel,
+    //   commande: dataLogin.commande,
+    //   facture: dataLogin.facture,
+    // };
+    // const response = await AsyncStorage.setItem(
+    //   "USERDATA",
+    //   JSON.stringify(data)
+    // );
+    // if (response) setAuthToken(data.idLocal);
+  }
+
+  async function logout() {
+    await AsyncStorage.removeItem("USERDATA");
     setAuthToken(null);
-    AsyncStorage.removeItem("token");
   }
 
   const valueUser = {
@@ -120,36 +186,51 @@ export default function App() {
 
   useLayoutEffect(() => {
     async function getDataAsyncLocal() {
-      console.log("1");
-      if (!authToken) {
-        const storeToken = await AsyncStorage.getItem("token");
-
-        const res = await Instance.get("/users.json");
-        for (const dataUser in res.data) {
-          if (res.data[dataUser].id === storeToken) {
-            console.log(res.data[dataUser]);
-            setLocalDataLogin(res.data[dataUser]);
-          }
-          // console.log("id::::", res.data[dataUser].id);
-        }
-        // console.log(res.data);
-
-        if (storeToken) {
-          setAuthToken(storeToken);
-          setLoading(false);
-        } else {
-          setLoading(false);
-        }
+      const storeData = await getLocalData();
+      if (storeData) {
+        console.log(storeData);
+        setLocalDataLogin(storeData);
+        setAuthToken(storeData.idLocal);
+        setLoading(false);
       } else {
-        const res = await Instance.get("/users.json");
-        for (const dataUser in res.data) {
-          if (res.data[dataUser].id === authToken) {
-            console.log(res.data[dataUser]);
-            setLocalDataLogin(res.data[dataUser]);
-            setAuthToken(authToken);
-          }
-        }
+        setLoading(false);
       }
+
+      // if (!authToken) {
+      //   console.log("1");
+      //   for (const userDataAll in res.data) {
+      //     if (userDataAll === storeData.localId) {
+      //       for (const userData in res.data[userDataAll]) {
+      //         const data = res.data[userDataAll][userData];
+      //         console.log(data);
+      //         setAuthToken(saveLocal.idLocal);
+      //       }
+      //     }
+      //   }
+      //   for (const dataUser in res.data) {
+      //     if (res.data[dataUser].idLocal === storeData?.idLocal) {
+      //       // console.log(res.data[dataUser]);
+      //       setLocalDataLogin(res.data[dataUser]);
+      //       if (storeData) {
+      //         setAuthToken(storeData.idLocal);
+      //         setLoading(false);
+      //       } else {
+      //         setLoading(false);
+      //       }
+      //     }
+      //   }
+      //   // console.log(res.data);
+      // }
+      // } else {
+      //   // const res = await Instance.get("/users.json");
+      //   for (const dataUser in res.data) {
+      //     if (res.data[dataUser].idLocal === authToken) {
+      //       // console.log(res.data[dataUser]);
+      //       setLocalDataLogin(res.data[dataUser]);
+      //       setAuthToken(authToken);
+      //     }
+      //   }
+      // }
 
       // try {
       //   const storeToken = await AsyncStorage.getItem("userData");
@@ -184,7 +265,7 @@ export default function App() {
       // }
     }
     getDataAsyncLocal();
-  }, [authToken]);
+  }, []);
 
   /*Fetch Value on Document*/
   // const projectID = "order-4b768";

@@ -24,8 +24,13 @@ import TextinputComponent from "../../components/TextinputComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account = () => {
-  const { menu, setFireBaseDataLogin, localDataLogin, setLocalDataLogin } =
-    useContext(MyContext);
+  const {
+    menu,
+    setFireBaseDataLogin,
+    localDataLogin,
+    setLocalDataLogin,
+    valueUser,
+  } = useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -40,15 +45,16 @@ const Account = () => {
 
   const logOut = async () => {
     try {
-      await onSignOut();
-      try {
-        await AsyncStorage.removeItem("userData");
-        setFireBaseDataLogin();
-        setLocalDataLogin();
-        console.log("Logout");
-      } catch (error) {
-        console.log(error);
-      }
+      await valueUser.logout();
+      // await onSignOut();
+      // try {
+      //   await AsyncStorage.removeItem("userData");
+      //   setFireBaseDataLogin();
+      //   setLocalDataLogin();
+      //   console.log("Logout");
+      // } catch (error) {
+      //   console.log(error);
+      // }
       // console.log("remove succes");
     } catch (error) {
       if (error.code === "auth/network-request-failed") {

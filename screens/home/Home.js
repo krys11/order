@@ -30,7 +30,7 @@ const Home = ({ route }) => {
       <TouchableOpacity
         style={styles.itemView}
         key={index}
-        onPress={() => valueUser.logout()} //navigation.navigate("Product Details", { id: item.id })}
+        onPress={() => navigation.navigate("Product Details", { id: item.id })}
       >
         <Image source={item.img0} resizeMode="cover" style={styles.img} />
         <Text style={styles.itemName}>{item.title}</Text>

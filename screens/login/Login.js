@@ -23,6 +23,7 @@ import { getUserData } from "../../firebase/Firebase";
 import { loginUser } from "../../firebase/ApiFirebase";
 //globale styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
+import axios from "axios";
 
 //costum config Toast
 const toastConfig = {
@@ -128,12 +129,16 @@ const Login = () => {
     if (email.length != 0 && password.length) {
       try {
         const dataLogin = await loginUser(email.trim(), password);
-        cleanVariable();
-        showToastSuccess();
-        setActivityIndicator(false);
-        console.log("login", dataLogin);
-        valueUser.authenticate(dataLogin.localId);
-        // setAuthToken(dataLogin.localId);
+        // console.log("login", dataLogin);
+        try {
+          await valueUser.authenticate(dataLogin);
+          cleanVariable();
+          showToastSuccess();
+          setActivityIndicator(false);
+        } catch (error) {
+          console.log("LoginError2::::", error);
+        }
+
         // const UserCredential = await onLogin(email.trim(), password);
         // if (UserCredential) {
         //   setUserUID(UserCredential.user.uid);
@@ -165,7 +170,21 @@ const Login = () => {
         // }
       } catch (error) {
         setActivityIndicator(false);
-        console.log(error.code);
+        // if (error.response) {
+        //   console.log("data::::", error.response.data);
+        //   console.log("status::::", error.response.status);
+        //   console.log("headers::::", error.response.headers);
+        // }
+        // if (error.request) {
+        //   console.log("request::::", error.request);
+        // }
+
+        // if (error.message) {
+        //   console.log("message::::", error.message);
+        // }
+
+        console.log("LoginError1::::", error);
+
         if (error.code === "auth/wrong-password") {
           er = "Mot de passe incorrect";
           setErrMsg(er);

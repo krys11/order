@@ -21,6 +21,7 @@ import { MyContext } from "../../context/MyContext";
 import { createUser } from "../../firebase/ApiFirebase";
 import axios from "axios";
 import Instance from "../../firebase/Instance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //costum config Toast
 const toastConfig = {
@@ -75,7 +76,7 @@ const Register = () => {
   const [password2, setPassword2] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
-  const { valueUser, commande, facture } = useContext(MyContext);
+  const {} = useContext(MyContext);
 
   //vider les champs
   const cleanVariable = () => {
@@ -120,19 +121,20 @@ const Register = () => {
       if (password === password2) {
         try {
           const dataRegister = await createUser(email.trim(), password);
-          // console.log("register:::", dataRegister);
-          await Instance.post("/users.json", {
-            id: dataRegister.localId,
+          const dataUser = {
+            idLocal: dataRegister.localId,
             name: name.trim(),
             email: email.trim(),
             tel: tel.trim(),
             commande: [""],
             facture: [""],
-          });
-          cleanVariable();
+          };
+          await Instance.post(`/users/${dataRegister.localId}.json`, dataUser);
+          // console.log(resSaveData.data.name);
+          // await AsyncStorage.setItem("USERDATA", JSON.stringify(dataUser));
           showToastSuccess();
           setActivityIndicator(false);
-          AsyncStorage.setItem("token", dataRegister.localId);
+          cleanVariable();
           // valueUser.authenticate(dataRegister.localId);
           // const UserCredential = await onRegister(email, password);
           // if (UserCredential) {
