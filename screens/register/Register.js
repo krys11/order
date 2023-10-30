@@ -120,8 +120,9 @@ const Register = () => {
       if (password === password2) {
         try {
           const dataRegister = await createUser(email.trim(), password);
+          // console.log("register:::", dataRegister);
           await Instance.post("/users.json", {
-            id: dataRegister.idToken,
+            id: dataRegister.localId,
             name: name.trim(),
             email: email.trim(),
             tel: tel.trim(),
@@ -131,7 +132,8 @@ const Register = () => {
           cleanVariable();
           showToastSuccess();
           setActivityIndicator(false);
-          valueUser.authenticate(dataRegister.idToken);
+          AsyncStorage.setItem("token", dataRegister.localId);
+          // valueUser.authenticate(dataRegister.localId);
           // const UserCredential = await onRegister(email, password);
           // if (UserCredential) {
           //   try {

@@ -121,18 +121,36 @@ export default function App() {
   useLayoutEffect(() => {
     async function getDataAsyncLocal() {
       console.log("1");
-      const storeToken = await AsyncStorage.getItem("token");
+      if (!authToken) {
+        const storeToken = await AsyncStorage.getItem("token");
 
-      const res = await Instance.get("/users.json");
-      setLocalDataLogin(res.data["-Nhrtuf96JR26SHVUFn_"]);
-      console.log(res.data["-Nhrtuf96JR26SHVUFn_"]);
+        const res = await Instance.get("/users.json");
+        for (const dataUser in res.data) {
+          if (res.data[dataUser].id === storeToken) {
+            console.log(res.data[dataUser]);
+            setLocalDataLogin(res.data[dataUser]);
+          }
+          // console.log("id::::", res.data[dataUser].id);
+        }
+        // console.log(res.data);
 
-      if (storeToken) {
-        setAuthToken(storeToken);
-        setLoading(false);
+        if (storeToken) {
+          setAuthToken(storeToken);
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
       } else {
-        setLoading(false);
+        const res = await Instance.get("/users.json");
+        for (const dataUser in res.data) {
+          if (res.data[dataUser].id === authToken) {
+            console.log(res.data[dataUser]);
+            setLocalDataLogin(res.data[dataUser]);
+            setAuthToken(authToken);
+          }
+        }
       }
+
       // try {
       //   const storeToken = await AsyncStorage.getItem("userData");
       //   const data = JSON.parse(storeToken);
@@ -166,7 +184,7 @@ export default function App() {
       // }
     }
     getDataAsyncLocal();
-  }, []);
+  }, [authToken]);
 
   /*Fetch Value on Document*/
   // const projectID = "order-4b768";
@@ -185,56 +203,56 @@ export default function App() {
   //   .then(json => FireStoreParser(json))
   //   .then(json => console.log(json))
 
-  useEffect(() => {
-    async function updateFactureCommande() {
-      if (update) {
-        console.log("3");
-        const updateLocalStorage = {
-          userID: userUID,
-          email: localDataLogin.email,
-          tel: localDataLogin.tel,
-          name: localDataLogin.name,
-          commande: commande,
-          facture: facture,
-        };
+  // useEffect(() => {
+  //   async function updateFactureCommande() {
+  //     if (update) {
+  //       console.log("3");
+  //       const updateLocalStorage = {
+  //         userID: userUID,
+  //         email: localDataLogin.email,
+  //         tel: localDataLogin.tel,
+  //         name: localDataLogin.name,
+  //         commande: commande,
+  //         facture: facture,
+  //       };
 
-        const updateFirebaseStorage = {
-          commande: commande,
-          facture: facture,
-        };
+  //       const updateFirebaseStorage = {
+  //         commande: commande,
+  //         facture: facture,
+  //       };
 
-        try {
-          await AsyncStorage.setItem(
-            "userData",
-            JSON.stringify(updateLocalStorage)
-          );
-          try {
-            await updateUserData(userUID, updateFirebaseStorage);
-            setUpdate(false);
-            setLoadingLocalAndFirebaseSave(false);
-            setBadgeCommande(true);
-            setBadgeFacture(true);
-            Alert.alert(
-              "Commande",
-              "Votre commande a été effectuée avec succes",
-              [{ text: "OK" }]
-            );
-          } catch (error) {
-            setUpdate(false);
-            setLoadingLocalAndFirebaseSave(false);
-            console.log("error clg2::::::", error);
-          }
-          console.log("save succes");
-        } catch (error) {
-          setUpdate(false);
-          setLoadingLocalAndFirebaseSave(false);
-          console.log("error clg3::::::", error);
-        }
-      }
-    }
+  //       try {
+  //         await AsyncStorage.setItem(
+  //           "userData",
+  //           JSON.stringify(updateLocalStorage)
+  //         );
+  //         try {
+  //           await updateUserData(userUID, updateFirebaseStorage);
+  //           setUpdate(false);
+  //           setLoadingLocalAndFirebaseSave(false);
+  //           setBadgeCommande(true);
+  //           setBadgeFacture(true);
+  //           Alert.alert(
+  //             "Commande",
+  //             "Votre commande a été effectuée avec succes",
+  //             [{ text: "OK" }]
+  //           );
+  //         } catch (error) {
+  //           setUpdate(false);
+  //           setLoadingLocalAndFirebaseSave(false);
+  //           console.log("error clg2::::::", error);
+  //         }
+  //         console.log("save succes");
+  //       } catch (error) {
+  //         setUpdate(false);
+  //         setLoadingLocalAndFirebaseSave(false);
+  //         console.log("error clg3::::::", error);
+  //       }
+  //     }
+  //   }
 
-    updateFactureCommande();
-  }, [commande, facture]);
+  //   updateFactureCommande();
+  // }, [commande, facture]);
 
   if (loading) {
     return <Screenloader />;
@@ -264,6 +282,7 @@ export default function App() {
           badgeFacture,
           setBadgeFacture,
           valueUser,
+          setAuthToken,
         }}
       >
         <NavigationContainer>

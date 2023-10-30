@@ -69,8 +69,14 @@ const toastConfig = {
 };
 
 const Login = () => {
-  const { setLocalDataLogin, setUserUID, setCommande, setFacture, valueUser } =
-    useContext(MyContext);
+  const {
+    setLocalDataLogin,
+    setUserUID,
+    setCommande,
+    setFacture,
+    valueUser,
+    setAuthToken,
+  } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -125,7 +131,9 @@ const Login = () => {
         cleanVariable();
         showToastSuccess();
         setActivityIndicator(false);
-        valueUser.authenticate(dataLogin.idToken);
+        console.log("login", dataLogin);
+        valueUser.authenticate(dataLogin.localId);
+        // setAuthToken(dataLogin.localId);
         // const UserCredential = await onLogin(email.trim(), password);
         // if (UserCredential) {
         //   setUserUID(UserCredential.user.uid);
