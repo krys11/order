@@ -46,6 +46,16 @@ const Account = () => {
   const logOut = async () => {
     try {
       await valueUser.logout();
+      try {
+        await AsyncStorage.removeItem("USERDATA");
+        try {
+          await AsyncStorage.removeItem("DATAPAYEMENT");
+        } catch (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.log("errorAccount", error);
       if (error.code === "auth/network-request-failed") {

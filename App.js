@@ -14,8 +14,6 @@ import logoDefault from "./assets/img/logo_default.jpeg";
 //AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screenloader from "./screens/screenLoader/Screenloader";
-import axios from "axios";
-import Instance from "./firebase/Instance";
 
 export default function App() {
   const auth = getAuth(app);
@@ -27,10 +25,38 @@ export default function App() {
   const [badgeFacture, setBadgeFacture] = useState(false);
   useState(false);
 
+  const getDates = () => {
+    const dateAll = new Date();
+    const date = `${dateAll.getDate()}`.padStart(2, 0);
+    const monthe = `${dateAll.getMonth() + 1}`.padStart(2, 0);
+    const year = `${dateAll.getFullYear()}`;
+
+    return `${date}/${monthe}/${year}`;
+  };
+
+  const getHours = () => {
+    const dateAll = new Date();
+    const hours = `${dateAll.getHours()}`.padStart(2, 0);
+    const minutes = `${dateAll.getMinutes()}`.padStart(2, 0);
+    const seconds = `${dateAll.getSeconds()}`.padStart(2, 0);
+
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
   async function getLocalData() {
     const data = await AsyncStorage.getItem("USERDATA");
     const store = JSON.parse(data);
     return store;
+  }
+
+  async function getDataPayementIsExist() {
+    const data = await AsyncStorage.getItem("DATAPAYEMENT");
+    const store = JSON.parse(data);
+    return store;
+  }
+
+  async function removeDataPayementIsExist() {
+    await AsyncStorage.removeItem("DATAPAYEMENT");
   }
 
   async function saveLocalData(data) {
@@ -50,6 +76,7 @@ export default function App() {
 
   async function logout() {
     await AsyncStorage.removeItem("USERDATA");
+    await AsyncStorage.removeItem("DATAPAYEMENT");
     setAuthToken(null);
   }
 
@@ -138,7 +165,7 @@ export default function App() {
         console.log("useLayoutEffect::::Apps", storeData);
         setLocalDataLogin(storeData);
         setCommande(storeData.commande);
-        setFacture(storeData.commande);
+        setFacture(storeData.facture);
         setAuthToken(storeData.userID);
         setLoading(false);
       } else {
@@ -146,7 +173,48 @@ export default function App() {
       }
     }
     getDataAsyncLocal();
-  }, []);
+  }, [authToken]);
+
+  const getDataPayementAsyncLocal = async (ref, status) => {
+    const dataPayement = await getDataPayementIsExist();
+    if (dataPayement) {
+      setCommande((previousCommande) => [
+        {
+          date: getDates(),
+          heure: getHours(),
+          name: dataPayement.name,
+          nombres: dataPayement.nombres,
+          montant: dataPayement.montant,
+          status: status,
+          format: dataPayement.format,
+        },
+        ...previousCommande,
+      ]);
+      setFacture((previousFacture) => [
+        {
+          date: getDates(),
+          heure: getHours(),
+          ref: ref,
+          name: dataPayement.name,
+          format: dataPayement.format,
+          nombres: dataPayement.nombres,
+          montant: dataPayement.montant,
+          client: dataPayement.name,
+          num: dataPayement.num,
+        },
+        ...previousFacture,
+      ]);
+      try {
+        await removeDataPayementIsExist();
+        setUpdateVariableUser(true);
+      } catch (error) {
+        setUpdateVariableUser(false);
+        console.log("errorRemoveDataPayementAsync", error);
+      }
+    } else {
+      setUpdateVariableUser(false);
+    }
+  };
 
   useEffect(() => {
     async function updateFactureCommande() {
@@ -173,11 +241,11 @@ export default function App() {
             setUpdateVariableUser(false);
             setBadgeCommande(true);
             setBadgeFacture(true);
-            Alert.alert(
-              "Commande",
-              "Votre commande a été effectuée avec succes",
-              [{ text: "OK" }]
-            );
+            // Alert.alert(
+            //   "Commande",
+            //   "Votre commande a été effectuée avec succes",
+            //   [{ text: "OK" }]
+            // );
           } catch (error) {
             console.log("errorUseEffectApp2::::", error);
             setUpdateVariableUser(false);
@@ -185,14 +253,13 @@ export default function App() {
           console.log("save succes");
         } catch (error) {
           console.log("errorUseEffectApp1::::", error);
-          setUpdate(false);
-          setLoadingLocalAndFirebaseSave(false);
+          setUpdateVariableUser(false);
         }
       }
     }
 
     updateFactureCommande();
-  }, [commande, facture]);
+  });
 
   if (loading) {
     return <Screenloader />;
@@ -217,6 +284,7 @@ export default function App() {
           setBadgeFacture,
           valueUser,
           setAuthToken,
+          getDataPayementAsyncLocal,
         }}
       >
         <NavigationContainer>

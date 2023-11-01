@@ -3,6 +3,7 @@ import { useKkiapay } from "@kkiapay-org/react-native-sdk";
 import { useContext, useEffect } from "react";
 import { Alert, Button, View } from "react-native";
 import { MyContext } from "../context/MyContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TestComponent = ({
   itemTitle,
@@ -26,25 +27,8 @@ const TestComponent = ({
     setBadgeCommande,
     setBadgeFacture,
     updateVariableUser,
+    getDataPayementAsyncLocal,
   } = useContext(MyContext);
-
-  const getDates = () => {
-    const dateAll = new Date();
-    const date = `${dateAll.getDate()}`.padStart(2, 0);
-    const monthe = `${dateAll.getMonth() + 1}`.padStart(2, 0);
-    const year = `${dateAll.getFullYear()}`;
-
-    return `${date}/${monthe}/${year}`;
-  };
-
-  const getHours = () => {
-    const dateAll = new Date();
-    const hours = `${dateAll.getHours()}`.padStart(2, 0);
-    const minutes = `${dateAll.getMinutes()}`.padStart(2, 0);
-    const seconds = `${dateAll.getSeconds()}`.padStart(2, 0);
-
-    return `${hours}:${minutes}:${seconds}`;
-  };
 
   function ok() {
     console.log("c'est bon pour la translaction");
@@ -59,44 +43,66 @@ const TestComponent = ({
     }
   };
 
-  const genererCommandeAndFacture = (ref) => {
-    // setUpdateVariableUser(true);
-    setCommande((previousCommande) => [
-      {
-        date: getDates(),
-        heure: getHours(),
-        name: itemTitle,
-        nombres: quantity,
-        montant: priceFinale(),
-        status: "Confirmer",
-        format: selectFormat,
-      },
-      ...previousCommande,
-    ]);
-    setFacture((previousFacture) => [
-      {
-        date: getDates(),
-        heure: getHours(),
-        ref: ref,
-        name: itemTitle,
-        format: selectFormat,
-        nombres: quantity,
-        montant: priceFinale(),
-        client: localDataLogin.name,
-        num: "+22998521478",
-      },
-      ...previousFacture,
-    ]);
-    setSelectFormat("");
-    setFixPrice("");
-    setQuantity("");
+  const saveLocalDataAsync = async () => {
+    const detailPayement = {
+      name: itemTitle,
+      nombres: quantity,
+      montant: priceFinale(),
+      format: selectFormat,
+      client: localDataLogin.name,
+      num: localDataLogin.tel,
+    };
+
+    try {
+      await AsyncStorage.setItem(
+        "DATAPAYEMENT",
+        JSON.stringify(detailPayement)
+      );
+      openWidget();
+    } catch (error) {
+      console.log("errorSaveDataPayementTestComponents", error);
+    }
   };
+
+  // const genererCommandeAndFacture = (ref) => {
+  //   // setUpdateVariableUser(true);
+  //   setCommande((previousCommande) => [
+  //     {
+  //       date: getDates(),
+  //       heure: getHours(),
+  //       name: itemTitle,
+  //       nombres: quantity,
+  //       montant: priceFinale(),
+  //       status: "Confirmer",
+  //       format: selectFormat,
+  //     },
+  //     ...previousCommande,
+  //   ]);
+  //   setFacture((previousFacture) => [
+  //     {
+  //       date: getDates(),
+  //       heure: getHours(),
+  //       ref: ref,
+  //       name: itemTitle,
+  //       format: selectFormat,
+  //       nombres: quantity,
+  //       montant: priceFinale(),
+  //       client: localDataLogin.name,
+  //       num: "+22998521478",
+  //     },
+  //     ...previousFacture,
+  //   ]);
+  //   setSelectFormat("");
+  //   setFixPrice("");
+  //   setQuantity("");
+  // };
 
   useEffect(() => {
     addSuccessListener((data) => {
       if (data?.transactionId) {
-        genererCommandeAndFacture(data.transactionId);
+        // genererCommandeAndFacture(data.transactionId);
         console.log("succes: ", data);
+        getDataPayementAsyncLocal(data.transactionId, "Confirmer");
       }
     });
   }, []);
@@ -161,10 +167,10 @@ const TestComponent = ({
     });
   };
 
-  const openWidgetisValid = () => {
+  const openWidgetisValid = async () => {
     if (selectFormat) {
       if (parseInt(quantity) > 0) {
-        openWidget();
+        await saveLocalDataAsync();
       } else {
         Alert.alert("Quantité", "Veillez définir un nombre", [{ text: "OK" }]);
       }
