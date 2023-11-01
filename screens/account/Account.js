@@ -46,22 +46,11 @@ const Account = () => {
   const logOut = async () => {
     try {
       await valueUser.logout();
-      // await onSignOut();
-      // try {
-      //   await AsyncStorage.removeItem("userData");
-      //   setFireBaseDataLogin();
-      //   setLocalDataLogin();
-      //   console.log("Logout");
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      // console.log("remove succes");
     } catch (error) {
+      console.log("errorAccount", error);
       if (error.code === "auth/network-request-failed") {
         er = "Vérifier votre connexion internet";
         setErrMsg(er);
-      } else {
-        console.log(error);
       }
     }
   };

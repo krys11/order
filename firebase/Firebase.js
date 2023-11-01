@@ -19,13 +19,13 @@ import {
 } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAovnZJ1crT3cKUKD4QF5tzjjh33J-9WxI",
-  authDomain: "order-4b768.firebaseapp.com",
-  projectId: "order-4b768",
-  storageBucket: "order-4b768.appspot.com",
-  messagingSenderId: "139938821750",
-  appId: "1:139938821750:web:2a663c8a1fcd01d4ec5157",
-  measurementId: "G-PMKFX7349V",
+  apiKey: "AIzaSyCKnuVSSdXS8aZZDR5cceVIbIRfjPqW3Yg",
+  authDomain: "vente-6c18a.firebaseapp.com",
+  projectId: "vente-6c18a",
+  storageBucket: "vente-6c18a.appspot.com",
+  messagingSenderId: "1009726195954",
+  appId: "1:1009726195954:web:c039231142e74f5e77286b",
+  measurementId: "G-3CKQ98N6SX",
 };
 
 const app = initializeApp(firebaseConfig);

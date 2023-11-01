@@ -120,44 +120,27 @@ const Register = () => {
     ) {
       if (password === password2) {
         try {
-          const dataRegister = await createUser(email.trim(), password);
+          const UserCredential = await onRegister(email.trim(), password);
           const dataUser = {
-            idLocal: dataRegister.localId,
+            userID: UserCredential.user.uid,
             name: name.trim(),
             email: email.trim(),
             tel: tel.trim(),
-            commande: [""],
-            facture: [""],
+            commande: [],
+            facture: [],
           };
-          await Instance.post(`/users/${dataRegister.localId}.json`, dataUser);
-          // console.log(resSaveData.data.name);
-          // await AsyncStorage.setItem("USERDATA", JSON.stringify(dataUser));
-          showToastSuccess();
-          setActivityIndicator(false);
-          cleanVariable();
-          // valueUser.authenticate(dataRegister.localId);
-          // const UserCredential = await onRegister(email, password);
-          // if (UserCredential) {
-          //   try {
-          //     await setUserCollection(UserCredential.user.uid, {
-          //       email,
-          //       tel,
-          //       name,
-          //       commande: [],
-          //       facture: [],
-          //     });
-          //     setActivityIndicator(false);
-          //     cleanVariable();
-          //     showToastSuccess();
-          //   } catch (error) {
-          //     console.log("Register:::::", error);
-          //   }
-          // } else {
-          //   return;
-          // }
+          try {
+            await setUserCollection(UserCredential.user.uid, dataUser);
+            setActivityIndicator(false);
+            cleanVariable();
+            showToastSuccess();
+          } catch (error) {
+            setActivityIndicator(false);
+            console.log("errorRegister2::::", error);
+          }
         } catch (error) {
           setActivityIndicator(false);
-          console.log(error.code);
+          console.log("errorRegister1::::", error.code);
           if (error.code === "auth/wrong-password") {
             er = "Mot de passe incorrect";
             setErrMsg(er);

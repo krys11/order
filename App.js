@@ -6,7 +6,7 @@ import BottomTabNavigator from "./routes/TabNavigator";
 //contxt
 import { MyContext } from "./context/MyContext";
 //firebase
-import { app, updateUserData } from "./firebase/Firebase";
+import { app, getUserData, updateUserData } from "./firebase/Firebase";
 //firebase auth
 import { getAuth } from "firebase/auth";
 //img
@@ -19,17 +19,13 @@ import Instance from "./firebase/Instance";
 
 export default function App() {
   const auth = getAuth(app);
-  const [fireBaseDataLogin, setFireBaseDataLogin] = useState();
   const [authToken, setAuthToken] = useState(null);
   const [localDataLogin, setLocalDataLogin] = useState();
-  const [userUID, setUserUID] = useState();
   const [loading, setLoading] = useState(true);
-  const [update, setUpdate] = useState(false);
+  const [updateVariableUser, setUpdateVariableUser] = useState(false);
   const [badgeCommande, setBadgeCommande] = useState(false);
   const [badgeFacture, setBadgeFacture] = useState(false);
-  const [loadingLocalAndFirebaseSave, setLoadingLocalAndFirebaseSave] =
-    useState(false);
-  // console.log("localDataLogin", localDataLogin);
+  useState(false);
 
   async function getLocalData() {
     const data = await AsyncStorage.getItem("USERDATA");
@@ -41,64 +37,15 @@ export default function App() {
     return await AsyncStorage.setItem("USERDATA", JSON.stringify(data));
   }
 
-  async function getOnlineAllUsersData() {
-    return await Instance.get("/users.json");
-  }
-
-  async function authenticate(dataLogin) {
-    const onlineAllUsersDatas = await getOnlineAllUsersData();
-    for (const userDataAll in onlineAllUsersDatas.data) {
-      if (userDataAll === dataLogin.localId) {
-        for (const userData in onlineAllUsersDatas.data[userDataAll]) {
-          const data = onlineAllUsersDatas.data[userDataAll][userData];
-          console.log(data);
-          const saveLocal = {
-            idLocal: data.idLocal,
-            name: data.name,
-            email: data.email,
-            tel: data.tel,
-            commande: data.commande,
-            facture: data.facture,
-          };
-          await saveLocalData(saveLocal);
-          setLocalDataLogin(saveLocal);
-          setAuthToken(saveLocal.idLocal);
-        }
-      }
-
-      // for (const userData in onlineAllUsersDatas.data[userDataAll]) {
-      //   if (
-      //     onlineAllUsersDatas.data[userDataAll][userData].idLocal ===
-      //     dataLogin.localId
-      //   ) {
-      //     console.log(onlineAllUsersDatas.data[userDataAll][userData]);
-      //   }
-      // }
-    }
-    // console.log("onlineAllUsersData", onlineAllUsersData.datas);
-    // console.log("dataLogin", dataLogin);
-    // console.log("localData", localData);
-    // let id;
-    // console.log("data:::", res.data);
-    // for (const dataUser in res.data) {
-    //   if (res.data[dataUser].idLocal === dataLogin.idLocal) {
-    //     id = res.data[dataUser].id;
-    //     setLocalDataLogin(res.data[dataUser]);
-    //   }
-    // }
-    // const data = {
-    //   idLocal: dataLogin.localId,
-    //   name: dataLogin.name,
-    //   email: dataLogin.email,
-    //   tel: dataLogin.tel,
-    //   commande: dataLogin.commande,
-    //   facture: dataLogin.facture,
-    // };
-    // const response = await AsyncStorage.setItem(
-    //   "USERDATA",
-    //   JSON.stringify(data)
-    // );
-    // if (response) setAuthToken(data.idLocal);
+  async function authenticate(uid) {
+    const dataUser = await getUserData(uid);
+    const data = {
+      ...dataUser.data(),
+      userID: uid,
+    };
+    await saveLocalData(data);
+    setLocalDataLogin(data);
+    setAuthToken(data.userID);
   }
 
   async function logout() {
@@ -188,152 +135,64 @@ export default function App() {
     async function getDataAsyncLocal() {
       const storeData = await getLocalData();
       if (storeData) {
-        console.log(storeData);
+        console.log("useLayoutEffect::::Apps", storeData);
         setLocalDataLogin(storeData);
-        setAuthToken(storeData.idLocal);
+        setCommande(storeData.commande);
+        setFacture(storeData.commande);
+        setAuthToken(storeData.userID);
         setLoading(false);
       } else {
         setLoading(false);
       }
-
-      // if (!authToken) {
-      //   console.log("1");
-      //   for (const userDataAll in res.data) {
-      //     if (userDataAll === storeData.localId) {
-      //       for (const userData in res.data[userDataAll]) {
-      //         const data = res.data[userDataAll][userData];
-      //         console.log(data);
-      //         setAuthToken(saveLocal.idLocal);
-      //       }
-      //     }
-      //   }
-      //   for (const dataUser in res.data) {
-      //     if (res.data[dataUser].idLocal === storeData?.idLocal) {
-      //       // console.log(res.data[dataUser]);
-      //       setLocalDataLogin(res.data[dataUser]);
-      //       if (storeData) {
-      //         setAuthToken(storeData.idLocal);
-      //         setLoading(false);
-      //       } else {
-      //         setLoading(false);
-      //       }
-      //     }
-      //   }
-      //   // console.log(res.data);
-      // }
-      // } else {
-      //   // const res = await Instance.get("/users.json");
-      //   for (const dataUser in res.data) {
-      //     if (res.data[dataUser].idLocal === authToken) {
-      //       // console.log(res.data[dataUser]);
-      //       setLocalDataLogin(res.data[dataUser]);
-      //       setAuthToken(authToken);
-      //     }
-      //   }
-      // }
-
-      // try {
-      //   const storeToken = await AsyncStorage.getItem("userData");
-      //   const data = JSON.parse(storeToken);
-      //   if (data !== null) {
-      //     setUserUID(data.userID);
-      //     setLocalDataLogin(data);
-      //     setCommande(data.commande);
-      //     setFacture(data.facture);
-      //     setLoading(false);
-      //   } else {
-      //     setLoading(false);
-      //     //   console.log("else");
-      //     //   if (auth.currentUser?.uid) {
-      //     //     try {
-      //     //       const dataCheck = await getUserData(data.uid);
-      //     //       setLocalDataLogin(dataCheck.data());
-      //     //       setLoading(true);
-      //     //     } catch (error) {
-      //     //       console.log("premier use:::", error);
-      //     //     }
-      //     //   } else {
-      //     //     console.log("personne");
-      //     //     setLoading(true);
-      //     //     if (!data) {
-      //     //       setLoading(true);
-      //     //     }
-      //     //   }
-      //   }
-      // } catch (error) {
-      //   console.log("App::getDataAsyncLocal::", error);
-      // }
     }
     getDataAsyncLocal();
   }, []);
 
-  /*Fetch Value on Document*/
-  // const projectID = "order-4b768";
-  // const key = "AIzaSyAovnZJ1crT3cKUKD4QF5tzjjh33J-9WxI";
-  // const doc = "users";
-  // const url = `https://firestore.googleapis.com/v1beta1/projects/${projectID}/databases/(default)/documents/${doc}?key=${key}`;
-  // // Use fetch to request the API information
-  // axios
-  //   .get(url)
-  //   .then((response) => console.log(response.data.documents[0].fields))
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-  // fetch(url)
-  //   .then(response => response.json())
-  //   .then(json => FireStoreParser(json))
-  //   .then(json => console.log(json))
+  useEffect(() => {
+    async function updateFactureCommande() {
+      if (updateVariableUser) {
+        console.log("3");
+        const updateLocalStorage = {
+          userID: valueUser.token,
+          email: localDataLogin.email,
+          tel: localDataLogin.tel,
+          name: localDataLogin.name,
+          commande: commande,
+          facture: facture,
+        };
 
-  // useEffect(() => {
-  //   async function updateFactureCommande() {
-  //     if (update) {
-  //       console.log("3");
-  //       const updateLocalStorage = {
-  //         userID: userUID,
-  //         email: localDataLogin.email,
-  //         tel: localDataLogin.tel,
-  //         name: localDataLogin.name,
-  //         commande: commande,
-  //         facture: facture,
-  //       };
+        const updateFirebaseStorage = {
+          commande: commande,
+          facture: facture,
+        };
 
-  //       const updateFirebaseStorage = {
-  //         commande: commande,
-  //         facture: facture,
-  //       };
+        try {
+          await saveLocalData(updateLocalStorage);
+          try {
+            await updateUserData(valueUser.token, updateFirebaseStorage);
+            setUpdateVariableUser(false);
+            setBadgeCommande(true);
+            setBadgeFacture(true);
+            Alert.alert(
+              "Commande",
+              "Votre commande a été effectuée avec succes",
+              [{ text: "OK" }]
+            );
+          } catch (error) {
+            console.log("errorUseEffectApp2::::", error);
+            setUpdateVariableUser(false);
+          }
+          console.log("save succes");
+        } catch (error) {
+          console.log("errorUseEffectApp1::::", error);
+          setUpdate(false);
+          setLoadingLocalAndFirebaseSave(false);
+        }
+      }
+    }
 
-  //       try {
-  //         await AsyncStorage.setItem(
-  //           "userData",
-  //           JSON.stringify(updateLocalStorage)
-  //         );
-  //         try {
-  //           await updateUserData(userUID, updateFirebaseStorage);
-  //           setUpdate(false);
-  //           setLoadingLocalAndFirebaseSave(false);
-  //           setBadgeCommande(true);
-  //           setBadgeFacture(true);
-  //           Alert.alert(
-  //             "Commande",
-  //             "Votre commande a été effectuée avec succes",
-  //             [{ text: "OK" }]
-  //           );
-  //         } catch (error) {
-  //           setUpdate(false);
-  //           setLoadingLocalAndFirebaseSave(false);
-  //           console.log("error clg2::::::", error);
-  //         }
-  //         console.log("save succes");
-  //       } catch (error) {
-  //         setUpdate(false);
-  //         setLoadingLocalAndFirebaseSave(false);
-  //         console.log("error clg3::::::", error);
-  //       }
-  //     }
-  //   }
-
-  //   updateFactureCommande();
-  // }, [commande, facture]);
+    updateFactureCommande();
+  }, [commande, facture]);
 
   if (loading) {
     return <Screenloader />;
@@ -348,16 +207,10 @@ export default function App() {
           setCommande,
           facture,
           setFacture,
-          fireBaseDataLogin,
-          setFireBaseDataLogin,
           localDataLogin,
           setLocalDataLogin,
-          userUID,
-          setUserUID,
-          update,
-          setUpdate,
-          loadingLocalAndFirebaseSave,
-          setLoadingLocalAndFirebaseSave,
+          updateVariableUser,
+          setUpdateVariableUser,
           badgeCommande,
           setBadgeCommande,
           badgeFacture,

@@ -100,8 +100,7 @@ const ForgotPassword = () => {
 
     if (email.length !== 0) {
       try {
-        // await onResetPassword(email);
-        await resetPasswordUser(email.trim());
+        await onResetPassword(email.trim());
         cleanVariable();
         showToastSuccess();
         setActivityIndicator(false);

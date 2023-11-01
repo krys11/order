@@ -128,60 +128,19 @@ const Login = () => {
 
     if (email.length != 0 && password.length) {
       try {
-        const dataLogin = await loginUser(email.trim(), password);
-        // console.log("login", dataLogin);
+        const UserCredential = await onLogin(email.trim(), password);
+
         try {
-          await valueUser.authenticate(dataLogin);
+          await valueUser.authenticate(UserCredential?.user?.uid);
           cleanVariable();
           showToastSuccess();
           setActivityIndicator(false);
         } catch (error) {
-          console.log("LoginError2::::", error);
+          setActivityIndicator(false);
+          console.log("loginError2::::", error);
         }
-
-        // const UserCredential = await onLogin(email.trim(), password);
-        // if (UserCredential) {
-        //   setUserUID(UserCredential.user.uid);
-        //   try {
-        //     const dataCheck = await getUserData(UserCredential.user.uid);
-        //     if (dataCheck) {
-        //       try {
-        //         const data = {
-        //           ...dataCheck.data(),
-        //           userID: UserCredential.user.uid,
-        //         };
-        //         console.log("loginCheck", data);
-        //         await saveUserUIDLocal(data);
-        //         setActivityIndicator(false);
-        //         cleanVariable();
-        //         showToastSuccess();
-        //         setTimeout(() => {
-        //           setCommande(dataCheck.data().commande);
-        //           setFacture(dataCheck.data().facture);
-        //           setLocalDataLogin(dataCheck.data());
-        //         }, 1000);
-        //       } catch (error) {
-        //         console.log("LoginErrorgetUserData:::::::::", error);
-        //       }
-        //     }
-        //   } catch (error) {
-        //     console.log("LoginErrorAsyncSave::::::::", error);
-        //   }
-        // }
       } catch (error) {
         setActivityIndicator(false);
-        // if (error.response) {
-        //   console.log("data::::", error.response.data);
-        //   console.log("status::::", error.response.status);
-        //   console.log("headers::::", error.response.headers);
-        // }
-        // if (error.request) {
-        //   console.log("request::::", error.request);
-        // }
-
-        // if (error.message) {
-        //   console.log("message::::", error.message);
-        // }
 
         console.log("LoginError1::::", error);
 

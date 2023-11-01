@@ -19,11 +19,11 @@ import TextinputComponent from "./TextinputComponent";
 
 const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
   const {
+    localDataLogin,
     setCommande,
     setFacture,
-    setUpdate,
-    loadingLocalAndFirebaseSave,
-    setLoadingLocalAndFirebaseSave,
+    updateVariableUser,
+    setUpdateVariableUser,
   } = useContext(MyContext);
   const [selectFormat, setSelectFormat] = React.useState("");
   const [fixPrice, setFixPrice] = React.useState("");
@@ -58,8 +58,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
   const genererCommandeAndFacture = () => {
     if (selectFormat) {
       if (parseInt(quantity) > 0) {
-        setLoadingLocalAndFirebaseSave(true);
-        setUpdate(true);
+        setUpdateVariableUser(true);
         setCommande((previousCommande) => [
           {
             date: getDates(),
@@ -72,7 +71,6 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           },
           ...previousCommande,
         ]);
-
         setFacture((previousFacture) => [
           {
             date: getDates(),
@@ -82,12 +80,11 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
             format: selectFormat,
             nombres: quantity,
             montant: priceFinale(),
-            client: "Kry's Hyppo",
+            client: localDataLogin.name,
             num: "+22998521478",
           },
           ...previousFacture,
         ]);
-
         setSelectFormat("");
         setFixPrice("");
         setQuantity("");
@@ -134,14 +131,28 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           placeholder="Nombres"
         />
 
-        {loadingLocalAndFirebaseSave ? (
+        {updateVariableUser ? (
           <Activityindicatorcomponent />
         ) : (
-          <TouchableOpacity onPress={genererCommandeAndFacture}>
-            <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
-              Commander
-            </Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              /*onPress={genererCommandeAndFacture}*/ disabled={true}
+            >
+              <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
+                Commander
+              </Text>
+            </TouchableOpacity>
+            <TestComponent
+              itemTitle={item.title}
+              quantity={quantity}
+              fixPrice={fixPrice}
+              selectFormat={selectFormat}
+              setSelectFormat={setSelectFormat}
+              setFixPrice={setFixPrice}
+              setQuantity={setQuantity}
+              genererCommandeAndFacture={genererCommandeAndFacture}
+            />
+          </>
         )}
       </View>
       {/* <TestComponent genererCommandeAndFacture={genererCommandeAndFacture} /> */}
