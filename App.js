@@ -162,7 +162,7 @@ export default function App() {
     async function getDataAsyncLocal() {
       const storeData = await getLocalData();
       if (storeData) {
-        console.log("useLayoutEffect::::Apps", storeData);
+        // console.log("useLayoutEffect::::Apps", storeData);
         setLocalDataLogin(storeData);
         setCommande(storeData.commande);
         setFacture(storeData.facture);

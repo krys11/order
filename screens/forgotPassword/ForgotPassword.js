@@ -1,4 +1,4 @@
-import { View, StyleSheet, Keyboard } from "react-native";
+import { View, StyleSheet, Keyboard, KeyboardAvoidingView } from "react-native";
 import React, { useState, useEffect } from "react";
 //navigation
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +17,8 @@ import { Colors } from "../../constant/Colors";
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 //firebase api
 import { resetPasswordUser } from "../../firebase/ApiFirebase";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import IconComponent from "../../components/IconComponent";
 
 //costum config Toast
 const toastConfig = {
@@ -150,21 +152,25 @@ const ForgotPassword = () => {
   );
 
   return (
-    <View style={GlobaleStyles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={GlobaleStyles.container}>
       <Lottiecomponents />
-      <View style={GlobaleStyles.section}>
-        <TextinputComponent label="Email" value={email} setValue={setEmail} />
-        {btnMotDePasseOublier}
-      </View>
-      <Btncomponents
-        onPress={() => navigation.navigate("Login")}
-        style={GlobaleStyles.btncustom}
-        mode="contained-tonal"
-      >
-        Se Connecter
-      </Btncomponents>
+      <KeyboardAvoidingView behavior="height" style={{ marginVertical: 200 }}>
+        <IconComponent />
+        <View style={GlobaleStyles.section}>
+          <TextinputComponent label="Email" value={email} setValue={setEmail} />
+          {btnMotDePasseOublier}
+        </View>
+
+        <Btncomponents
+          onPress={() => navigation.navigate("Login")}
+          style={GlobaleStyles.btncustom}
+          mode="contained-tonal"
+        >
+          Se Connecter
+        </Btncomponents>
+      </KeyboardAvoidingView>
       <Toast config={toastConfig} />
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

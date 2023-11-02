@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, StyleSheet, Keyboard } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 //AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //navigation
@@ -24,7 +31,8 @@ import { loginUser } from "../../firebase/ApiFirebase";
 //globale styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 import axios from "axios";
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import IconComponent from "../../components/IconComponent";
 //costum config Toast
 const toastConfig = {
   /*
@@ -142,7 +150,7 @@ const Login = () => {
       } catch (error) {
         setActivityIndicator(false);
 
-        console.log("LoginError1::::", error);
+        console.log("LoginError1::::", error.code);
 
         if (error.code === "auth/wrong-password") {
           er = "Mot de passe incorrect";
@@ -187,27 +195,37 @@ const Login = () => {
   );
 
   return (
-    <View style={GlobaleStyles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={GlobaleStyles.container}>
       <Lottiecomponents />
-      <View style={[GlobaleStyles.section, { height: 250 }]}>
-        <TextinputComponent label="Email" value={email} setValue={setEmail} />
-        <TextinputComponent
-          label="Mot de passe"
-          value={password}
-          setValue={setPassword}
-          secureTextEntry={true}
-        />
-        {btnSeConnecter}
-      </View>
-      <Btncomponents
-        onPress={() => navigation.navigate("Forgetpassword")}
-        style={GlobaleStyles.btncustom}
-        mode="contained-tonal"
-      >
-        Mot de Passe Oublié
-      </Btncomponents>
+      <KeyboardAvoidingView behavior="height" style={{ marginVertical: 200 }}>
+        <IconComponent />
+        <View style={[GlobaleStyles.section, { height: 250 }]}>
+          <TextinputComponent label="Email" value={email} setValue={setEmail} />
+          <TextinputComponent
+            label="Mot de passe"
+            value={password}
+            setValue={setPassword}
+            secureTextEntry={true}
+          />
+          {btnSeConnecter}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Forgetpassword")}
+          >
+            <Text style={{ color: Colors.colorWhite, marginTop: 10 }}>
+              Mot de Passe Oublié
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Btncomponents
+          onPress={() => navigation.navigate("Register")}
+          style={GlobaleStyles.btncustom}
+          mode="contained-tonal"
+        >
+          S'inscrire
+        </Btncomponents>
+      </KeyboardAvoidingView>
       <Toast config={toastConfig} />
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Keyboard } from "react-native";
+import { View, StyleSheet, Keyboard, KeyboardAvoidingView } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 //firebase function
 import { onRegister, setUserCollection } from "../../firebase/Firebase";
@@ -22,6 +22,8 @@ import { createUser } from "../../firebase/ApiFirebase";
 import axios from "axios";
 import Instance from "../../firebase/Instance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import IconComponent from "../../components/IconComponent";
 
 //costum config Toast
 const toastConfig = {
@@ -192,37 +194,40 @@ const Register = () => {
   );
 
   return (
-    <View style={GlobaleStyles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={GlobaleStyles.container}>
       <Lottiecomponents />
-      <View style={[GlobaleStyles.section, { height: 450 }]}>
-        <TextinputComponent label="Prénom" value={name} setValue={setName} />
+      <KeyboardAvoidingView behavior="height" style={{ marginVertical: 100 }}>
+        <IconComponent />
+        <View style={[GlobaleStyles.section, { height: 450 }]}>
+          <TextinputComponent label="Prénom" value={name} setValue={setName} />
+          <TextinputComponent label="Email" value={email} setValue={setEmail} />
+          <TextinputComponent label="Téléphone" value={tel} setValue={setTel} />
+          <TextinputComponent
+            label="Créer un mot de passe"
+            value={password}
+            setValue={setPassword}
+            secureTextEntry={true}
+          />
+          <TextinputComponent
+            label="Confimer votre mot de passe"
+            value={password2}
+            setValue={setPassword2}
+            secureTextEntry={true}
+          />
 
-        <TextinputComponent label="Email" value={email} setValue={setEmail} />
-        <TextinputComponent label="Téléphone" value={tel} setValue={setTel} />
-        <TextinputComponent
-          label="Créer un mot de passe"
-          value={password}
-          setValue={setPassword}
-          secureTextEntry={true}
-        />
-        <TextinputComponent
-          label="Confimer votre mot de passe"
-          value={password2}
-          setValue={setPassword2}
-          secureTextEntry={true}
-        />
+          {btnSinscrire}
+        </View>
 
-        {btnSinscrire}
-      </View>
-      <Btncomponents
-        onPress={() => navigation.navigate("Login")}
-        mode="contained-tonal"
-        style={GlobaleStyles.btncustom}
-      >
-        Se Connecter
-      </Btncomponents>
+        <Btncomponents
+          onPress={() => navigation.navigate("Login")}
+          mode="contained-tonal"
+          style={GlobaleStyles.btncustom}
+        >
+          Se Connecter
+        </Btncomponents>
+      </KeyboardAvoidingView>
       <Toast config={toastConfig} />
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
