@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Keyboard,
-  KeyboardAvoidingView,
   TouchableOpacity,
   Text,
 } from "react-native";
@@ -18,74 +17,19 @@ import Lottiecomponents from "../../components/Lottiecomponents";
 import TextinputComponent from "../../components/TextinputComponent";
 import Btncomponents from "../../components/Btncomponents";
 import Activityindicatorcomponent from "../../components/Activityindicatorcomponent";
-//Toast
-import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
+import IconComponent from "../../components/IconComponent";
+import { ToastConfig, showToastError } from "../../components/Toastcomponent";
 //Color
 import { Colors } from "../../constant/Colors";
 //context
 import { MyContext } from "../../context/MyContext";
-//Firestore
-import { getUserData } from "../../firebase/Firebase";
-//FirebaseApi
-import { loginUser } from "../../firebase/ApiFirebase";
 //globale styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
-import axios from "axios";
+//KeyboardAwareScrollView
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import IconComponent from "../../components/IconComponent";
-//costum config Toast
-const toastConfig = {
-  /*
-    Overwrite 'success' type,
-    by modifying the existing `BaseToast` component
-  */
-  success: (props) => (
-    <BaseToast
-      {...props}
-      style={{ borderLeftColor: "pink" }}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: Colors.colorBlack,
-      }}
-      text1Style={{
-        fontSize: 15,
-        fontWeight: "400",
-        color: Colors.colorWhite,
-      }}
-    />
-  ),
-  /*
-    Overwrite 'error' type,
-    by modifying the existing `ErrorToast` component
-  */
-  error: (props) => (
-    <ErrorToast
-      {...props}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: Colors.colorBlack,
-      }}
-      text1Style={{
-        fontSize: 15,
-        color: Colors.colorWhite,
-      }}
-      text2Style={{
-        fontSize: 15,
-        color: Colors.colorWhite,
-      }}
-    />
-  ),
-};
 
 const Login = () => {
-  const {
-    setLocalDataLogin,
-    setUserUID,
-    setCommande,
-    setFacture,
-    valueUser,
-    setAuthToken,
-  } = useContext(MyContext);
+  const { valueUser } = useContext(MyContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -98,26 +42,6 @@ const Login = () => {
 
   //navigation
   const navigation = useNavigation();
-
-  //Toast message
-  const showToastSuccess = () => {
-    Toast.show({
-      type: "success",
-      text1: "Hello",
-      text2: "Connecter 👋",
-      visibilityTime: 5000,
-    });
-  };
-
-  //notification
-  const showToastError = (msg) => {
-    Toast.show({
-      type: "error",
-      text1: msg + " 👋",
-      position: "top",
-      visibilityTime: 5000,
-    });
-  };
 
   //save user UID LOCAL
   const saveUserUIDLocal = async (data) => {
@@ -141,7 +65,6 @@ const Login = () => {
         try {
           await valueUser.authenticate(UserCredential?.user?.uid);
           cleanVariable();
-          showToastSuccess();
           setActivityIndicator(false);
         } catch (error) {
           setActivityIndicator(false);
@@ -195,36 +118,42 @@ const Login = () => {
   );
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={GlobaleStyles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
       <Lottiecomponents />
-      <KeyboardAvoidingView behavior="height" style={{ marginVertical: 200 }}>
-        <IconComponent />
-        <View style={[GlobaleStyles.section, { height: 250 }]}>
-          <TextinputComponent label="Email" value={email} setValue={setEmail} />
-          <TextinputComponent
-            label="Mot de passe"
-            value={password}
-            setValue={setPassword}
-            secureTextEntry={true}
-          />
-          {btnSeConnecter}
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Forgetpassword")}
+      <View style={{ marginVertical: 200 }}>
+        <View style={GlobaleStyles.container}>
+          <View style={[GlobaleStyles.section, { height: 250 }]}>
+            <TextinputComponent
+              label="Email"
+              value={email}
+              setValue={setEmail}
+            />
+            <TextinputComponent
+              label="Mot de passe"
+              value={password}
+              setValue={setPassword}
+              secureTextEntry={true}
+            />
+            {btnSeConnecter}
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Forgetpassword")}
+            >
+              <Text style={{ color: Colors.colorWhite, marginTop: 10 }}>
+                Mot de Passe Oublié
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Btncomponents
+            onPress={() => navigation.navigate("Register")}
+            style={GlobaleStyles.btncustom}
+            mode="contained-tonal"
           >
-            <Text style={{ color: Colors.colorWhite, marginTop: 10 }}>
-              Mot de Passe Oublié
-            </Text>
-          </TouchableOpacity>
+            S'inscrire
+          </Btncomponents>
+          <IconComponent />
         </View>
-        <Btncomponents
-          onPress={() => navigation.navigate("Register")}
-          style={GlobaleStyles.btncustom}
-          mode="contained-tonal"
-        >
-          S'inscrire
-        </Btncomponents>
-      </KeyboardAvoidingView>
-      <Toast config={toastConfig} />
+      </View>
+      <ToastConfig />
     </KeyboardAwareScrollView>
   );
 };

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet, Keyboard } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 //firebase function
 import { onRegister, setUserCollection } from "../../firebase/Firebase";
@@ -9,65 +9,18 @@ import TextinputComponent from "../../components/TextinputComponent";
 import Lottiecomponents from "../../components/Lottiecomponents";
 import Btncomponents from "../../components/Btncomponents";
 import Activityindicatorcomponent from "../../components/Activityindicatorcomponent";
-//Toast
-import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-//Color
-import { Colors } from "../../constant/Colors";
+import IconComponent from "../../components/IconComponent";
+import {
+  ToastConfig,
+  showToastError,
+  showToastSuccess,
+} from "../../components/Toastcomponent";
 //globales styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 //mycontext
 import { MyContext } from "../../context/MyContext";
-//FireBase Api
-import { createUser } from "../../firebase/ApiFirebase";
-import axios from "axios";
-import Instance from "../../firebase/Instance";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+//KeyboardAwareScrollView
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import IconComponent from "../../components/IconComponent";
-
-//costum config Toast
-const toastConfig = {
-  /*
-    Overwrite 'success' type,
-    by modifying the existing `BaseToast` component
-  */
-  success: (props) => (
-    <BaseToast
-      {...props}
-      style={{ borderLeftColor: "pink" }}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: Colors.colorBlack,
-      }}
-      text1Style={{
-        fontSize: 15,
-        fontWeight: "400",
-        color: Colors.colorWhite,
-      }}
-    />
-  ),
-  /*
-    Overwrite 'error' type,
-    by modifying the existing `ErrorToast` component
-  */
-  error: (props) => (
-    <ErrorToast
-      {...props}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: Colors.colorBlack,
-      }}
-      text1Style={{
-        fontSize: 15,
-        color: Colors.colorWhite,
-      }}
-      text2Style={{
-        fontSize: 15,
-        color: Colors.colorWhite,
-      }}
-    />
-  ),
-};
 
 const Register = () => {
   const navigation = useNavigation();
@@ -83,28 +36,6 @@ const Register = () => {
   //vider les champs
   const cleanVariable = () => {
     setName(""), setEmail(""), setTel(""), setPassword(""), setPassword2("");
-  };
-
-  //Toast message
-  const showToastSuccess = () => {
-    Toast.show({
-      type: "success",
-      text1: "Enregistrement reussi👋",
-      visibilityTime: 5000,
-    });
-
-    setTimeout(() => {
-      navigation.navigate("Login");
-    }, 5000);
-  };
-
-  const showToastError = (msg) => {
-    Toast.show({
-      type: "error",
-      text1: msg + " 👋",
-      position: "top",
-      visibilityTime: 5000,
-    });
   };
 
   //function Register
@@ -135,7 +66,7 @@ const Register = () => {
             await setUserCollection(UserCredential.user.uid, dataUser);
             setActivityIndicator(false);
             cleanVariable();
-            showToastSuccess();
+            showToastSuccess("Compte Créé avec succes👋");
           } catch (error) {
             setActivityIndicator(false);
             console.log("errorRegister2::::", error);
@@ -194,39 +125,57 @@ const Register = () => {
   );
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={GlobaleStyles.container}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
+        flex: 1,
+      }}
+    >
       <Lottiecomponents />
-      <KeyboardAvoidingView behavior="height" style={{ marginVertical: 100 }}>
-        <IconComponent />
-        <View style={[GlobaleStyles.section, { height: 450 }]}>
-          <TextinputComponent label="Prénom" value={name} setValue={setName} />
-          <TextinputComponent label="Email" value={email} setValue={setEmail} />
-          <TextinputComponent label="Téléphone" value={tel} setValue={setTel} />
-          <TextinputComponent
-            label="Créer un mot de passe"
-            value={password}
-            setValue={setPassword}
-            secureTextEntry={true}
-          />
-          <TextinputComponent
-            label="Confimer votre mot de passe"
-            value={password2}
-            setValue={setPassword2}
-            secureTextEntry={true}
-          />
+      <View style={{ marginVertical: 150 }}>
+        <View style={GlobaleStyles.container}>
+          <View style={[GlobaleStyles.section, { height: 450 }]}>
+            <TextinputComponent
+              label="Prénom"
+              value={name}
+              setValue={setName}
+            />
+            <TextinputComponent
+              label="Email"
+              value={email}
+              setValue={setEmail}
+            />
+            <TextinputComponent
+              label="Téléphone"
+              value={tel}
+              setValue={setTel}
+            />
+            <TextinputComponent
+              label="Créer un mot de passe"
+              value={password}
+              setValue={setPassword}
+              secureTextEntry={true}
+            />
+            <TextinputComponent
+              label="Confimer votre mot de passe"
+              value={password2}
+              setValue={setPassword2}
+              secureTextEntry={true}
+            />
 
-          {btnSinscrire}
+            {btnSinscrire}
+          </View>
+
+          <Btncomponents
+            onPress={() => navigation.navigate("Login")}
+            mode="contained-tonal"
+            style={GlobaleStyles.btncustom}
+          >
+            Se Connecter
+          </Btncomponents>
+          <IconComponent />
         </View>
-
-        <Btncomponents
-          onPress={() => navigation.navigate("Login")}
-          mode="contained-tonal"
-          style={GlobaleStyles.btncustom}
-        >
-          Se Connecter
-        </Btncomponents>
-      </KeyboardAvoidingView>
-      <Toast config={toastConfig} />
+      </View>
+      <ToastConfig />
     </KeyboardAwareScrollView>
   );
 };

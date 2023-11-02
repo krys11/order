@@ -1,12 +1,11 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 //color
 import { Colors } from "../constant/Colors";
 
 const GlobaleStyles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
     alignItems: "center",
+    justifyContent: "center",
   },
   lottie: {
     height: "100%",

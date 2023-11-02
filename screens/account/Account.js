@@ -9,28 +9,15 @@ import {
 } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
-//firebase function
-import { onSignOut } from "../../firebase/Firebase";
-//Toast
-import Toast from "react-native-toast-message";
 //context
 import { MyContext } from "../../context/MyContext";
 //color
 import { Colors } from "../../constant/Colors";
 //components
 import TextinputComponent from "../../components/TextinputComponent";
-//AsyncStorage
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account = () => {
-  const {
-    menu,
-    setFireBaseDataLogin,
-    localDataLogin,
-    setLocalDataLogin,
-    valueUser,
-  } = useContext(MyContext);
+  const { menu, localDataLogin, valueUser } = useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -46,16 +33,6 @@ const Account = () => {
   const logOut = async () => {
     try {
       await valueUser.logout();
-      try {
-        await AsyncStorage.removeItem("USERDATA");
-        try {
-          await AsyncStorage.removeItem("DATAPAYEMENT");
-        } catch (error) {
-          console.log(error);
-        }
-      } catch (error) {
-        console.log(error);
-      }
     } catch (error) {
       console.log("errorAccount", error);
       if (error.code === "auth/network-request-failed") {
@@ -101,7 +78,6 @@ const Account = () => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.viewContainer}>
-          <Toast />
           <View style={styles.userDetailsView}>
             <Image
               source={menu[0].img1}

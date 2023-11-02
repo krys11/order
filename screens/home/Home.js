@@ -19,6 +19,7 @@ import { MyContext } from "../../context/MyContext";
 import { useNavigation } from "@react-navigation/native";
 //components
 import Comanderapidecomponent from "../../components/Comanderapidecomponent";
+import { ToastConfig } from "../../components/Toastcomponent";
 
 const Home = ({ route }) => {
   const { menu, valueUser } = useContext(MyContext);
@@ -66,15 +67,16 @@ const Home = ({ route }) => {
     <KkiapayProvider>
       <ScrollView style={styles.container}>
         <View style={styles.viewContainer}>
-          <Text style={[styles.itemName, { marginBottom: 10 }]}>
+          {/* <Text style={[styles.itemName, { marginBottom: 10 }]}>
             Disponible:
-          </Text>
+          </Text> */}
           <View style={styles.listMenu}>{itemsMenu}</View>
-          <Text style={styles.itemName}>Commande Rapide:</Text>
+          {/* <Text style={styles.itemName}>Commande Rapide:</Text>
           <View style={styles.commandeRapideContainer}>
             {itemsCommandeRapide}
-          </View>
+          </View> */}
         </View>
+        <ToastConfig />
       </ScrollView>
     </KkiapayProvider>
   );
@@ -85,10 +87,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
     backgroundColor: Colors.colorBlack,
-    padding: 20,
+    padding: 10,
   },
   viewContainer: {
-    padding: 20,
+    padding: 10,
   },
   listMenu: {
     flexDirection: "row",
@@ -104,8 +106,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   img: {
-    width: 125,
-    height: 125,
+    width: 150,
+    height: 150,
     borderRadius: 999,
   },
   itemName: {

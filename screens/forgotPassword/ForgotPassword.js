@@ -1,4 +1,4 @@
-import { View, StyleSheet, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet, Keyboard } from "react-native";
 import React, { useState, useEffect } from "react";
 //navigation
 import { useNavigation } from "@react-navigation/native";
@@ -9,60 +9,16 @@ import TextinputComponent from "../../components/TextinputComponent";
 import Btncomponents from "../../components/Btncomponents";
 import Lottiecomponents from "../../components/Lottiecomponents";
 import Activityindicatorcomponent from "../../components/Activityindicatorcomponent";
-//Toast
-import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-//Color
-import { Colors } from "../../constant/Colors";
+import IconComponent from "../../components/IconComponent";
+import {
+  ToastConfig,
+  showToastError,
+  showToastSuccess,
+} from "../../components/Toastcomponent";
 //globales styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
-//firebase api
-import { resetPasswordUser } from "../../firebase/ApiFirebase";
+//KeyboardAwareScrollView
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import IconComponent from "../../components/IconComponent";
-
-//costum config Toast
-const toastConfig = {
-  /*
-    Overwrite 'success' type,
-    by modifying the existing `BaseToast` component
-  */
-  success: (props) => (
-    <BaseToast
-      {...props}
-      style={{ borderLeftColor: "pink" }}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: Colors.colorBlack,
-      }}
-      text1Style={{
-        fontSize: 15,
-        fontWeight: "400",
-        color: Colors.colorWhite,
-      }}
-    />
-  ),
-  /*
-    Overwrite 'error' type,
-    by modifying the existing `ErrorToast` component
-  */
-  error: (props) => (
-    <ErrorToast
-      {...props}
-      contentContainerStyle={{
-        paddingHorizontal: 15,
-        backgroundColor: Colors.colorBlack,
-      }}
-      text1Style={{
-        fontSize: 15,
-        color: Colors.colorWhite,
-      }}
-      text2Style={{
-        fontSize: 15,
-        color: Colors.colorWhite,
-      }}
-    />
-  ),
-};
 
 const ForgotPassword = () => {
   //variables
@@ -76,24 +32,6 @@ const ForgotPassword = () => {
     setEmail("");
   };
 
-  //Toast message
-  const showToastSuccess = () => {
-    Toast.show({
-      type: "success",
-      text1: "Email envoyer, Verifier votre boite de reception email 👋",
-      visibilityTime: 5000,
-    });
-  };
-
-  const showToastError = (msg) => {
-    Toast.show({
-      type: "error",
-      text1: msg + " 👋",
-      position: "top",
-      visibilityTime: 5000,
-    });
-  };
-
   //function de reset mot de passe
   const userPasswordForget = async () => {
     let er;
@@ -104,7 +42,9 @@ const ForgotPassword = () => {
       try {
         await onResetPassword(email.trim());
         cleanVariable();
-        showToastSuccess();
+        showToastSuccess(
+          "Email envoyer, Verifier votre boite de reception email 👋"
+        );
         setActivityIndicator(false);
       } catch (error) {
         setActivityIndicator(false);
@@ -152,24 +92,30 @@ const ForgotPassword = () => {
   );
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={GlobaleStyles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
       <Lottiecomponents />
-      <KeyboardAvoidingView behavior="height" style={{ marginVertical: 200 }}>
-        <IconComponent />
-        <View style={GlobaleStyles.section}>
-          <TextinputComponent label="Email" value={email} setValue={setEmail} />
-          {btnMotDePasseOublier}
+      <View style={{ marginVertical: 250 }}>
+        <View style={GlobaleStyles.container}>
+          <View style={GlobaleStyles.section}>
+            <TextinputComponent
+              label="Email"
+              value={email}
+              setValue={setEmail}
+            />
+            {btnMotDePasseOublier}
+          </View>
+          <Btncomponents
+            onPress={() => navigation.navigate("Login")}
+            style={GlobaleStyles.btncustom}
+            mode="contained-tonal"
+          >
+            Se Connecter
+          </Btncomponents>
+          <IconComponent />
         </View>
+      </View>
 
-        <Btncomponents
-          onPress={() => navigation.navigate("Login")}
-          style={GlobaleStyles.btncustom}
-          mode="contained-tonal"
-        >
-          Se Connecter
-        </Btncomponents>
-      </KeyboardAvoidingView>
-      <Toast config={toastConfig} />
+      <ToastConfig />
     </KeyboardAwareScrollView>
   );
 };
