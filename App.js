@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import { Alert } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { MainStackNavigator } from "./routes/StackNavigator";
 import BottomTabNavigator from "./routes/TabNavigator";
 //contxt
@@ -162,7 +162,7 @@ export default function App() {
       ],
     },
     {
-      id: "2",
+      id: "3",
       title: "Chawarma",
       img0: logoDefault,
       format: [
@@ -193,7 +193,7 @@ export default function App() {
       ],
     },
     {
-      id: "2",
+      id: "4",
       title: "Chawarma",
       img0: logoDefault,
       format: [
@@ -270,7 +270,7 @@ export default function App() {
           format: dataPayement.format,
           nombres: dataPayement.nombres,
           montant: dataPayement.montant,
-          client: dataPayement.name,
+          client: localDataLogin.name,
           num: dataPayement.num,
         },
         ...previousFacture,

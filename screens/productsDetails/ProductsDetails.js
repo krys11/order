@@ -17,14 +17,16 @@ const ProductsDetails = () => {
   const itemFormat = product["format"].map((item, index) => {
     return (
       <View key={index}>
-        <Productdetailscomponent product={product} item={item} />
+        <Productdetailscomponent product={product} item={item} id={params.id} />
       </View>
     );
   });
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.productsDetailsView}>{itemFormat}</View>
+      <View style={{ marginBottom: 60 }}>
+        <View style={styles.productsDetailsView}>{itemFormat}</View>
+      </View>
     </ScrollView>
   );
 };
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.colorBlack,
   },
   productsDetailsView: {
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: Colors.colorBlack,
   },
   productsDetailsFormat: {

@@ -4,8 +4,11 @@ import React from "react";
 import { Colors } from "../constant/Colors";
 //img
 import { ImageSlider } from "react-native-image-slider-banner";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Productdetailscomponent = ({ product, item }) => {
+  const navigation = useNavigation();
+  const { params } = useRoute();
   return (
     <View style={styles.productsDetailsFormat}>
       <View style={{ width: "100%", height: 200 }}>
@@ -46,7 +49,14 @@ const Productdetailscomponent = ({ product, item }) => {
         <Text style={{ color: Colors.colorRed, fontWeight: "bold" }}>
           {item.price}FCFA
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Commande Details", {
+              item: item,
+              title: product.title,
+            })
+          }
+        >
           <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
             Commander
           </Text>

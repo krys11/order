@@ -4,40 +4,28 @@ import { useContext, useEffect } from "react";
 import { Alert, Button, View } from "react-native";
 import { MyContext } from "../context/MyContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 const TestComponent = ({
+  nombre,
+  itemPrice,
   itemTitle,
-  quantity,
-  fixPrice,
-  selectFormat,
-  setSelectFormat,
-  setFixPrice,
-  setQuantity,
+  itemFormat,
+  setNombre,
 }) => {
   const { openKkiapayWidget, addSuccessListener, addFailedListener } =
     useKkiapay();
-  const {
-    setCommande,
-    valueUser,
-    commande,
-    facture,
-    setFacture,
-    setUpdateVariableUser,
-    localDataLogin,
-    setBadgeCommande,
-    setBadgeFacture,
-    updateVariableUser,
-    getDataPayementAsyncLocal,
-  } = useContext(MyContext);
+  const { localDataLogin, getDataPayementAsyncLocal } = useContext(MyContext);
+  const navigation = useNavigation();
 
-  function ok() {
-    console.log("c'est bon pour la translaction");
-    genererCommandeAndFacture();
-  }
+  // function ok() {
+  //   console.log("c'est bon pour la translaction");
+  //   genererCommandeAndFacture();
+  // }
 
   const priceFinale = () => {
-    if (fixPrice && quantity) {
-      return fixPrice * parseInt(quantity);
+    if (nombre && itemPrice) {
+      return parseInt(nombre) * parseInt(itemPrice);
     } else {
       return 0;
     }
@@ -46,9 +34,9 @@ const TestComponent = ({
   const saveLocalDataAsync = async () => {
     const detailPayement = {
       name: itemTitle,
-      nombres: quantity,
+      nombres: nombre,
       montant: priceFinale(),
-      format: selectFormat,
+      format: itemFormat,
       client: localDataLogin.name,
       num: localDataLogin.tel,
     };
@@ -58,6 +46,7 @@ const TestComponent = ({
         "DATAPAYEMENT",
         JSON.stringify(detailPayement)
       );
+      setNombre("");
       openWidget();
     } catch (error) {
       console.log("errorSaveDataPayementTestComponents", error);
@@ -168,14 +157,10 @@ const TestComponent = ({
   };
 
   const openWidgetisValid = async () => {
-    if (selectFormat) {
-      if (parseInt(quantity) > 0) {
-        await saveLocalDataAsync();
-      } else {
-        Alert.alert("Quantité", "Veillez définir un nombre", [{ text: "OK" }]);
-      }
+    if (parseInt(nombre) > 0) {
+      await saveLocalDataAsync();
     } else {
-      Alert.alert("Format", "Veillez selectionner un format", [{ text: "OK" }]);
+      Alert.alert("Quantité", "Veillez définir un nombre", [{ text: "OK" }]);
     }
   };
 

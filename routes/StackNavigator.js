@@ -11,6 +11,7 @@ import Register from "../screens/register/Register";
 import ForgotPassword from "../screens/forgotPassword/ForgotPassword";
 import ProductsDetails from "../screens/productsDetails/ProductsDetails";
 import Account from "../screens/account/Account";
+import Paiement from "../screens/paiement/Paiement";
 
 //Color
 import { Colors } from "../constant/Colors";
@@ -73,6 +74,7 @@ const HomeProductsStackNavigator = () => {
     >
       <stack.Screen name="Home" component={Home} />
       <stack.Screen name="Product Details" component={ProductsDetails} />
+      <stack.Screen name="Commande Details" component={Paiement} />
     </stack.Navigator>
   );
 };
