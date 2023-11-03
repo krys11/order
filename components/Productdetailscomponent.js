@@ -9,21 +9,12 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 const Productdetailscomponent = ({ product, item }) => {
   const navigation = useNavigation();
   const { params } = useRoute();
+  const img = [{ img: item.img1 }, { img: item.img2 }, { img: item.img3 }];
   return (
     <View style={styles.productsDetailsFormat}>
       <View style={{ width: "100%", height: 200 }}>
         <ImageSlider
-          data={[
-            {
-              img: item.img1,
-            },
-            {
-              img: item.img2,
-            },
-            {
-              img: item.img3,
-            },
-          ]}
+          data={img}
           autoPlay={true}
           closeIconColor="#fff"
           caroselImageStyle={{
@@ -31,7 +22,7 @@ const Productdetailscomponent = ({ product, item }) => {
             justifyContent: "center",
             alignSelf: "center",
           }}
-          timer={3000}
+          timer={2000}
         />
       </View>
       <View style={styles.format}>
