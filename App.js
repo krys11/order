@@ -33,7 +33,7 @@ export default function App() {
   const [badgeFacture, setBadgeFacture] = useState(false);
   const [commande, setCommande] = useState([]);
   const [facture, setFacture] = useState([]);
-  const [menu, setMenu] = useState([]);
+  const [menu, setMenu] = useState();
 
   const valueUser = {
     token: authToken,
@@ -41,9 +41,6 @@ export default function App() {
     authenticate: authenticate,
     logout: logout,
   };
-
-  console.log("app:::", valueUser.token);
-  // console.log("docs::::", menu);
 
   const getDates = () => {
     const dateAll = new Date();
@@ -319,11 +316,9 @@ export default function App() {
   useLayoutEffect(() => {
     const unsub = onSnapshot(collection(db, "menus"), (querySnapshot) => {
       const documents = querySnapshot.docs.map((doc) => {
-        return {
-          ...doc.data().menus,
-        };
+        return [...doc.data().menus];
       });
-      setMenu(documents);
+      setMenu(documents[0]);
       setLoading(false);
     });
     return () => unsub();

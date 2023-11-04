@@ -8,8 +8,14 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const Productdetailscomponent = ({ product, item }) => {
   const navigation = useNavigation();
-  const { params } = useRoute();
-  const img = [{ img: item.img1 }, { img: item.img2 }, { img: item.img3 }];
+  const img = [
+    item.img1 ? { img: item.img1 } : "",
+    item.img2 ? { img: item.img2 } : "",
+    item.img3 ? { img: item.img3 } : "",
+    // item.img4 ? { img: item.img4 } : { img: null },
+    // item.img5 ? { img: item.img5 } : { img: null },
+    // item.img6 ? { img: item.img6 } : { img: null },
+  ];
   return (
     <View style={styles.productsDetailsFormat}>
       <View style={{ width: "100%", height: 200 }}>

@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 //mycontext
-import React, { useContext, Fragment } from "react";
+import React, { useContext, Fragment, useEffect } from "react";
 //Kkiapay
 import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 //Color
@@ -25,34 +25,26 @@ import { useState } from "react";
 const Home = ({ route }) => {
   const { menu, valueUser } = useContext(MyContext);
   const navigation = useNavigation();
-  const [itemss, setItemss] = useState([]);
-  let tab = [];
-  // console.log("docs::::Login", menu);
-  {
-    for (const items in menu[0]) {
-      tab.push(menu[0][items]);
-      setItemss(tab);
-    }
-  }
-  //item and click view details
-  // const itemsMenu = itemss.map((items, index) => {
-  //   return (
-  //     <TouchableOpacity
-  //       style={styles.itemView}
-  //       key={index}
-  //       // onPress={() =>
-  //       //   navigation.navigate("Product Details", { id: menu[0][item].id })
-  //       // }
-  //     >
-  //       {/* <Image
-  //         source={{ uri: menu[0][item].img0 }}
-  //         resizeMode="cover"
-  //         style={styles.img}
-  //       />
-  //       <Text style={styles.itemName}>{menu[0][item].title}</Text> */}
-  //     </TouchableOpacity>
-  //   );
-  // });
+
+  const itemsMenu = menu.map((items, index) => {
+    return (
+      <TouchableOpacity
+        style={styles.itemView}
+        key={index}
+        onPress={() =>
+          navigation.navigate("Product Details", { id: menu[index].id })
+        }
+        // onPress={() => console.log(menu[index].id)}
+      >
+        <Image
+          source={{ uri: items.img0 }}
+          resizeMode="cover"
+          style={styles.img}
+        />
+        <Text style={styles.itemName}>{items.title}</Text>
+      </TouchableOpacity>
+    );
+  });
 
   //item and click view details
   // const itemsCommandeRapide = menu.map((item, index) => {
@@ -85,7 +77,7 @@ const Home = ({ route }) => {
           {/* <Text style={[styles.itemName, { marginBottom: 10 }]}>
             Disponible:
           </Text> */}
-          <View style={styles.listMenu}></View>
+          <View style={styles.listMenu}>{itemsMenu}</View>
           {/* <Text style={styles.itemName}>Commande Rapide:</Text>
           <View style={styles.commandeRapideContainer}>
             {itemsCommandeRapide}
