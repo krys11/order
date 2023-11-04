@@ -6,7 +6,13 @@ import BottomTabNavigator from "./routes/TabNavigator";
 //contxt
 import { MyContext } from "./context/MyContext";
 //firebase
-import { app, getUserData, updateUserData } from "./firebase/Firebase";
+import {
+  app,
+  getUserData,
+  updateUserData,
+  db,
+  setCollectionData,
+} from "./firebase/Firebase";
 //firebase auth
 import { getAuth } from "firebase/auth";
 //img
@@ -15,6 +21,7 @@ import logoDefault from "./assets/img/logo_default.jpeg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screenloader from "./screens/screenLoader/Screenloader";
 import { ToastConfig, showToastSuccess } from "./components/Toastcomponent";
+import { onSnapshot, collection } from "firebase/firestore";
 
 export default function App() {
   const auth = getAuth(app);
@@ -24,7 +31,19 @@ export default function App() {
   const [updateVariableUser, setUpdateVariableUser] = useState(false);
   const [badgeCommande, setBadgeCommande] = useState(false);
   const [badgeFacture, setBadgeFacture] = useState(false);
-  useState(false);
+  const [commande, setCommande] = useState([]);
+  const [facture, setFacture] = useState([]);
+  const [menu, setMenu] = useState([]);
+
+  const valueUser = {
+    token: authToken,
+    isAuthnticated: !!authToken,
+    authenticate: authenticate,
+    logout: logout,
+  };
+
+  console.log("app:::", valueUser.token);
+  // console.log("docs::::", menu);
 
   const getDates = () => {
     const dateAll = new Date();
@@ -89,146 +108,228 @@ export default function App() {
     }
   }
 
-  const valueUser = {
-    token: authToken,
-    isAuthnticated: !!authToken,
-    authenticate: authenticate,
-    logout: logout,
-  };
+  // const [menu, setMenu] = useState([
+  //   {
+  //     id: "1",
+  //     title: "Pizza",
+  //     img0: logoDefault,
+  //     format: [
+  //       {
+  //         nom: "Petit",
+  //         price: 1000,
+  //         details: "Petit, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Moyen",
+  //         price: 2000,
+  //         details: "Moyen, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Lage",
+  //         price: 3000,
+  //         details: "Lage, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "2",
+  //     title: "Chawarma",
+  //     img0: logoDefault,
+  //     format: [
+  //       {
+  //         nom: "Petit",
+  //         price: 1000,
+  //         details: "Petit, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Moyen",
+  //         price: 2000,
+  //         details: "Moyen, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Lage",
+  //         price: 3000,
+  //         details: "Lage, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "3",
+  //     title: "Chawarma",
+  //     img0: logoDefault,
+  //     format: [
+  //       {
+  //         nom: "Petit",
+  //         price: 1000,
+  //         details: "Petit, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Moyen",
+  //         price: 2000,
+  //         details: "Moyen, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Lage",
+  //         price: 3000,
+  //         details: "Lage, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "4",
+  //     title: "Chawarma",
+  //     img0: logoDefault,
+  //     format: [
+  //       {
+  //         nom: "Petit",
+  //         price: 1000,
+  //         details: "Petit, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Moyen",
+  //         price: 2000,
+  //         details: "Moyen, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Lage",
+  //         price: 3000,
+  //         details: "Lage, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //     ],
+  //   },
+  // ]);
 
-  console.log("app:::", valueUser.token);
+  // const menus = [
+  //   {
+  //     id: "1",
+  //     title: "Pizza",
+  //     img0: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //     format: [
+  //       {
+  //         nom: "Petit",
+  //         price: 1000,
+  //         details: "Petit, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Moyen",
+  //         price: 2000,
+  //         details: "Moyen, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Lage",
+  //         price: 3000,
+  //         details: "Lage, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "2",
+  //     title: "Chawarma",
+  //     img0: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //     format: [
+  //       {
+  //         nom: "Petit",
+  //         price: 1000,
+  //         details: "Petit, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Moyen",
+  //         price: 2000,
+  //         details: "Moyen, Sauce, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //       {
+  //         nom: "Lage",
+  //         price: 3000,
+  //         details: "Lage, Pain, Sel, Oignon",
+  //         img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
+  //         img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
+  //         img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
+  //       },
+  //     ],
+  //   },
+  // ];
 
-  const [menu, setMenu] = useState([
-    {
-      id: "1",
-      title: "Pizza",
-      img0: logoDefault,
-      format: [
-        {
-          nom: "Petit",
-          price: 1000,
-          details: "Petit, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Moyen",
-          price: 2000,
-          details: "Moyen, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Lage",
-          price: 3000,
-          details: "Lage, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-      ],
-    },
-    {
-      id: "2",
-      title: "Chawarma",
-      img0: logoDefault,
-      format: [
-        {
-          nom: "Petit",
-          price: 1000,
-          details: "Petit, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Moyen",
-          price: 2000,
-          details: "Moyen, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Lage",
-          price: 3000,
-          details: "Lage, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-      ],
-    },
-    {
-      id: "3",
-      title: "Chawarma",
-      img0: logoDefault,
-      format: [
-        {
-          nom: "Petit",
-          price: 1000,
-          details: "Petit, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Moyen",
-          price: 2000,
-          details: "Moyen, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Lage",
-          price: 3000,
-          details: "Lage, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-      ],
-    },
-    {
-      id: "4",
-      title: "Chawarma",
-      img0: logoDefault,
-      format: [
-        {
-          nom: "Petit",
-          price: 1000,
-          details: "Petit, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Moyen",
-          price: 2000,
-          details: "Moyen, Sauce, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-        {
-          nom: "Lage",
-          price: 3000,
-          details: "Lage, Pain, Sel, Oignon",
-          img1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5a5uCP-n4teeW2SApcIqUrcQApev8ZVCJkA&usqp=CAU",
-          img2: "https://thumbs.dreamstime.com/b/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg",
-          img3: "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510__340.jpg",
-        },
-      ],
-    },
-  ]);
+  // useEffect(() => {
+  //   async function saveData() {
+  //     try {
+  //       await setCollectionData("menus", "6CGuUMuLrcvXoNDh5Rmw", { menus });
+  //       console.log("save ok");
+  //     } catch (error) {
+  //       console.log("errorSaveMenus:::", error);
+  //     }
+  //   }
 
-  const [commande, setCommande] = useState([]);
+  //   saveData();
 
-  const [facture, setFacture] = useState([]);
+  //   return () => saveData();
+  // }, []);
 
+  //get All Menus
+  useLayoutEffect(() => {
+    const unsub = onSnapshot(collection(db, "menus"), (querySnapshot) => {
+      const documents = querySnapshot.docs.map((doc) => {
+        return {
+          ...doc.data().menus,
+        };
+      });
+      setMenu(documents);
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
+
+  //check user is connected
   useLayoutEffect(() => {
     async function getDataAsyncLocal() {
       const storeData = await getLocalData();
@@ -238,7 +339,7 @@ export default function App() {
         setCommande(storeData.commande);
         setFacture(storeData.facture);
         setAuthToken(storeData.userID);
-        setLoading(false);
+        // setLoading(false);
       } else {
         setLoading(false);
       }
@@ -246,6 +347,7 @@ export default function App() {
     getDataAsyncLocal();
   }, [authToken]);
 
+  //save payement data local to get save after reload application in generate facture
   const getDataPayementAsyncLocal = async (ref, status) => {
     const dataPayement = await getDataPayementIsExist();
     if (dataPayement) {
@@ -287,6 +389,7 @@ export default function App() {
     }
   };
 
+  //update facture in commande after payement confirm
   useEffect(() => {
     async function updateFactureCommande() {
       if (updateVariableUser) {

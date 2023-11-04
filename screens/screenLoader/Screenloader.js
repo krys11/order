@@ -9,7 +9,7 @@ import Lottiecomponents from "../../components/Lottiecomponents";
 
 const Screenloader = () => {
   return (
-    <View style={GlobaleStyles.container}>
+    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
       <Text style={styles.textchargment}>Patientez...</Text>
       <Lottiecomponents
         source={require("../../assets/lotties/food_loading.json")}

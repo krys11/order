@@ -16,7 +16,12 @@ import {
   setDoc,
   doc,
   updateDoc,
+  collection,
+  getDocs,
+  query,
+  onSnapshot,
 } from "firebase/firestore";
+import "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKnuVSSdXS8aZZDR5cceVIbIRfjPqW3Yg",
@@ -37,8 +42,8 @@ const auth = initializeAuth(app, {
 const db = getFirestore(app);
 
 //save User Data
-const setUserCollection = async (userID, data) => {
-  const ref = doc(db, `users/${userID}`);
+const setCollectionData = async (collectionName, userID, data) => {
+  const ref = doc(db, `${collectionName}/${userID}`);
   return await setDoc(ref, data);
 };
 
@@ -81,7 +86,8 @@ export {
   onSendEmailVerification,
   onResetPassword,
   onSignOut,
-  setUserCollection,
+  setCollectionData,
   getUserData,
   updateUserData,
+  db,
 };

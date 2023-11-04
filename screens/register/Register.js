@@ -1,7 +1,7 @@
 import { View, StyleSheet, Keyboard } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 //firebase function
-import { onRegister, setUserCollection } from "../../firebase/Firebase";
+import { onRegister, setCollectionData } from "../../firebase/Firebase";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //components
@@ -63,7 +63,7 @@ const Register = () => {
             facture: [],
           };
           try {
-            await setUserCollection(UserCredential.user.uid, dataUser);
+            await setCollectionData("users", UserCredential.user.uid, dataUser);
             setActivityIndicator(false);
             cleanVariable();
             showToastSuccess("Compte Créé avec succes👋");
