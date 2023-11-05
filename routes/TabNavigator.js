@@ -37,6 +37,7 @@ const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
+  const { valueUser, valueAdmin } = useContext(MyContext);
 
   const { badgeCommande, setBadgeCommande, badgeFacture, setBadgeFacture } =
     useContext(MyContext);
@@ -57,7 +58,7 @@ const BottomTabNavigator = () => {
     return Colors.colorWhite;
   };
 
-  return (
+  const render = valueUser.isAuthnticated ? (
     <Tab.Navigator
       initialRouteName="home"
       screenOptions={({ route }) => ({
@@ -300,7 +301,140 @@ const BottomTabNavigator = () => {
         }}
       />
     </Tab.Navigator>
+  ) : (
+    <Tab.Navigator
+      initialRouteName="home"
+      screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 10,
+          height: 50,
+          left: 15,
+          right: 15,
+          elevation: 0,
+          backgroundColor: Colors.colorWhite,
+          borderRadius: 20,
+        },
+        // headerTitleAlign: "center",
+        // headerStyle: {
+        //   backgroundColor: Colors.colorBlackAlpha,
+        //   borderWidth: 1,
+        //   borderBottomColor: Colors.colorWhite,
+        // },
+        // headerTitleStyle: {
+        //   fontWeight: "bold",
+        //   textTransform: "uppercase",
+        // },
+        // headerTintColor: Colors.colorRed,
+        // //TabHeader
+        // tabBarIcon: ({ focused }) => {
+        //   let iconName;
+        //   if (route.name == "Acceuil") {
+        //     iconName = "home";
+        //     return (
+        //       <IconButton
+        //         icon={iconName}
+        //         iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //         size={20}
+        //       />
+        //     );
+        //   } else if (route.name == "Commandes") {
+        //     iconName = "android-messages";
+        //     return (
+        //       <View style={styles.badgeAndIcon}>
+        //         <IconButton
+        //           icon={iconName}
+        //           iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //           size={20}
+        //         />
+        //         {badgeCommande ? (
+        //           <Badge
+        //             size={10}
+        //             style={{ position: "absolute", top: 20, left: 35 }}
+        //           ></Badge>
+        //         ) : (
+        //           ""
+        //         )}
+        //       </View>
+        //     );
+        //   } else if (route.name == "Factures") {
+        //     iconName = "animation";
+        //     return (
+        //       <View style={styles.badgeAndIcon}>
+        //         <IconButton
+        //           icon={iconName}
+        //           iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //           size={20}
+        //         />
+        //         {badgeFacture ? (
+        //           <Badge
+        //             size={10}
+        //             style={{ position: "absolute", top: 20, left: 35 }}
+        //           ></Badge>
+        //         ) : (
+        //           ""
+        //         )}
+        //       </View>
+        //     );
+        //   } else if (route.name == "Compte") {
+        //     iconName = "account";
+        //     return (
+        //       <IconButton
+        //         icon={iconName}
+        //         iconColor={focused ? Colors.colorRed : Colors.colorWhite}
+        //         size={20}
+        //       />
+        //     );
+        //   }
+        // },
+        // tabBarStyle: {
+        //   backgroundColor: Colors.colorBlack,
+        //   paddingBottom: 5,
+        // },
+        // tabBarLabelStyle: {
+        //   color: Colors.colorWhite,
+        //   paddingBottom: 5,
+        //   fontSize: 10,
+        //   fontWeight: "bold",
+        // },
+      })}
+    >
+      <Tab.Screen
+        name="Acceuil"
+        component={HomeProductsStackNavigator}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              style={{ alignItems: "center" }}
+              onPress={() => navigation.navigate("Acceuil")}
+            >
+              <IconButton
+                icon="home"
+                iconColor={focused ? Colors.colorRed : Colors.colorBlack}
+                size={20}
+              />
+              <Text
+                style={{
+                  color: focused ? Colors.colorRed : Colors.colorBlack,
+                  fontSize: 12,
+                  position: "relative",
+                  bottom: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Acceuil
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
+  {
+    return render;
+  }
 };
 
 const styles = StyleSheet.create({

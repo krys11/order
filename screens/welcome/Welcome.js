@@ -31,6 +31,7 @@ const Welcome = () => {
           buttonColor={Colors.colorBlack}
           style={[styles.marges, styles.btnstyle]}
           onPress={() => navigation.navigate("Login")}
+          onLongPress={() => navigation.navigate("Logindmin")}
         >
           Se connecter
         </Button>

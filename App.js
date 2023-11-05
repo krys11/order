@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import { Alert } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { MainStackNavigator } from "./routes/StackNavigator";
+import {
+  HomeAdminStackNavigator,
+  MainStackNavigator,
+} from "./routes/StackNavigator";
 import BottomTabNavigator from "./routes/TabNavigator";
 //contxt
 import { MyContext } from "./context/MyContext";
@@ -26,7 +29,9 @@ import { onSnapshot, collection } from "firebase/firestore";
 export default function App() {
   const auth = getAuth(app);
   const [authToken, setAuthToken] = useState(null);
+  const [authTokenAdmin, setAuthTokenAdmin] = useState(null);
   const [localDataLogin, setLocalDataLogin] = useState();
+  const [localDataAdminLogin, setLocalDataAdminLogin] = useState();
   const [loading, setLoading] = useState(true);
   const [updateVariableUser, setUpdateVariableUser] = useState(false);
   const [badgeCommande, setBadgeCommande] = useState(false);
@@ -39,6 +44,13 @@ export default function App() {
     token: authToken,
     isAuthnticated: !!authToken,
     authenticate: authenticate,
+    logout: logout,
+  };
+
+  const valueAdmin = {
+    token: authTokenAdmin,
+    isAuthnticated: !!authTokenAdmin,
+    authenticate: authenticateAdmin,
     logout: logout,
   };
 
@@ -60,8 +72,14 @@ export default function App() {
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  async function getLocalData() {
+  async function getLocalUserData() {
     const data = await AsyncStorage.getItem("USERDATA");
+    const store = JSON.parse(data);
+    return store;
+  }
+
+  async function getLocalAdminData() {
+    const data = await AsyncStorage.getItem("ADMINDATA");
     const store = JSON.parse(data);
     return store;
   }
@@ -89,6 +107,17 @@ export default function App() {
     await saveLocalData(data);
     setLocalDataLogin(data);
     setAuthToken(data.userID);
+  }
+
+  async function authenticateAdmin(uid) {
+    // const dataUser = await getUserData(uid);
+    // const data = {
+    //   ...dataUser.data(),
+    //   userID: uid,
+    // };
+    // await saveLocalData(data);
+    // setLocalDataLogin(data);
+    setAuthTokenAdmin(uid);
   }
 
   async function logout() {
@@ -326,8 +355,8 @@ export default function App() {
 
   //check user is connected
   useLayoutEffect(() => {
-    async function getDataAsyncLocal() {
-      const storeData = await getLocalData();
+    async function getDataUserAsyncLocal() {
+      const storeData = await getLocalUserData();
       if (storeData) {
         // console.log("useLayoutEffect::::Apps", storeData);
         setLocalDataLogin(storeData);
@@ -339,8 +368,22 @@ export default function App() {
         setLoading(false);
       }
     }
-    getDataAsyncLocal();
-  }, [authToken]);
+    async function getDataAdminAsyncLocal() {
+      const storeData = await getLocalAdminData();
+      if (storeData) {
+        // console.log("useLayoutEffect::::Apps", storeData);
+        setLocalDataAdminLogin(storeData);
+        // setCommande(storeData.commande);
+        // setFacture(storeData.facture);
+        setAuthTokenAdmin(storeData.userID);
+        // setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    }
+    getDataUserAsyncLocal();
+    // getDataAdminAsyncLocal();
+  }, [authToken, authTokenAdmin]);
 
   //save payement data local to get save after reload application in generate facture
   const getDataPayementAsyncLocal = async (ref, status) => {
@@ -426,6 +469,13 @@ export default function App() {
     updateFactureCommande();
   });
 
+  const render =
+    valueAdmin.isAuthnticated || valueUser.isAuthnticated ? (
+      <BottomTabNavigator />
+    ) : (
+      <MainStackNavigator />
+    );
+
   if (loading) {
     return <Screenloader />;
   } else {
@@ -443,14 +493,13 @@ export default function App() {
           badgeFacture,
           setBadgeFacture,
           valueUser,
+          valueAdmin,
           setAuthToken,
           getDataPayementAsyncLocal,
         }}
       >
         <NavigationContainer>
-          {/* {localDataLogin ? <BottomTabNavigator /> : <MainStackNavigator />} */}
-          {valueUser.isAuthnticated && <BottomTabNavigator />}
-          {!valueUser.isAuthnticated && <MainStackNavigator />}
+          {render}
           <ToastConfig />
         </NavigationContainer>
       </MyContext.Provider>

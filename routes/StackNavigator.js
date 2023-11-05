@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
-//Screen
+//Screen user
 import Home from "../screens/home/Home";
 import Welcome from "../screens/welcome/Welcome";
 import Login from "../screens/login/Login";
@@ -12,6 +12,10 @@ import ForgotPassword from "../screens/forgotPassword/ForgotPassword";
 import ProductsDetails from "../screens/productsDetails/ProductsDetails";
 import Account from "../screens/account/Account";
 import Paiement from "../screens/paiement/Paiement";
+
+//Screen Admin
+import LoginAdmin from "../screens/admin/loginAdmin/LoginAdmin";
+import HomeAdmin from "../screens/admin/homeAdmin/HomeAdmin";
 
 //Color
 import { Colors } from "../constant/Colors";
@@ -56,6 +60,11 @@ const MainStackNavigator = () => {
         component={ForgotPassword}
         options={{ headerShown: false }}
       />
+      <stack.Screen
+        name="Logindmin"
+        component={LoginAdmin}
+        options={{ headerShown: false }}
+      />
     </stack.Navigator>
   );
 };
@@ -78,6 +87,23 @@ const HomeProductsStackNavigator = () => {
     </stack.Navigator>
   );
 };
+
+// const HomeAdminStackNavigator = () => {
+//   return (
+//     <stack.Navigator
+//       initialRouteName="HomeAdmin"
+//       screenOptions={{
+//         headerTintColor: Colors.colorWhite,
+//         headerStyle: {
+//           backgroundColor: Colors.colorBlackAlpha,
+//         },
+//         headerTitleAlign: "center",
+//       }}
+//     >
+//       <stack.Screen name="HomeAdmin" component={HomeAdmin} />
+//     </stack.Navigator>
+//   );
+// };
 
 const AccountStackNavigator = () => {
   return (
