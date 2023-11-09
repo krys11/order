@@ -59,6 +59,12 @@ const updateUserData = async (userID, updateData) => {
   return await updateDoc(ref, updateData);
 };
 
+//update Admin Data
+const updateAdminData = async (userID, updateData) => {
+  const ref = doc(db, `admin/${userID}`);
+  return await updateDoc(ref, updateData);
+};
+
 const onRegister = async (email, password) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
@@ -89,5 +95,6 @@ export {
   setCollectionData,
   getUserData,
   updateUserData,
+  updateAdminData,
   db,
 };

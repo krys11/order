@@ -18,13 +18,14 @@ import Screenloader from "./screens/screenLoader/Screenloader";
 import { ToastConfig, showToastSuccess } from "./components/Toastcomponent";
 //Firebase
 import { getAuth } from "firebase/auth";
-import { onSnapshot, collection } from "firebase/firestore";
+import { onSnapshot, collection, arrayUnion } from "firebase/firestore";
 import {
   app,
   getUserData,
   updateUserData,
   db,
   setCollectionData,
+  updateAdminData,
 } from "./firebase/Firebase";
 //Notifications
 import * as Notifications from "expo-notifications";
@@ -132,6 +133,7 @@ export default function App() {
     // await saveLocalData(data);
     // setLocalDataLogin(data);
     setAuthTokenAdmin(uid);
+    setLoading(false);
   }
 
   async function logout() {
@@ -466,14 +468,28 @@ export default function App() {
           facture: facture,
         };
 
+        const updateFirebaseDataAdmin = {
+          facture: facture[0],
+          notifiactionToken: localDataLogin.notifiactionToken,
+          check: 1,
+        };
+
         try {
           await saveLocalData(updateLocalStorage);
           try {
             await updateUserData(valueUser.token, updateFirebaseStorage);
-            setUpdateVariableUser(false);
-            setBadgeCommande(true);
-            setBadgeFacture(true);
-            showToastSuccess("Commande effectuée avec succes");
+            try {
+              await updateAdminData("wF9wyzb9EQVm5k3N1KNrjhXXNJZ2", {
+                commanderecue: arrayUnion(updateFirebaseDataAdmin),
+              });
+              setUpdateVariableUser(false);
+              setBadgeCommande(true);
+              setBadgeFacture(true);
+              showToastSuccess("Commande effectuée avec succes");
+            } catch (error) {
+              console.log("errorUseEffectApp3::::", error);
+              setUpdateVariableUser(false);
+            }
           } catch (error) {
             console.log("errorUseEffectApp2::::", error);
             setUpdateVariableUser(false);

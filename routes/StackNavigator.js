@@ -19,6 +19,7 @@ import HomeAdmin from "../screens/admin/homeAdmin/HomeAdmin";
 
 //Color
 import { Colors } from "../constant/Colors";
+import SendsNotificationAdmin from "../screens/admin/sendAllNotifications/SendsNotificationAdmin";
 
 const stack = createStackNavigator();
 
@@ -51,6 +52,11 @@ const MainStackNavigator = () => {
         options={{ headerShown: false }}
       />
       <stack.Screen
+        name="Loginadmin"
+        component={LoginAdmin}
+        options={{ headerShown: false }}
+      />
+      <stack.Screen
         name="Register"
         component={Register}
         options={{ headerShown: false }}
@@ -58,11 +64,6 @@ const MainStackNavigator = () => {
       <stack.Screen
         name="Forgetpassword"
         component={ForgotPassword}
-        options={{ headerShown: false }}
-      />
-      <stack.Screen
-        name="Logindmin"
-        component={LoginAdmin}
         options={{ headerShown: false }}
       />
     </stack.Navigator>
@@ -88,22 +89,31 @@ const HomeProductsStackNavigator = () => {
   );
 };
 
-// const HomeAdminStackNavigator = () => {
-//   return (
-//     <stack.Navigator
-//       initialRouteName="HomeAdmin"
-//       screenOptions={{
-//         headerTintColor: Colors.colorWhite,
-//         headerStyle: {
-//           backgroundColor: Colors.colorBlackAlpha,
-//         },
-//         headerTitleAlign: "center",
-//       }}
-//     >
-//       <stack.Screen name="HomeAdmin" component={HomeAdmin} />
-//     </stack.Navigator>
-//   );
-// };
+const HomeAdminStackNavigator = () => {
+  return (
+    <stack.Navigator
+      initialRouteName="Homeadmin"
+      screenOptions={{
+        headerTintColor: Colors.colorWhite,
+        headerStyle: {
+          backgroundColor: Colors.colorBlackAlpha,
+        },
+        headerTitleAlign: "center",
+      }}
+    >
+      <stack.Screen
+        name="Homeadmin"
+        component={HomeAdmin}
+        options={{ headerShown: false }}
+      />
+      {/* <stack.Screen
+        name="SendsNotificationadmin"
+        component={SendsNotificationAdmin}
+        options={{ headerShown: false }}
+      /> */}
+    </stack.Navigator>
+  );
+};
 
 const AccountStackNavigator = () => {
   return (
@@ -130,4 +140,5 @@ export {
   MainStackNavigator,
   HomeProductsStackNavigator,
   AccountStackNavigator,
+  HomeAdminStackNavigator,
 };

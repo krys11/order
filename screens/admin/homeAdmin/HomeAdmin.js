@@ -6,9 +6,16 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Button,
 } from "react-native";
 //mycontext
-import React, { useContext, Fragment, useEffect } from "react";
+import React, {
+  useContext,
+  Fragment,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 //Kkiapay
 import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 //Color
@@ -18,82 +25,96 @@ import { MyContext } from "../../../context/MyContext";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //components
-import Comanderapidecomponent from "../../../components/Comanderapidecomponent";
 import { ToastConfig } from "../../../components/Toastcomponent";
-import { useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../../firebase/Firebase";
+import { ActivityIndicator } from "react-native-paper";
+import Lottiecomponents from "../../../components/Lottiecomponents";
+import Screenloader from "../../screenLoader/Screenloader";
 
 const HomeAdmin = ({ route }) => {
   const { menu, valueUser } = useContext(MyContext);
   const navigation = useNavigation();
+  const [datas, setDatas] = useState();
+  // const commanderecue = datas ? datas["commanderecue"] : "";
 
-  const itemsMenu = menu.map((items, index) => {
-    return (
-      <TouchableOpacity
-        style={styles.itemView}
-        key={index}
-        onPress={() =>
-          navigation.navigate("Product Details", { id: menu[index].id })
-        }
-        // onPress={() => console.log(menu[index].id)}
-      >
-        <Image
-          source={{ uri: items.img0 }}
-          resizeMode="cover"
-          style={styles.img}
-        />
-        <Text style={styles.itemName}>{items.title}</Text>
-      </TouchableOpacity>
-    );
-  });
+  // console.log("commanderecue:::", commanderecue[0]);
 
-  //item and click view details
-  // const itemsCommandeRapide = menu.map((item, index) => {
-  //   const itemformat = [
-  //     { key: "0", value: item.format[0].nom },
-  //     { key: "1", value: item.format[1].nom },
-  //     { key: "2", value: item.format[2].nom },
-  //   ];
-  //   const itemPrice = [
-  //     item.format[0].price,
-  //     item.format[1].price,
-  //     item.format[2].price,
-  //   ];
+  const sendNotification = async (index) => {
+    const message = {
+      to: datas["commanderecue"][index].notifiactionToken,
+      sound: "default",
+      title: "Chawarma",
+      body: "Votre commande est prête passez prendre tant que c'est encore toute chaude",
+    };
 
-  //   return (
-  //     <Fragment key={index}>
-  //       <Comanderapidecomponent
-  //         item={item}
-  //         itemformat={itemformat}
-  //         itemPrice={itemPrice}
-  //       />
-  //     </Fragment>
-  //   );
-  // });
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  };
 
-  return (
-    <KkiapayProvider>
-      <ScrollView style={styles.container}>
-        <View style={styles.viewContainer}>
-          {/* <Text style={[styles.itemName, { marginBottom: 10 }]}>
-            Disponible:
-          </Text> */}
-          {/* <View style={styles.listMenu}>{itemsMenu}</View> */}
-          {/* <Text style={styles.itemName}>Commande Rapide:</Text>
-          <View style={styles.commandeRapideContainer}>
-            {itemsCommandeRapide}
-          </View> */}
-        </View>
-        <ToastConfig />
-      </ScrollView>
-    </KkiapayProvider>
+  useLayoutEffect(() => {
+    const unsub = onSnapshot(collection(db, "admin"), (querySnapshot) => {
+      const documents = querySnapshot.docs.map((doc) => {
+        return doc.data();
+      });
+      setDatas(documents[0]);
+    });
+
+    return () => unsub();
+  }, []);
+
+  const ViewUser = datas ? (
+    datas["commanderecue"].map((data, i) => {
+      const commanderecue = datas["commanderecue"];
+      return (
+        <TouchableOpacity key={i}>
+          <Text>Commande: {i + 1}</Text>
+          <Text>date: {commanderecue[i].facture.client}</Text>
+          <Text>date: {commanderecue[i].facture.date}</Text>
+          <Text>
+            format: {commanderecue[i].facture.name}(
+            {commanderecue[i].facture.format}){" "}
+          </Text>
+          <Text>heure: {commanderecue[i].facture.heure}</Text>
+          <Text>montant: {commanderecue[i].facture.montant}</Text>
+          <Text>name: {commanderecue[i].facture.name}</Text>
+          <Text>nombres: {commanderecue[i].facture.nombres}</Text>
+          <Button
+            title="Commande Terminée"
+            onPress={async () => await sendNotification(i)}
+          />
+          <Text>------------------</Text>
+        </TouchableOpacity>
+      );
+    })
+  ) : (
+    <Text>Pas de commande</Text>
   );
+
+  if (datas) {
+    return (
+      <View style={{ marginTop: 50 }}>
+        <Text>Commande des Users</Text>
+        <ScrollView>{ViewUser}</ScrollView>
+      </View>
+    );
+  } else {
+    return <Screenloader />;
+  }
 };
 
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
-    backgroundColor: Colors.colorBlack,
+    backgroundColor: Colors.colorWhite,
     padding: 10,
   },
   viewContainer: {

@@ -27,12 +27,14 @@ import { Colors } from "../constant/Colors";
 import {
   HomeProductsStackNavigator,
   AccountStackNavigator,
+  HomeAdminStackNavigator,
 } from "./StackNavigator";
 
 //mycontext
 import { MyContext } from "../context/MyContext";
 import { useNavigation } from "@react-navigation/native";
 import Notification from "../screens/notification/Notification";
+import SendsNotificationAdmin from "../screens/admin/sendAllNotifications/SendsNotificationAdmin";
 
 const Tab = createBottomTabNavigator();
 
@@ -305,7 +307,7 @@ const BottomTabNavigator = () => {
     </Tab.Navigator>
   ) : (
     <Tab.Navigator
-      initialRouteName="home"
+      initialRouteName="Acceuil"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -404,13 +406,13 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen
         name="Acceuil"
-        component={HomeProductsStackNavigator}
+        component={HomeAdminStackNavigator}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TouchableOpacity
               style={{ alignItems: "center" }}
-              onPress={() => navigation.navigate("Acceuil")}
+              onPress={() => navigation.navigate("Homeadmin")}
             >
               <IconButton
                 icon="home"
@@ -427,6 +429,36 @@ const BottomTabNavigator = () => {
                 }}
               >
                 Acceuil
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="SendsNotificationadmin"
+        component={SendsNotificationAdmin}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              style={{ alignItems: "center" }}
+              onPress={() => navigation.navigate("SendsNotificationadmin")}
+            >
+              <IconButton
+                icon="home"
+                iconColor={focused ? Colors.colorRed : Colors.colorBlack}
+                size={20}
+              />
+              <Text
+                style={{
+                  color: focused ? Colors.colorRed : Colors.colorBlack,
+                  fontSize: 12,
+                  position: "relative",
+                  bottom: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Notifications
               </Text>
             </TouchableOpacity>
           ),

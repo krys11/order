@@ -1,4 +1,4 @@
-import { View, StyleSheet, Keyboard } from "react-native";
+import { View, StyleSheet, Keyboard, Alert, Platform } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 //firebase function
 import { onRegister, setCollectionData } from "../../firebase/Firebase";
@@ -21,6 +21,8 @@ import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 import { MyContext } from "../../context/MyContext";
 //KeyboardAwareScrollView
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+//Notification
+import * as Notification from "expo-notifications";
 
 const Register = () => {
   const navigation = useNavigation();
@@ -31,7 +33,41 @@ const Register = () => {
   const [password2, setPassword2] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
+  const [tokenNotification, setTokenNotification] = useState();
   const {} = useContext(MyContext);
+
+  async function configurePushNotification() {
+    const { status } = await Notification.getPermissionsAsync();
+    let persmission = status;
+
+    if (persmission !== "granted") {
+      const { status } = await Notification.requestPermissionsAsync();
+      let persmission = status;
+    }
+
+    if (persmission !== "granted") {
+      Alert.alert(
+        "Notification Persmission",
+        "Nous avons besoin des notifications pour cette App"
+      );
+      return;
+    }
+    const tokenData = await Notification.getExpoPushTokenAsync();
+    // console.log(tokenData);
+    setTokenNotification(tokenData.data);
+
+    if (Platform.OS === "ios") {
+      Notification.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notification.AndroidImportance.DEFAULT,
+      });
+    }
+  }
+
+  useEffect(() => {
+    const getPermission = async () => await configurePushNotification();
+    getPermission();
+  }, []);
 
   //vider les champs
   const cleanVariable = () => {
@@ -52,49 +88,58 @@ const Register = () => {
       password2.length !== 0
     ) {
       if (password === password2) {
-        try {
-          const UserCredential = await onRegister(email.trim(), password);
-          const dataUser = {
-            userID: UserCredential.user.uid,
-            name: name.trim(),
-            email: email.trim(),
-            tel: tel.trim(),
-            commande: [],
-            facture: [],
-          };
+        if (!tokenNotification) {
+          await configurePushNotification();
+        } else {
           try {
-            await setCollectionData("users", UserCredential.user.uid, dataUser);
-            setActivityIndicator(false);
-            cleanVariable();
-            showToastSuccess("Compte Créé avec succes👋");
+            const UserCredential = await onRegister(email.trim(), password);
+            const dataUser = {
+              userID: UserCredential.user.uid,
+              name: name.trim(),
+              email: email.trim(),
+              tel: tel.trim(),
+              commande: [],
+              facture: [],
+              notifiactionToken: tokenNotification,
+            };
+            try {
+              await setCollectionData(
+                "users",
+                UserCredential.user.uid,
+                dataUser
+              );
+              setActivityIndicator(false);
+              cleanVariable();
+              showToastSuccess("Compte Créé avec succes👋");
+            } catch (error) {
+              setActivityIndicator(false);
+              console.log("errorRegister2::::", error);
+            }
           } catch (error) {
             setActivityIndicator(false);
-            console.log("errorRegister2::::", error);
-          }
-        } catch (error) {
-          setActivityIndicator(false);
-          console.log("errorRegister1::::", error.code);
-          if (error.code === "auth/wrong-password") {
-            er = "Mot de passe incorrect";
-            setErrMsg(er);
-          } else if (error.code === "auth/weak-password") {
-            er = "Le mot de passe doit depasser de 6 lettres";
-            setErrMsg(er);
-          } else if (error.code === "auth/email-already-in-use") {
-            er = "Cet email est deja utiliser";
-            setErrMsg(er);
-          } else if (error.code === "auth/invalid-email") {
-            er = "Email incorrect";
-            setErrMsg(er);
-          } else if (error.code === "auth/too-many-requests") {
-            er = "Patienter un peu, serveur occuper";
-            setErrMsg(er);
-          } else if (error.code === "auth/network-request-failed") {
-            er = "Vérifier votre connexion internet";
-            setErrMsg(er);
-          } else if (error.code === "ERR_BAD_REQUEST") {
-            er = "Vérifier vos informations de connexion";
-            setErrMsg(er);
+            console.log("errorRegister1::::", error.code);
+            if (error.code === "auth/wrong-password") {
+              er = "Mot de passe incorrect";
+              setErrMsg(er);
+            } else if (error.code === "auth/weak-password") {
+              er = "Le mot de passe doit depasser de 6 lettres";
+              setErrMsg(er);
+            } else if (error.code === "auth/email-already-in-use") {
+              er = "Cet email est deja utiliser";
+              setErrMsg(er);
+            } else if (error.code === "auth/invalid-email") {
+              er = "Email incorrect";
+              setErrMsg(er);
+            } else if (error.code === "auth/too-many-requests") {
+              er = "Patienter un peu, serveur occuper";
+              setErrMsg(er);
+            } else if (error.code === "auth/network-request-failed") {
+              er = "Vérifier votre connexion internet";
+              setErrMsg(er);
+            } else if (error.code === "ERR_BAD_REQUEST") {
+              er = "Vérifier vos informations de connexion";
+              setErrMsg(er);
+            }
           }
         }
       } else {
