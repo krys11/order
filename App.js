@@ -8,7 +8,17 @@ import {
 import BottomTabNavigator from "./routes/TabNavigator";
 //contxt
 import { MyContext } from "./context/MyContext";
-//firebase
+//img
+import logoDefault from "./assets/img/logo_default.jpeg";
+//AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+//Screenloader
+import Screenloader from "./screens/screenLoader/Screenloader";
+//ToastConfig
+import { ToastConfig, showToastSuccess } from "./components/Toastcomponent";
+//Firebase
+import { getAuth } from "firebase/auth";
+import { onSnapshot, collection } from "firebase/firestore";
 import {
   app,
   getUserData,
@@ -16,15 +26,19 @@ import {
   db,
   setCollectionData,
 } from "./firebase/Firebase";
-//firebase auth
-import { getAuth } from "firebase/auth";
-//img
-import logoDefault from "./assets/img/logo_default.jpeg";
-//AsyncStorage
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Screenloader from "./screens/screenLoader/Screenloader";
-import { ToastConfig, showToastSuccess } from "./components/Toastcomponent";
-import { onSnapshot, collection } from "firebase/firestore";
+//Notifications
+import * as Notifications from "expo-notifications";
+
+//Local Notification
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldShowAlert: true,
+      shouldSetBadge: true,
+    };
+  },
+});
 
 export default function App() {
   const auth = getAuth(app);
@@ -350,6 +364,7 @@ export default function App() {
       setMenu(documents[0]);
       setLoading(false);
     });
+
     return () => unsub();
   }, []);
 
@@ -383,6 +398,11 @@ export default function App() {
     }
     getDataUserAsyncLocal();
     // getDataAdminAsyncLocal();
+
+    return () => {
+      getDataUserAsyncLocal();
+      // getDataAdminAsyncLocal();
+    };
   }, [authToken, authTokenAdmin]);
 
   //save payement data local to get save after reload application in generate facture
@@ -429,7 +449,7 @@ export default function App() {
 
   //update facture in commande after payement confirm
   useEffect(() => {
-    async function updateFactureCommande() {
+    const updateFactureCommande = async () => {
       if (updateVariableUser) {
         console.log("3");
         const updateLocalStorage = {
@@ -464,9 +484,13 @@ export default function App() {
           setUpdateVariableUser(false);
         }
       }
-    }
+    };
 
     updateFactureCommande();
+
+    return () => {
+      updateFactureCommande();
+    };
   });
 
   const render =

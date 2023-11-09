@@ -32,6 +32,7 @@ import {
 //mycontext
 import { MyContext } from "../context/MyContext";
 import { useNavigation } from "@react-navigation/native";
+import Notification from "../screens/notification/Notification";
 
 const Tab = createBottomTabNavigator();
 
@@ -300,6 +301,7 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
+      <Tab.Screen name="Notif" component={Notification} />
     </Tab.Navigator>
   ) : (
     <Tab.Navigator
