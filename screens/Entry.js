@@ -6,7 +6,6 @@ import Screenloader from "./screenLoader/Screenloader";
 import { MyContext } from "../context/MyContext";
 import { ToastConfig, showToastSuccess } from "../components/Toastcomponent";
 import {
-  app,
   db,
   getUserData,
   updateUserData,
@@ -305,8 +304,10 @@ export default function Entry() {
         }}
       >
         <NavigationContainer>
-          {render}
-          <ToastConfig />
+          <>
+            {render}
+            <ToastConfig />
+          </>
         </NavigationContainer>
       </MyContext.Provider>
     );
