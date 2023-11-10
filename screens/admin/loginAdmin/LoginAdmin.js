@@ -42,7 +42,7 @@ const LoginAdmin = () => {
     if (email.length != 0 && password.length) {
       try {
         const UserCredential = await onLogin(email.trim(), password);
-        console.log(UserCredential);
+        // console.log(UserCredential);
         setActivityIndicator(false);
         try {
           await valueAdmin.authenticate(UserCredential?.user?.uid);
