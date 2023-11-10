@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.krysdario1996.orderapp"
+      "package": "com.krysdario1996.orderapp",
+      "version": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
