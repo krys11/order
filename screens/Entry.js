@@ -13,9 +13,9 @@ import {
   updateAdminData,
 } from "../firebase/Firebase";
 import { onSnapshot, collection, arrayUnion } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Entry() {
-  const auth = getAuth(app);
   const [authToken, setAuthToken] = useState(null);
   const [authTokenAdmin, setAuthTokenAdmin] = useState(null);
   const [localDataLogin, setLocalDataLogin] = useState();

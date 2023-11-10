@@ -1,6 +1,7 @@
 import React from "react";
 import Entry from "./screens/Entry";
 import * as Notifications from "expo-notifications";
+import { ToastConfig } from "./components/Toastcomponent";
 
 //Local Notification
 Notifications.setNotificationHandler({
@@ -220,5 +221,10 @@ export default function App() {
   //   return () => saveData();
   // }, []);
 
-  return <Entry />;
+  return (
+    <>
+      <Entry />
+      <ToastConfig />
+    </>
+  );
 }

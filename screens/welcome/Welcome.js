@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 //colors
 import { Colors } from "../../constant/Colors";
+import { Button } from "react-native-paper";
 
 const Welcome = () => {
   const navigation = useNavigation();

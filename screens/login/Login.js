@@ -70,6 +70,9 @@ const Login = () => {
         } else if (error.code === "auth/user-not-found") {
           er = "Utilisateur introuvable";
           setErrMsg(er);
+        } else if (error.code === "auth/invalid-login-credentials") {
+          er = "Utilisateur invalide";
+          setErrMsg(er);
         } else if (error.code === "auth/invalid-email") {
           er = "Email incorrect";
           setErrMsg(er);
