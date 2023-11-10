@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
+import { StyleSheet } from "react-native";
 //react_list_select
 import { SelectList } from "react-native-dropdown-select-list";
-import { useContext } from "react";
 //mycontext
 import { MyContext } from "../context/MyContext";
 //color

@@ -1,6 +1,5 @@
-import { View, Text } from "react-native";
 import React from "react";
-import { IconButton, MD3Colors } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../constant/Colors";
 

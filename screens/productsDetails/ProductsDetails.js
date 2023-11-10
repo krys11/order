@@ -1,6 +1,5 @@
 import { View, ScrollView, StyleSheet } from "react-native";
 import React, { useContext } from "react";
-
 //navigation param
 import { useRoute } from "@react-navigation/native";
 //context

@@ -1,3 +1,4 @@
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +8,6 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
 } from "react-native";
-import React, { useContext, useState, useEffect } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 //context
 import { MyContext } from "../../context/MyContext";
@@ -26,8 +26,6 @@ const Account = () => {
 
   const ChangePassword = async () => {
     console.log("first");
-    // setActivityIndicator(true);
-    // setDisableTouchable(true);
   };
 
   const logOut = async () => {

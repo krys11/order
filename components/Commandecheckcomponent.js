@@ -1,5 +1,5 @@
+import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import React, { useContext, useState } from "react";
 //color
 import { Colors } from "../constant/Colors";
 //mycontext

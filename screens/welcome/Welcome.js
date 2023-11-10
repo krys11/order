@@ -1,8 +1,6 @@
-import { View, Text, ImageBackground, StyleSheet } from "react-native";
-import React, { useContext } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { MyContext } from "../../context/MyContext";
-import { Button } from "react-native-paper";
 //lottie animmation
 import LottieView from "lottie-react-native";
 //colors
@@ -10,7 +8,6 @@ import { Colors } from "../../constant/Colors";
 
 const Welcome = () => {
   const navigation = useNavigation();
-  const { isAuth, setIsAuth, data } = useContext(MyContext);
 
   return (
     <View style={styles.container}>

@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useContext } from "react";
 import { MyContext } from "../../context/MyContext";
 import { Colors } from "../../constant/Colors";
@@ -11,9 +11,8 @@ import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 import Activityindicatorcomponent from "../../components/Activityindicatorcomponent";
 
 export default function Paiement() {
-  const [priceTotal, setPriceTotal] = useState();
   const [nombre, setNombre] = useState("0");
-  const { menu, updateVariableUser } = useContext(MyContext);
+  const { updateVariableUser } = useContext(MyContext);
   const { params } = useRoute();
 
   return (
@@ -36,7 +35,7 @@ export default function Paiement() {
           keyboardType="numeric"
         />
         <Text>
-          Prix Total :{" "}
+          Prix Total :
           {nombre ? `${params.item.price * parseInt(nombre)} FCFA` : "0 FCFA"}
         </Text>
         {updateVariableUser ? (

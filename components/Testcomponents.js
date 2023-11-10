@@ -1,10 +1,9 @@
 // In your component -- TestComponent
+import React, { useContext, useEffect } from "react";
 import { useKkiapay } from "@kkiapay-org/react-native-sdk";
-import { useContext, useEffect } from "react";
 import { Alert, Button, View } from "react-native";
 import { MyContext } from "../context/MyContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
 
 const TestComponent = ({
   nombre,
@@ -16,7 +15,6 @@ const TestComponent = ({
   const { openKkiapayWidget, addSuccessListener, addFailedListener } =
     useKkiapay();
   const { localDataLogin, getDataPayementAsyncLocal } = useContext(MyContext);
-  const navigation = useNavigation();
 
   // function ok() {
   //   console.log("c'est bon pour la translaction");

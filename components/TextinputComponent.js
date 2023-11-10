@@ -1,5 +1,5 @@
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import React from "react";
+import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
 //Colors

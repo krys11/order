@@ -1,35 +1,18 @@
-import React, { useContext, Fragment } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Badge, IconButton, MD3Colors } from "react-native-paper";
-
-//icons
-import {
-  MaterialIcons,
-  AntDesign,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
-
+import { Badge, IconButton } from "react-native-paper";
 //Screen
 import Commande from "../screens/commande/Commande";
 import Facture from "../screens/facture/Facture";
-
 //Color
 import { Colors } from "../constant/Colors";
-
 //stack Navigator
 import {
   HomeProductsStackNavigator,
   AccountStackNavigator,
   HomeAdminStackNavigator,
 } from "./StackNavigator";
-
 //mycontext
 import { MyContext } from "../context/MyContext";
 import { useNavigation } from "@react-navigation/native";
@@ -40,26 +23,10 @@ const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
-  const { valueUser, valueAdmin } = useContext(MyContext);
+  const { valueUser } = useContext(MyContext);
 
   const { badgeCommande, setBadgeCommande, badgeFacture, setBadgeFacture } =
     useContext(MyContext);
-
-  const setC = (focused) => {
-    if (focused) {
-      setBadgeCommande(false);
-      return Colors.colorRed;
-    }
-    return Colors.colorWhite;
-  };
-
-  const setF = (focused) => {
-    if (focused) {
-      setBadgeFacture(false);
-      return Colors.colorRed;
-    }
-    return Colors.colorWhite;
-  };
 
   const render = valueUser.isAuthnticated ? (
     <Tab.Navigator

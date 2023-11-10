@@ -1,44 +1,22 @@
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   ScrollView,
   Dimensions,
   Button,
 } from "react-native";
-//mycontext
-import React, {
-  useContext,
-  Fragment,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
-//Kkiapay
-import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 //Color
 import { Colors } from "../../../constant/Colors";
-//context
-import { MyContext } from "../../../context/MyContext";
-//navigation
-import { useNavigation } from "@react-navigation/native";
 //components
-import { ToastConfig } from "../../../components/Toastcomponent";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase/Firebase";
-import { ActivityIndicator } from "react-native-paper";
-import Lottiecomponents from "../../../components/Lottiecomponents";
 import Screenloader from "../../screenLoader/Screenloader";
 
 const HomeAdmin = ({ route }) => {
-  const { menu, valueUser } = useContext(MyContext);
-  const navigation = useNavigation();
   const [datas, setDatas] = useState();
-  // const commanderecue = datas ? datas["commanderecue"] : "";
-
-  // console.log("commanderecue:::", commanderecue[0]);
 
   const sendNotification = async (index) => {
     const message = {

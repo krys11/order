@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useContext } from "react";
 //color
 import { Colors } from "../constant/Colors";
 //mycontext
@@ -135,9 +135,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           <Activityindicatorcomponent />
         ) : (
           <>
-            <TouchableOpacity
-              /*onPress={genererCommandeAndFacture}*/ disabled={true}
-            >
+            <TouchableOpacity disabled={true}>
               <Text style={{ color: Colors.colorGreen, fontWeight: "bold" }}>
                 Commander
               </Text>
@@ -155,7 +153,7 @@ const Comanderapidecomponent = ({ item, itemformat, itemPrice }) => {
           </>
         )}
       </View>
-      {/* <TestComponent genererCommandeAndFacture={genererCommandeAndFacture} /> */}
+      <TestComponent genererCommandeAndFacture={genererCommandeAndFacture} />
     </View>
   );
 };

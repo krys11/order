@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import React, { useContext, useEffect } from "react";
-
 //color
 import { Colors } from "../../constant/Colors";
 import Facturecomponent from "../../components/Facturecomponent";

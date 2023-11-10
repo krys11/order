@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-//AsyncStorage
-import AsyncStorage from "@react-native-async-storage/async-storage";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //firebase function
@@ -42,15 +40,6 @@ const Login = () => {
 
   //navigation
   const navigation = useNavigation();
-
-  //save user UID LOCAL
-  const saveUserUIDLocal = async (data) => {
-    try {
-      await AsyncStorage.setItem("userData", JSON.stringify(data));
-    } catch (error) {
-      console.log("AsynLogin::::::", error);
-    }
-  };
 
   //function login
   const userLogin = async () => {

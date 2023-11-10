@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 //color
 import { Colors } from "../constant/Colors";
 //img
 import { ImageSlider } from "react-native-image-slider-banner";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const Productdetailscomponent = ({ product, item }) => {
   const navigation = useNavigation();
@@ -12,9 +12,6 @@ const Productdetailscomponent = ({ product, item }) => {
     item.img1 ? { img: item.img1 } : "",
     item.img2 ? { img: item.img2 } : "",
     item.img3 ? { img: item.img3 } : "",
-    // item.img4 ? { img: item.img4 } : { img: null },
-    // item.img5 ? { img: item.img5 } : { img: null },
-    // item.img6 ? { img: item.img6 } : { img: null },
   ];
   return (
     <View style={styles.productsDetailsFormat}>

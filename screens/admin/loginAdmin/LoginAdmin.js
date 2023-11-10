@@ -1,15 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  StyleSheet,
-  Keyboard,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-//AsyncStorage
-import AsyncStorage from "@react-native-async-storage/async-storage";
-//navigation
-import { useNavigation } from "@react-navigation/native";
+import { View, StyleSheet, Keyboard, Text } from "react-native";
 //firebase function
 import { onLogin } from "../../../firebase/Firebase";
 //components
@@ -43,18 +33,6 @@ const LoginAdmin = () => {
     setEmail(""), setPassword("");
   };
 
-  //navigation
-  const navigation = useNavigation();
-
-  //save user UID LOCAL
-  const saveUserUIDLocal = async (data) => {
-    try {
-      await AsyncStorage.setItem("userData", JSON.stringify(data));
-    } catch (error) {
-      console.log("AsynLogin::::::", error);
-    }
-  };
-
   //function login
   const adminLogin = async () => {
     let er;
@@ -65,20 +43,14 @@ const LoginAdmin = () => {
       try {
         const UserCredential = await onLogin(email.trim(), password);
         console.log(UserCredential);
+        setActivityIndicator(false);
         try {
           await valueAdmin.authenticate(UserCredential?.user?.uid);
+          cleanVariable();
         } catch (error) {
           setActivityIndicator(false);
           console.log("loginAdminError2::::", error);
         }
-        // try {
-        //   await valueUser.authenticate(UserCredential?.user?.uid);
-        //   cleanVariable();
-        //   setActivityIndicator(false);
-        // } catch (error) {
-        //   setActivityIndicator(false);
-        //   console.log("loginAdminError2::::", error);
-        // }
       } catch (error) {
         setActivityIndicator(false);
 

@@ -1,7 +1,7 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 //lottie animmation
 import LottieView from "lottie-react-native";
-import { StyleSheet } from "react-native";
 
 const Lottiecomponents = (props) => {
   return (

@@ -2,8 +2,6 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 //colors
 import { Colors } from "../../constant/Colors";
-//globale styles
-import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
 //component
 import Lottiecomponents from "../../components/Lottiecomponents";
 

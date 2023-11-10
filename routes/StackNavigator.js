@@ -1,8 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
-
 import { createStackNavigator } from "@react-navigation/stack";
-
 //Screen user
 import Home from "../screens/home/Home";
 import Welcome from "../screens/welcome/Welcome";
@@ -12,14 +9,11 @@ import ForgotPassword from "../screens/forgotPassword/ForgotPassword";
 import ProductsDetails from "../screens/productsDetails/ProductsDetails";
 import Account from "../screens/account/Account";
 import Paiement from "../screens/paiement/Paiement";
-
 //Screen Admin
 import LoginAdmin from "../screens/admin/loginAdmin/LoginAdmin";
 import HomeAdmin from "../screens/admin/homeAdmin/HomeAdmin";
-
 //Color
 import { Colors } from "../constant/Colors";
-import SendsNotificationAdmin from "../screens/admin/sendAllNotifications/SendsNotificationAdmin";
 
 const stack = createStackNavigator();
 

@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 //mycontext
-import React, { useContext, Fragment, useEffect } from "react";
+import React, { useContext } from "react";
 //Kkiapay
 import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 //Color
@@ -18,12 +18,10 @@ import { MyContext } from "../../context/MyContext";
 //navigation
 import { useNavigation } from "@react-navigation/native";
 //components
-import Comanderapidecomponent from "../../components/Comanderapidecomponent";
 import { ToastConfig } from "../../components/Toastcomponent";
-import { useState } from "react";
 
-const Home = ({ route }) => {
-  const { menu, valueUser } = useContext(MyContext);
+const Home = () => {
+  const { menu } = useContext(MyContext);
   const navigation = useNavigation();
 
   const itemsMenu = menu.map((items, index) => {
@@ -34,7 +32,6 @@ const Home = ({ route }) => {
         onPress={() =>
           navigation.navigate("Product Details", { id: menu[index].id })
         }
-        // onPress={() => console.log(menu[index].id)}
       >
         <Image
           source={{ uri: items.img0 }}
@@ -74,14 +71,7 @@ const Home = ({ route }) => {
     <KkiapayProvider>
       <ScrollView style={styles.container}>
         <View style={styles.viewContainer}>
-          {/* <Text style={[styles.itemName, { marginBottom: 10 }]}>
-            Disponible:
-          </Text> */}
           <View style={styles.listMenu}>{itemsMenu}</View>
-          {/* <Text style={styles.itemName}>Commande Rapide:</Text>
-          <View style={styles.commandeRapideContainer}>
-            {itemsCommandeRapide}
-          </View> */}
         </View>
         <ToastConfig />
       </ScrollView>
@@ -122,6 +112,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingTop: 5,
   },
-  commandeRapideContainer: {},
 });
 export default Home;

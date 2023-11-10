@@ -1,5 +1,5 @@
-import { View, StyleSheet, Keyboard, Alert, Platform } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import { View, Keyboard, Alert, Platform } from "react-native";
+import React, { useState, useEffect } from "react";
 //firebase function
 import { onRegister, setCollectionData } from "../../firebase/Firebase";
 //navigation
@@ -17,8 +17,6 @@ import {
 } from "../../components/Toastcomponent";
 //globales styles
 import { GlobaleStyles } from "../../globaleStyles/GlobaleStyles";
-//mycontext
-import { MyContext } from "../../context/MyContext";
 //KeyboardAwareScrollView
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 //Notification
@@ -34,7 +32,6 @@ const Register = () => {
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
   const [tokenNotification, setTokenNotification] = useState();
-  const {} = useContext(MyContext);
 
   async function configurePushNotification() {
     const { status } = await Notification.getPermissionsAsync();
@@ -42,7 +39,7 @@ const Register = () => {
 
     if (persmission !== "granted") {
       const { status } = await Notification.requestPermissionsAsync();
-      let persmission = status;
+      persmission = status;
     }
 
     if (persmission !== "granted") {
@@ -224,7 +221,5 @@ const Register = () => {
     </KeyboardAwareScrollView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Register;

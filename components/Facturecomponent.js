@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,7 +6,6 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React, { useContext } from "react";
 //color
 import { Colors } from "../constant/Colors";
 //icons
