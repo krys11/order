@@ -21,7 +21,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.krysdario1996.orderapp",
-      "version": "1.0.0"
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
