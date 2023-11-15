@@ -14,7 +14,8 @@ const TestComponent = ({
 }) => {
   const { openKkiapayWidget, addSuccessListener, addFailedListener } =
     useKkiapay();
-  const { localDataLogin, getDataPayementAsyncLocal } = useContext(MyContext);
+  const { userDATA, getDataPayementAsyncLocal, commande, facture } =
+    useContext(MyContext);
 
   // function ok() {
   //   console.log("c'est bon pour la translaction");
@@ -35,8 +36,11 @@ const TestComponent = ({
       nombres: nombre,
       montant: priceFinale(),
       format: itemFormat,
-      client: localDataLogin.name,
-      num: localDataLogin.tel,
+      client: userDATA.name,
+      num: userDATA.tel,
+      uid: userDATA.userID,
+      commande: commande,
+      facture: facture,
     };
 
     try {

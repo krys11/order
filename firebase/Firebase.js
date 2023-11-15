@@ -12,12 +12,10 @@ import {
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getFirestore,
-  getDoc,
   setDoc,
   doc,
   updateDoc,
-  onSnapshot,
-  collection,
+  arrayUnion,
 } from "firebase/firestore";
 import "firebase/firestore";
 

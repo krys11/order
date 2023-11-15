@@ -10,6 +10,7 @@ import {
   getUserData,
   updateUserData,
   updateAdminData,
+  setCollectionData,
 } from "../firebase/Firebase";
 import { onSnapshot, collection, arrayUnion } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -312,6 +313,7 @@ export default function Entry() {
     };
   }, []);
 
+  //get all menu and user data
   useLayoutEffect(() => {
     //get user data
     const getDataUser = () => {
@@ -322,7 +324,11 @@ export default function Entry() {
             // console.log(doc.data().userID === userID);
             if (doc.data()[key] === userUID) {
               setUserDATA(doc.data());
+              setCommande(doc.data()["commande"]);
+              setFacture(doc.data()["facture"]);
               setAuthToken(userUID);
+              setLoading(false);
+            } else {
               setLoading(false);
             }
           }
@@ -330,7 +336,8 @@ export default function Entry() {
       });
     };
 
-    const userData = () => {
+    //get all menu
+    const getAllMenu = () => {
       if (userUID) {
         console.log("userData");
         //get All Menus
@@ -344,132 +351,96 @@ export default function Entry() {
       }
     };
 
-    userData();
+    getAllMenu();
 
-    // return () => {
-    //   userData();
-    // };
+    return () => {
+      getAllMenu();
+    };
   }, [userUID]);
 
-  //get All Menus
-  // useLayoutEffect(() => {
-  //   const getAllMenu = () => {
-  //     onSnapshot(collection(db, "menus"), (querySnapshot) => {
-  //       const documents = querySnapshot.docs.map((doc) => {
-  //         return [...doc.data().menus];
-  //       });
-  //       setMenu(documents[0]);
-  //       setLoading(false);
-  //       setAuthToken(userUID);
-  //     });
-  //   };
-
-  //   getAllMenu();
-
-  //   return () => getAllMenu();
-  // }, []);
-
   //save payement data local to get save after reload application in generate facture
-  // const getDataPayementAsyncLocal = async (ref, status) => {
-  //   const dataPayement = await getDataPayementIsExist();
-  //   if (dataPayement) {
-  //     setCommande((previousCommande) => [
-  //       {
-  //         date: getDates(),
-  //         heure: getHours(),
-  //         name: dataPayement.name,
-  //         nombres: dataPayement.nombres,
-  //         montant: dataPayement.montant,
-  //         status: status,
-  //         format: dataPayement.format,
-  //       },
-  //       ...previousCommande,
-  //     ]);
-  //     setFacture((previousFacture) => [
-  //       {
-  //         date: getDates(),
-  //         heure: getHours(),
-  //         ref: ref,
-  //         name: dataPayement.name,
-  //         format: dataPayement.format,
-  //         nombres: dataPayement.nombres,
-  //         montant: dataPayement.montant,
-  //         client: localDataLogin.name,
-  //         num: dataPayement.num,
-  //       },
-  //       ...previousFacture,
-  //     ]);
-  //     try {
-  //       await removeDataPayementIsExist();
-  //       setUpdateVariableUser(true);
-  //     } catch (error) {
-  //       setUpdateVariableUser(false);
-  //       console.log("errorRemoveDataPayementAsync", error);
-  //     }
-  //   } else {
-  //     setUpdateVariableUser(false);
-  //   }
-  // };
+  const getDataPayementAsyncLocal = async (ref, status) => {
+    const tabFacture = [];
+    const tabCommande = [];
+    const dataPayement = await getDataPayementIsExist();
+    if (dataPayement) {
+      tabCommande.unshift(
+        {
+          date: getDates(),
+          heure: getHours(),
+          name: dataPayement.name,
+          nombres: dataPayement.nombres,
+          montant: dataPayement.montant,
+          status: status,
+          format: dataPayement.format,
+        },
+        ...dataPayement.commande
+      );
 
-  //update facture in commande after payement confirm
-  // useEffect(() => {
-  //   const updateFactureCommande = async () => {
-  //     if (updateVariableUser) {
-  //       console.log("3");
-  //       const updateLocalStorage = {
-  //         userID: valueUser.token,
-  //         email: localDataLogin.email,
-  //         tel: localDataLogin.tel,
-  //         name: localDataLogin.name,
-  //         commande: commande,
-  //         facture: facture,
-  //       };
+      tabFacture.unshift(
+        {
+          date: getDates(),
+          heure: getHours(),
+          ref: ref,
+          name: dataPayement.name,
+          format: dataPayement.format,
+          nombres: dataPayement.nombres,
+          montant: dataPayement.montant,
+          client: dataPayement.client,
+          num: dataPayement.num,
+        },
+        ...dataPayement.facture
+      );
 
-  //       const updateFirebaseStorage = {
-  //         commande: commande,
-  //         facture: facture,
-  //       };
+      // setCommande((previousCommande) => [
+      //   {
+      //     date: getDates(),
+      //     heure: getHours(),
+      //     name: dataPayement.name,
+      //     nombres: dataPayement.nombres,
+      //     montant: dataPayement.montant,
+      //     status: status,
+      //     format: dataPayement.format,
+      //   },
+      //   ...previousCommande,
+      // ]);
+      // setFacture((previousFacture) => [
+      //   {
+      //     date: getDates(),
+      //     heure: getHours(),
+      //     ref: ref,
+      //     name: dataPayement.name,
+      //     format: dataPayement.format,
+      //     nombres: dataPayement.nombres,
+      //     montant: dataPayement.montant,
+      //     client: dataPayement.client,
+      //     num: dataPayement.num,
+      //   },
+      //   ...previousFacture,
+      // ]);
 
-  //       const updateFirebaseDataAdmin = {
-  //         facture: facture[0],
-  //         notifiactionToken: localDataLogin.notifiactionToken,
-  //         check: 1,
-  //       };
-
-  //       try {
-  //         await saveLocalData(updateLocalStorage);
-  //         try {
-  //           await updateUserData(valueUser.token, updateFirebaseStorage);
-  //           try {
-  //             await updateAdminData("wF9wyzb9EQVm5k3N1KNrjhXXNJZ2", {
-  //               commanderecue: arrayUnion(updateFirebaseDataAdmin),
-  //             });
-  //             setUpdateVariableUser(false);
-  //             setBadgeCommande(true);
-  //             setBadgeFacture(true);
-  //             showToastSuccess("Commande effectuée avec succes");
-  //           } catch (error) {
-  //             console.log("errorUseEffectApp3::::", error);
-  //             setUpdateVariableUser(false);
-  //           }
-  //         } catch (error) {
-  //           console.log("errorUseEffectApp2::::", error);
-  //           setUpdateVariableUser(false);
-  //         }
-  //         console.log("save succes");
-  //       } catch (error) {
-  //         console.log("errorUseEffectApp1::::", error);
-  //         setUpdateVariableUser(false);
-  //       }
-  //     }
-  //   };
-
-  //   updateFactureCommande();
-
-  //   return () => {
-  //     updateFactureCommande();
-  //   };
-  // });
+      try {
+        await removeDataPayementIsExist();
+        setUpdateVariableUser(true);
+        try {
+          await updateUserData(dataPayement.uid, {
+            commande: tabCommande,
+            facture: tabFacture,
+          });
+          setUpdateVariableUser(false);
+          setBadgeCommande(true);
+          setBadgeFacture(true);
+        } catch (error) {
+          console.log("errorArrayUnion:::", error);
+        }
+      } catch (error) {
+        setUpdateVariableUser(false);
+        console.log("errorRemoveDataPayementAsync", error);
+      }
+    } else {
+      setUpdateVariableUser(false);
+    }
+  };
 
   const render = valueUser.isAuthnticated ? (
     <BottomTabNavigator />
@@ -495,7 +466,7 @@ export default function Entry() {
           valueUser,
           userDATA,
           setAuthToken,
-          // getDataPayementAsyncLocal,
+          getDataPayementAsyncLocal,
         }}
       >
         <NavigationContainer>
