@@ -17,7 +17,7 @@ import { Colors } from "../../constant/Colors";
 import TextinputComponent from "../../components/TextinputComponent";
 
 const Account = () => {
-  const { menu, localDataLogin, valueUser } = useContext(MyContext);
+  const { menu, userDATA, valueUser } = useContext(MyContext);
 
   const [newPassword, setNewPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
@@ -83,11 +83,9 @@ const Account = () => {
               style={styles.imgAccount}
             />
             <Text style={{ color: Colors.colorWhite, marginVertical: 10 }}>
-              {localDataLogin.name}
+              {userDATA.name}
             </Text>
-            <Text style={{ color: Colors.colorWhite }}>
-              {localDataLogin.tel}
-            </Text>
+            <Text style={{ color: Colors.colorWhite }}>{userDATA.tel}</Text>
           </View>
           <KeyboardAvoidingView behavior="position">
             <View style={styles.passwordChangeView}>

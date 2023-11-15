@@ -16,6 +16,8 @@ import {
   setDoc,
   doc,
   updateDoc,
+  onSnapshot,
+  collection,
 } from "firebase/firestore";
 import "firebase/firestore";
 
@@ -44,10 +46,22 @@ const setCollectionData = async (collectionName, userID, data) => {
 };
 
 //get User Data
-const getUserData = async (userID) => {
-  const ref = doc(db, `users/${userID}`);
-  return await getDoc(ref);
-};
+// const getUserData = (userID) => {
+//   let dataUser;
+//   onSnapshot(collection(db, `users`), (querySnapshot) => {
+//     // return console.log(querySnapshot.docs);
+//     querySnapshot.docs.map((doc) => {
+//       for (const key in doc.data()) {
+//         // console.log(doc.data().userID === userID);
+//         if (doc.data()[key] === userID) {
+//           dataUser = doc.data();
+//         }
+//       }
+//     });
+//   });
+
+//   return dataUser;
+// };
 
 //update User Data
 const updateUserData = async (userID, updateData) => {
@@ -89,7 +103,6 @@ export {
   onResetPassword,
   onSignOut,
   setCollectionData,
-  getUserData,
   updateUserData,
   updateAdminData,
   db,

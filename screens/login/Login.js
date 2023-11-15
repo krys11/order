@@ -32,6 +32,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [activityIndicator, setActivityIndicator] = useState(false);
+  const { setUserUID } = useContext(MyContext);
 
   //vider les champs
   const cleanVariable = () => {
@@ -50,11 +51,11 @@ const Login = () => {
     if (email.length != 0 && password.length) {
       try {
         const UserCredential = await onLogin(email.trim(), password);
-
         try {
           await valueUser.authenticate(UserCredential?.user?.uid);
           cleanVariable();
-          setActivityIndicator(false);
+          // setActivityIndicator(false);
+          // setUserUID(UserCredential?.user?.uid);
         } catch (error) {
           setActivityIndicator(false);
           console.log("loginError2::::", error);
