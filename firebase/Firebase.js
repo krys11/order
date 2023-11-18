@@ -104,4 +104,5 @@ export {
   updateUserData,
   updateAdminData,
   db,
+  auth,
 };

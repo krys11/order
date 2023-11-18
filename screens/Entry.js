@@ -1,19 +1,14 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { MainStackNavigator } from "../routes/StackNavigator";
 import BottomTabNavigator from "../routes/TabNavigator";
 import Screenloader from "./screenLoader/Screenloader";
 import { MyContext } from "../context/MyContext";
-import { ToastConfig, showToastSuccess } from "../components/Toastcomponent";
-import {
-  db,
-  getUserData,
-  updateUserData,
-  updateAdminData,
-  setCollectionData,
-} from "../firebase/Firebase";
-import { onSnapshot, collection, arrayUnion } from "firebase/firestore";
+import { ToastConfig } from "../components/Toastcomponent";
+import { db, updateUserData, auth } from "../firebase/Firebase";
+import { onSnapshot, collection } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Entry() {
   const [authToken, setAuthToken] = useState(null);
@@ -27,10 +22,10 @@ export default function Entry() {
   const [userDATA, setUserDATA] = useState();
   const [menu, setMenu] = useState();
 
-  async function authenticate(userUid) {
+  async function authenticate(useruid) {
     try {
-      await AsyncStorage.setItem("USERDATA", userUid);
-      setUserUID(userUid);
+      await AsyncStorage.setItem("USERDATA", useruid);
+      setUserUID(useruid);
     } catch (error) {
       console.log("EntryAsyncStorage.setItem::::", error);
     }
@@ -295,39 +290,30 @@ export default function Entry() {
     }
   }
 
-  //check user is connected
-  useLayoutEffect(() => {
-    async function getUserUid() {
-      const userUid = await getLocalUserUid();
-      if (userUid) {
-        setUserUID(userUid);
-      } else {
-        setLoading(false);
-      }
-    }
-
-    getUserUid();
-
-    return () => {
-      getUserUid();
-    };
-  }, []);
-
-  //get all menu and user data
-  useLayoutEffect(() => {
-    //get user data
-    const getDataUser = () => {
+  //check user login in get all menu
+  useEffect(() => {
+    const getDataUser = (uid) => {
       console.log("getDataUser");
       onSnapshot(collection(db, "users"), (querySnapshot) => {
         querySnapshot.docs.map((doc) => {
           for (const key in doc.data()) {
             // console.log(doc.data().userID === userID);
-            if (doc.data()[key] === userUID) {
-              setUserDATA(doc.data());
-              setCommande(doc.data()["commande"]);
-              setFacture(doc.data()["facture"]);
-              setAuthToken(userUID);
-              setLoading(false);
+            if (doc.data()[key] === uid) {
+              console.log("getMenu");
+              onSnapshot(collection(db, "menus"), (querySnapshot) => {
+                const documents = querySnapshot.docs.map((doc) => {
+                  return [...doc.data().menus];
+                });
+                if (documents[0]) {
+                  setMenu(documents[0]);
+                  setUserDATA(doc.data());
+                  setCommande(doc.data()["commande"]);
+                  setFacture(doc.data()["facture"]);
+                  setAuthToken(uid);
+                } else {
+                  setLoading(false);
+                }
+              });
             } else {
               setLoading(false);
             }
@@ -336,27 +322,33 @@ export default function Entry() {
       });
     };
 
-    //get all menu
-    const getAllMenu = () => {
-      if (userUID) {
-        console.log("userData");
-        //get All Menus
-        onSnapshot(collection(db, "menus"), (querySnapshot) => {
-          const documents = querySnapshot.docs.map((doc) => {
-            return [...doc.data().menus];
+    getLocalUserUid()
+      .then((user) => {
+        if (user) {
+          onAuthStateChanged(auth, (userr) => {
+            if (userr) {
+              getDataUser(userr.uid);
+            }
           });
-          setMenu(documents[0]);
-          getDataUser(userUID);
-        });
-      }
-    };
-
-    getAllMenu();
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.log("error");
+      });
 
     return () => {
-      getAllMenu();
+      getDataUser();
+      getLocalUserUid();
     };
   }, [userUID]);
+
+  useEffect(() => {
+    if (authToken) {
+      setLoading(false);
+    }
+  }, [authToken]);
 
   //save payement data local to get save after reload application in generate facture
   const getDataPayementAsyncLocal = async (ref, status) => {
@@ -391,33 +383,6 @@ export default function Entry() {
         },
         ...dataPayement.facture
       );
-
-      // setCommande((previousCommande) => [
-      //   {
-      //     date: getDates(),
-      //     heure: getHours(),
-      //     name: dataPayement.name,
-      //     nombres: dataPayement.nombres,
-      //     montant: dataPayement.montant,
-      //     status: status,
-      //     format: dataPayement.format,
-      //   },
-      //   ...previousCommande,
-      // ]);
-      // setFacture((previousFacture) => [
-      //   {
-      //     date: getDates(),
-      //     heure: getHours(),
-      //     ref: ref,
-      //     name: dataPayement.name,
-      //     format: dataPayement.format,
-      //     nombres: dataPayement.nombres,
-      //     montant: dataPayement.montant,
-      //     client: dataPayement.client,
-      //     num: dataPayement.num,
-      //   },
-      //   ...previousFacture,
-      // ]);
 
       try {
         await removeDataPayementIsExist();
@@ -470,10 +435,8 @@ export default function Entry() {
         }}
       >
         <NavigationContainer>
-          <>
-            {render}
-            <ToastConfig />
-          </>
+          {render}
+          <ToastConfig />
         </NavigationContainer>
       </MyContext.Provider>
     );
