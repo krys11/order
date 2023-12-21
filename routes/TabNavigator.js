@@ -270,7 +270,7 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen name="Notif" component={Notification} />
+      {/* <Tab.Screen name="Notif" component={Notification} /> */}
     </Tab.Navigator>
   ) : (
     <Tab.Navigator
